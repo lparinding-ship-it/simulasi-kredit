@@ -7,7 +7,7 @@ const creditFields = ['principal', 'months', 'interest', 'salary', 'idir', 'prov
 let result, page = 0;
 function read() {
   const x = Object.fromEntries(creditFields.map(id => [id, Number($(id).value)]));
-  return { ...x, mode: $('mode').value, start: $('start').value, birth: $('birth').value };
+  return { ...x, mode: $('mode').value, start: $('start').value, birth: $('birth').value, product: $('product').value, position: $('position').value };
 }
 function table(all = false) {
   const rows = all ? result.rows : result.rows.slice(page * 12, (page + 1) * 12);
@@ -36,8 +36,26 @@ function showCharges(x) {
   $('netHint').textContent = i.available ? 'Setelah seluruh potongan' : 'Menunggu perhitungan premi AJK';
   $('printParameters').textContent = `Plafond ${money(x.principal)} · Tenor ${x.months} bulan · Awal kredit ${dateText(x.start)} · Tanggal lahir ${x.birth ? dateText(x.birth) : 'belum diisi'}`;
 }
+function showPolicy(x, maturity) {
+  const p = checkProductPolicy(x, maturity);
+  $('positionField').hidden = x.product !== 'asn';
+  $('policyRule').textContent = p.ageLimit === null ? 'Batas usia Kredit Usaha belum ditetapkan. Batas IDIR 95% dari THP.' : `Batas jatuh tempo: ulang tahun ke-${p.ageLimit}. Batas IDIR ${p.maxIdir}% dari THP.`;
+  const details = [...p.messages];
+  if (p.needsBirth) details.push('Isi tanggal lahir yang valid untuk memeriksa batas usia produk.');
+  if (p.deadline) details.push('Tanggal batas usia: ' + dateText(p.deadline));
+  $('policyNotice').replaceChildren(...details.map(text => { const line = document.createElement('p'); line.textContent = text; return line; }));
+  $('policyNotice').hidden = details.length === 0;
+  $('policyNotice').className = 'policy-notice' + (p.messages.length ? ' violation' : '');
+  if (maturity) {
+    $('productSummary').textContent = p.productName + (x.product === 'asn' ? ' · ' + (x.position === 'functional' ? 'Fungsional/Guru' : 'Struktural') : '');
+    $('policySummary').textContent = [...p.messages, ...(p.needsBirth ? ['Batas usia belum diperiksa: tanggal lahir belum valid.'] : []), ...(p.deadline ? [`Batas usia ${p.ageLimit} tahun: ${dateText(p.deadline)}.`] : []), `Batas IDIR ${p.maxIdir}% dari THP.`].join(' ');
+    $('policySummary').className = 'hint' + (p.messages.length || p.needsBirth ? ' unavailable' : '');
+  }
+  return p;
+}
 function update() {
   const x = read();
+  showPolicy(x, null);
   const valid = $('form').checkValidity() && x.start >= '1900-01-01' && x.start <= '2200-12-31';
   $('error').textContent = valid ? '' : 'Lengkapi input dengan nilai yang valid. Tenor 1–600 bulan; tanggal awal antara tahun 1900 dan 2200.';
   $('results').hidden = !valid;
@@ -49,6 +67,7 @@ function update() {
     return;
   }
   result = calculate(x); page = 0;
+  result.policy = showPolicy(x, result.rows.at(-1).date);
   $('years').textContent = `${(x.months / 12).toLocaleString('id-ID', { maximumFractionDigits: 1 })} tahun`;
   $('tenorRange').value = Math.min(x.months, 360);
   $('tenorTag').textContent = x.months + ' bulan';
@@ -66,6 +85,7 @@ function update() {
   const warn = [];
   if (result.payment > x.salary * x.idir / 100) warn.push('Angsuran melebihi batas IDIR.');
   if (result.net !== null && result.net < 0) warn.push('Potongan melebihi plafond; dana bersih negatif.');
+  warn.unshift(...result.policy.messages);
   $('status').textContent = warn.join(' ') || 'Angsuran berada dalam batas IDIR yang Anda isi.';
   $('status').className = 'status' + (warn.length ? ' warn' : '');
   $('ageRow').hidden = !x.birth;
@@ -79,6 +99,9 @@ function csvRows() {
   const x = read(), i = result.insurance;
   return [
     ['Simulasi kredit'], ['Template untuk kalangan internal, Di Buat Oleh Luther Parinding, S.Si'],
+    ['Produk', result.policy.productName], ['Jabatan', x.product === 'asn' ? (x.position === 'functional' ? 'Fungsional/Guru' : 'Struktural') : 'Tidak berlaku'],
+    ['Batas usia', result.policy.ageLimit ?? 'Belum ditetapkan'], ['Tanggal batas usia', result.policy.deadline ?? 'Belum tersedia'],
+    ['IDIR (%)', x.idir], ['Batas IDIR (%)', result.policy.maxIdir], ['Notifikasi ketentuan', result.policy.messages.join(' | ') || (result.policy.needsBirth ? 'Tanggal lahir belum valid' : 'Tidak ada pelanggaran pada batas yang diperiksa')],
     ['Plafond', x.principal], ['Tenor (bulan)', x.months], ['Tanggal awal kredit', x.start], ['Tanggal lahir', x.birth],
     ['EIR per tahun (%)', result.rate * 1200], ['Provisi (%)', x.provisionPercent], ['Biaya provisi (Rp)', result.provision],
     ['Administrasi (Rp)', x.admin], ['Asuransi AJK', 'CHUBB'], ['Usia asuransi (tahun)', i.age ?? ''],
