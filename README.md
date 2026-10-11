@@ -1,13 +1,12 @@
-# Simulasi Kredit
+# Aplikasi Simulasi Kredit – Sisa Gaji Diperjelas (2026)
 
-Buka index.html di browser setelah mengekstrak semua file ZIP. Atau buka Simulasi-Kredit.html yang tersedia terpisah (satu file, tanpa instalasi).
+Buka **Simulasi-Kredit.html** (file tunggal, offline). Alternatif: buka **index.html** setelah mengekstrak semua berkas.
 
-Produk: KREDIT CPNS/ASN, KREDIT PENSIUN, KREDIT USAHA. CPNS/ASN Struktural dibatasi sampai ulang tahun ke-58, Fungsional/Guru ke-60; Pensiun ke-75. Jatuh tempo tepat pada batas diperbolehkan. IDIR maksimum 85% untuk Kredit Pensiun dan 95% untuk Kredit CPNS/ASN serta Kredit Usaha. Kredit Usaha belum memiliki batas usia yang ditentukan. Notifikasi mengikuti teks pengguna; hasil tetap berupa simulasi.
+- Nominal **Sisa Gaji Setelah Angsuran** ditampilkan besar di bawah Angsuran Bulanan, pada aplikasi dan ringkasan A4.
+- Warna indikator berdasarkan persentase sisa THP: merah <10% atau IDIR melebihi batas; kuning 10%–<25%; hijau >=25% bila IDIR tidak melebihi batas. Ini **indikator visual**, bukan keputusan layak kredit; kewajiban lain dan kebutuhan hidup harus diverifikasi.
+- **Cetak Ringkasan** ditata agar tetap 1 halaman A4; **Cetak Jadwal Angsuran** tetap terpisah. Pada pengaturan cetak gunakan A4 Portrait, skala 100%, dan matikan header/footer browser.
+- Kedua cetak serta CSV tidak aktif bila validasi batas usia/IDIR gagal, sesuai versi sebelumnya.
+- Baki debet akhir Rp0 dan angsuran seluruh bulan tetap sama.
+- Design & Development © 2026 Luther Parinding, S.Si.
 
-Premi AJK CHUBB = plafond x tarif per mil / 1000. Tarif berasal dari RATE PREMI ASURANSI CHUBB.xlsx, sheet Tabel ass Chubb B7:V63, berlabel 1 November 2017. Usia asuransi dibulatkan naik ketika mencapai 6 bulan; tenor tarif dibulatkan naik ke tahun penuh, mengikuti rumus utama Premi Chubb M12. Tabel mencakup usia 18-74 dan tenor 1-20 tahun. Tarif nol atau di luar tabel perlu dikonfirmasi; dana bersih tidak ditampilkan sebagai angka sebelum premi tersedia.
-
-Provisi menggunakan persen dari plafond (nilai awal 1%). Premi/provisi dibulatkan ke rupiah terdekat. Administrasi dan pelunasan kredit lama berupa nominal rupiah. Biaya dipotong dari dana pencairan.
-
-Template untuk kalangan internal, Di Buat Oleh Luther Parinding, S.Si
-
-Seluruh hitungan berjalan lokal. Tidak ada pengiriman data. Versi online belum diterbitkan.
+Jika hasil cetak pada browser berbeda, pastikan A4 Portrait dan header/footer browser dimatikan.
