@@ -532,6 +532,33 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 }
 @media screen and (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.top-print-button{transition:none}}
 @media print{.mobile-quick-nav,.mobile-table-hint{display:none!important}}
+
+/* Identitas dokumen: tersinkron dengan ringkasan, jadwal angsuran, dan CSV. */
+.input-group-document{background:#f8faff;border:1px solid #ccdcef}
+.input-group-document .input-group-index{background:#24548b;color:#fff}
+.input-group-document .doc-note{font-size:10px;margin:10px 0 0}
+.doc-report-identity{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:13px;border:1px solid #dce5f1;border-radius:9px;background:#f9fbfe;margin:0 0 13px;padding:11px 14px}
+.doc-report-identity div,.sp-identity div{min-width:0}
+.doc-report-identity span,.sp-identity span{display:block;color:#738ba8;font-size:9px;font-weight:750;letter-spacing:.45px;margin:0 0 4px}
+.doc-report-identity b,.sp-identity b{display:block;color:#173c69;font-size:12px;line-height:1.25;overflow-wrap:anywhere}
+.print-heading-meta b{font-size:inherit;color:#315f95;font-weight:750}
+.sp-identity{display:grid;grid-template-columns:1fr 1fr 1.3fr 1fr 1fr;gap:8px;padding:7px 9px;border:1px solid #dce5f1;border-radius:4px;margin:0 0 10px;background:#f9fbfe}
+.sp-identity b{font-size:9px}
+.sp-identity span{font-size:7.5px}
+@media(max-width:760px){.doc-report-identity{grid-template-columns:1fr;gap:9px;padding:12px}.print-heading-meta{min-width:0}.print-heading-meta small{overflow-wrap:anywhere}}
+@media print{
+ body:not(.printing-schedule):not(.print-blocked) .doc-report-identity{display:grid!important;grid-template-columns:1.1fr 1fr 1fr!important;gap:2.4mm!important;padding:1.6mm 2.5mm!important;margin:0 0 1.6mm!important;border-radius:1.4mm!important;break-inside:avoid!important}
+ body:not(.printing-schedule):not(.print-blocked) .doc-report-identity span{font-size:6pt!important;margin:0 0 .4mm!important;line-height:1.12!important}
+ body:not(.printing-schedule):not(.print-blocked) .doc-report-identity b{font-size:8pt!important;line-height:1.14!important;overflow-wrap:anywhere}
+ body:not(.printing-schedule):not(.print-blocked) .print-heading-meta{gap:.2mm!important}
+ body:not(.printing-schedule):not(.print-blocked) .print-heading-meta small{font-size:6.6pt!important;line-height:1.1!important;max-width:51mm;overflow-wrap:anywhere}
+ body.printing-schedule .sp-identity{display:grid!important;grid-template-columns:1.8fr 1fr 1.25fr .95fr .95fr!important;gap:2mm!important;padding:1.4mm 2mm!important;margin-bottom:2mm!important;break-inside:avoid}
+ body.printing-schedule .sp-identity span{font-size:6pt!important;margin-bottom:.6mm!important}
+ body.printing-schedule .sp-identity b{font-size:7.1pt!important;line-height:1.14!important}
+ body.printing-schedule #spDocNo{white-space:nowrap!important;font-size:6.6pt!important;letter-spacing:-.12px!important}
+}
+#docNo[readonly]{background:#eef5ff;color:#153e72;font-weight:750;letter-spacing:.25px;cursor:default}
+@media(max-width:760px){#docNo[readonly]{font-size:16px!important}}
 </style></head>
 <body><header><a class="brand" href="#"><span class="logo">K</span> Kredit<span class="brand-light"> / Simulasi</span></a><div aria-label="Pilihan dokumen cetak" class="top-print-actions">
 <button class="top-print-button summary-print-action" id="print" title="Cetak ringkasan 1 halaman A4" type="button"><span aria-hidden="true" class="action-icon">▣</span><span><b>Cetak Ringkasan</b><small>1 halaman A4</small></span></button>
@@ -544,7 +571,15 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
   <a href="#results" aria-label="Ke hasil simulasi kredit"><span aria-hidden="true">▦</span> Hasil</a>
   <a href="#schedule" aria-label="Ke tabel jadwal angsuran"><span aria-hidden="true">▤</span> Angsuran</a>
 </nav>
-<div class="layout"><aside class="card inputs"><div class="section-title"><h2>Parameter kredit</h2><button class="text-button" id="reset">Reset</button></div><form id="form"><section aria-labelledby="groupDebitur" class="input-group">
+<div class="layout"><aside class="card inputs"><div class="section-title"><h2>Parameter kredit</h2><button class="text-button" id="reset">Reset</button></div><form id="form"><section aria-labelledby="groupDokumen" class="input-group input-group-document">
+<div class="input-group-title" id="groupDokumen"><span class="input-group-index">00</span><div>IDENTITAS DOKUMEN<small>Untuk penelusuran hasil simulasi dan cetak</small></div></div>
+<div class="input-field-block"><label for="docNo">Nomor Simulasi / Referensi <span class="automatic-pill">OTOMATIS</span></label><input id="docNo" type="text" maxlength="42" readonly aria-readonly="true" autocomplete="off" title="Nomor referensi otomatis untuk satu simulasi"/></div>
+<div class="input-field-block"><label for="docDate">Tanggal Simulasi</label><input id="docDate" type="date"/></div>
+<div class="input-field-block"><label for="docDebtor">Nama Calon Debitur</label><input id="docDebtor" type="text" maxlength="75" placeholder="Nama sesuai identitas" autocomplete="off"/></div>
+<div class="input-field-block"><label for="docUnit">Cabang / Unit Kerja</label><input id="docUnit" type="text" maxlength="65" placeholder="Nama cabang atau unit" autocomplete="off"/></div>
+<div class="input-field-block"><label for="docOfficer">Nama Petugas / AO</label><input id="docOfficer" type="text" maxlength="65" placeholder="Nama petugas" autocomplete="off"/></div>
+<p class="hint doc-note">Nomor referensi dibuat otomatis saat aplikasi dibuka atau simulasi di-Reset; nomor tetap sama selama simulasi berlangsung. Ini bukan nomor registrasi resmi bank.</p>
+</section><section aria-labelledby="groupDebitur" class="input-group">
 <div class="input-group-title" id="groupDebitur"><span class="input-group-index">01</span><div>DATA DEBITUR &amp; KEMAMPUAN BAYAR<small>Identitas, penghasilan, dan batas angsuran</small></div></div>
 <div class="input-field-block"><label for="product">Pilihan produk</label><select id="product"><option value="asn">KREDIT CPNS/ASN</option><option value="pension">KREDIT PENSIUN</option><option value="business">KREDIT USAHA</option></select></div><div id="positionField"><label for="position">Jenis jabatan</label><select id="position"><option value="structural">Struktural</option><option value="functional">Fungsional/Guru</option></select></div><div class="input-field-block"><label for="birth">Tanggal lahir tertanggung</label><input aria-describedby="policyRule insuranceMessage" id="birth" type="date"/></div><div class="input-field-block"><label for="start">Tanggal awal kredit</label><input id="start" required="" type="date" value="2026-10-10"/></div><div class="input-field-block"><label for="salary">Gaji bersih / THP (Rp)</label><input id="salary" max="1000000000000" min="0" required="" type="number" value="4494000"/></div><div class="input-field-block"><label for="idir">Batas potongan gaji / IDIR (%)</label><input id="idir" max="100" min="0" required="" step="0.01" type="number" value="93.31"/><p class="field-note" id="idirManualHint">Masukkan batas IDIR sesuai analisis; tidak boleh melebihi ketentuan produk.</p></div><div class="input-policy"><p class="hint" id="policyRule"></p><div class="policy-notice" hidden="" id="policyNotice" role="alert"></div></div></section><section aria-labelledby="groupFasilitas" class="input-group">
 <div class="input-group-title" id="groupFasilitas"><span class="input-group-index">02</span><div>PARAMETER FASILITAS KREDIT<small>Tenor, bunga, kapasitas, dan plafon pengajuan</small></div></div>
@@ -586,7 +621,8 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 </div>
 <div class="computed-row"><span>Premi Kebakaran</span><output id="firePremiumDisplay">Rp 0</output></div>
 </div><div class="insurance-box total-premium-box"><div class="computed-row total-premium-row"><span>Total Premi Asuransi</span><output id="totalInsuranceDisplay">—</output></div></div></div><label for="payoff">Pelunasan kredit lama (Rp)</label><input id="payoff" min="0" required="" type="number" value="0"/></details></section><div aria-live="polite" class="print-gate-notice" id="printGateNotice" role="status"><strong id="printGateTitle">Memeriksa kelayakan cetak...</strong><div id="printGateReasons"></div></div><p id="error" role="alert"></p></form><p class="hint">Hasil diperbarui otomatis saat parameter berubah.</p></aside>
-<section aria-live="polite" class="results" id="results"><div class="print-heading"><div class="print-heading-title"><span class="print-mark">K</span><div><div class="print-eyebrow">SIMULASI KREDIT · INTERNAL</div><h1>RINGKASAN SIMULASI KREDIT</h1><p>Ringkasan pembiayaan dan kemampuan bayar</p></div></div><div class="print-heading-meta"><span>DOKUMEN INTERNAL</span><small id="printDate"></small></div></div><div class="product-summary"><strong id="productSummary"></strong><p class="hint" id="policySummary"></p></div><div class="print-facility">
+<section aria-live="polite" class="results" id="results"><div class="print-heading"><div class="print-heading-title"><span class="print-mark">K</span><div><div class="print-eyebrow">SIMULASI KREDIT · INTERNAL</div><h1>RINGKASAN SIMULASI KREDIT</h1><p>Ringkasan pembiayaan dan kemampuan bayar</p></div></div><div class="print-heading-meta"><span>DOKUMEN INTERNAL</span><small>NO: <b id="docNoPrint">—</b></small><small>TANGGAL SIMULASI: <b id="docDatePrint">—</b></small><small id="printDate"></small></div></div>
+<div class="doc-report-identity" aria-label="Identitas dokumen simulasi"><div><span>CALON DEBITUR</span><b id="docDebtorPrint">—</b></div><div><span>CABANG / UNIT KERJA</span><b id="docUnitPrint">—</b></div><div><span>PETUGAS / AO</span><b id="docOfficerPrint">—</b></div></div><div class="product-summary"><strong id="productSummary"></strong><p class="hint" id="policySummary"></p></div><div class="print-facility">
 <div class="section-kicker"><span>01</span> INFORMASI FASILITAS KREDIT</div>
 <div class="facility-grid">
 <div class="facility-cell"><span>PRODUK KREDIT</span><strong id="facProduct"></strong></div>
@@ -618,6 +654,7 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 <div class="sp-brand"><span class="sp-icon">K</span><div><span class="sp-eyebrow">DOKUMEN SIMULASI KREDIT</span><h1>JADWAL ANGSURAN KREDIT</h1><p>Rincian pembayaran pokok, bunga, dan baki debet bulanan</p></div></div>
 <div class="sp-ref">INTERNAL<br/><span id="spPrintDate"></span></div>
 </div>
+<div class="sp-identity"><div><span>NO. SIMULASI</span><b id="spDocNo">—</b></div><div><span>TANGGAL SIMULASI</span><b id="spDocDate">—</b></div><div><span>CALON DEBITUR</span><b id="spDocDebtor">—</b></div><div><span>CABANG / UNIT</span><b id="spDocUnit">—</b></div><div><span>PETUGAS / AO</span><b id="spDocOfficer">—</b></div></div>
 <div class="sp-facility">
 <div><span>PRODUK KREDIT</span><b id="spProduct"></b></div>
 <div><span>PLAFON KREDIT</span><b id="spPrincipal"></b></div>
@@ -799,6 +836,40 @@ const money = n => n === null || !Number.isFinite(n) ? '—' : 'Rp ' + Math.roun
 const pct = n => n.toLocaleString('id-ID', { maximumFractionDigits: 3 }) + '%';
 const perMille = n => n === null ? '—' : n.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ‰';
 const dateText = s => new Date(s + 'T00:00:00').toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+// Nomor referensi dibuat secara lokal (tanpa server atau penomoran resmi/berurutan).
+// Tanggal pembuatan lokal + 48 bit acak menjaga benturan antarsimulasi sangat kecil.
+function newSimulationReference() {
+  const date = todayLocalISO().replaceAll('-', '');
+  const bytes = new Uint8Array(6);
+  if (globalThis.crypto && typeof globalThis.crypto.getRandomValues === 'function') {
+    globalThis.crypto.getRandomValues(bytes);
+  } else {
+    // Fallback untuk browser lama; referensi ini bukan ID bank yang dijamin unik.
+    for (let i=0; i<bytes.length; i++) bytes[i] = Math.floor(Math.random()*256);
+  }
+  const code = Array.from(bytes, b => b.toString(16).padStart(2,'0')).join('').toUpperCase();
+  return `SIM-${date}-${code}`;
+}
+function assignNewReference(){ $('docNo').value = newSimulationReference(); updateDocumentIdentity(); }
+// Identitas bersifat sementara dan tidak dikirim maupun disimpan ke server.
+const documentFieldIds = ['docNo','docDate','docDebtor','docUnit','docOfficer'];
+function todayLocalISO() {
+  const d = new Date();
+  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+}
+function docIdentity() {
+  const v = id => ($(id).value || '').trim();
+  return {number:v('docNo'),date:v('docDate'),debtor:v('docDebtor'),unit:v('docUnit'),officer:v('docOfficer')};
+}
+function updateDocumentIdentity() {
+  const d=docIdentity();
+  const show = value => value || '—';
+  const simDate = d.date && /^\d{4}-\d{2}-\d{2}$/.test(d.date) ? dateText(d.date) : '—';
+  for (const [id,val] of [
+    ['docNoPrint',d.number],['docDatePrint',simDate],['docDebtorPrint',d.debtor],['docUnitPrint',d.unit],['docOfficerPrint',d.officer],
+    ['spDocNo',d.number],['spDocDate',simDate],['spDocDebtor',d.debtor],['spDocUnit',d.unit],['spDocOfficer',d.officer]
+  ]) $(id).textContent=show(val);
+}
 const creditFields = ['principal', 'months', 'interest', 'salary', 'idir', 'provisionPercent', 'admin', 'adminPercent', 'payoff', 'otherFee', 'firePremium', 'ajkOtherPremium'];
 let result, page = 0;
 // Central print permission (applies to summary, all amortization pages, browser Print, and CSV).
@@ -1061,6 +1132,8 @@ function csvRows() {
   const x = read(), i = result.insurance;
   return [
     ['Simulasi kredit'], ['Design & Development © 2026 Luther Parinding, S.Si.'],
+    ['Nomor simulasi / referensi', docIdentity().number], ['Tanggal simulasi', docIdentity().date],
+    ['Nama calon debitur', docIdentity().debtor], ['Cabang / unit kerja', docIdentity().unit], ['Nama petugas / AO', docIdentity().officer],
     ['Produk', result.policy.productName], ['Jabatan', x.product === 'asn' ? (x.position === 'functional' ? 'Fungsional/Guru' : 'Struktural') : 'Tidak berlaku'],
     ['Batas usia', result.policy.ageLimit], ['Tanggal batas usia', result.policy.deadline ?? 'Belum tersedia'],
     ['IDIR (%)', x.idir], ['Batas IDIR (%)', result.policy.maxIdir], ['Notifikasi ketentuan', result.policy.messages.join(' | ') || (result.policy.needsBirth ? 'Tanggal lahir belum valid' : 'Tidak ada pelanggaran pada batas yang diperiksa')],
@@ -1082,7 +1155,8 @@ function csvRows() {
   ];
 }
 $('form').addEventListener('submit', e => e.preventDefault());
-$('form').addEventListener('input', e => { if (e.target.id !== 'mode') update(); });
+$('form').addEventListener('input', e => { if (documentFieldIds.includes(e.target.id)) {updateDocumentIdentity();return;} if (e.target.id !== 'mode') update(); });
+$('docDate').addEventListener('change',updateDocumentIdentity);
 // Keep a separate explicit selection for each product to avoid carrying a business AJK choice into salary/pension.
 const ajkByProduct = { asn: 'ajk', pension: 'ajk', business: 'none' };
 let selectedProduct = $('product').value;
@@ -1104,7 +1178,7 @@ $('mode').addEventListener('change', () => {
 });
 $('prev').onclick = () => { page--; table(); };
 $('next').onclick = () => { page++; table(); };
-$('reset').onclick = () => { $('form').reset(); $('rateUnit').textContent = 'per bulan'; setProductIdirLimit(true); update(); };
+$('reset').onclick = () => { $('form').reset(); $('docDate').value=todayLocalISO(); assignNewReference(); $('rateUnit').textContent = 'per bulan'; setProductIdirLimit(true); update(); };
 $('csv').onclick = () => {
   if (!canPrintNow()) return;
   const csv = csvRows().map(row => row.map(value => '"' + String(value).replaceAll('"', '""') + '"').join(';')).join('\r\n');
@@ -1177,7 +1251,10 @@ document.addEventListener('keydown', e => {
     e.stopPropagation();
   }
 }, true);
+$('docDate').value = todayLocalISO();
+assignNewReference();
 setProductIdirLimit();
+updateDocumentIdentity();
 update();
 
 </script></body></html>

@@ -1,19 +1,18 @@
-APLIKASI SIMULASI KREDIT - PERBAIKAN AJK SEMUA PRODUK (Oktober 2026)
+APLIKASI SIMULASI KREDIT — NOMOR REFERENSI OTOMATIS
 
-CARA MENJALANKAN:
-Buka Simulasi-Kredit.html atau index.html di browser modern (Chrome, Edge, Firefox).
+CARA MEMBUKA:
+Buka Simulasi-Kredit.html melalui browser (Chrome, Edge, Firefox atau Safari).
 
-PERBAIKAN:
-- Kredit CPNS/ASN: biaya AJK kembali muncul dan dihitung dalam total potongan/dana bersih.
-- Kredit Pensiun: biaya AJK kembali muncul dan dihitung dalam total potongan/dana bersih.
-- Kredit Usaha: AJK tetap tersedia. Asuransi Kebakaran tetap terpisah dan hanya tampil untuk Kredit Usaha.
-- Pilihan AJK: AJK CHUBB (rate otomatis jika tersedia), AJK Lain (manual), Tanpa Asuransi (premi Rp0).
-- Default saat baru dipilih: CHUBB untuk CPNS/ASN & Pensiun; Tanpa Asuransi untuk Kredit Usaha. Pilihan bisa diubah oleh pengguna.
-- Daftar biaya, total potongan, dana bersih, laporan PDF, dan CSV mengikuti pilihan premi.
-- Pengaturan usia dan IDIR, laporan ringkasan satu halaman A4, jadwal angsuran dan layout responsif dipertahankan.
+NOMOR REFERENSI:
+- Dibuat otomatis saat aplikasi dibuka dengan format SIM-YYYYMMDD-XXXXXXXXXXXX.
+- Tidak perlu diketik. Tidak berubah saat parameter kredit atau identitas diubah.
+- Klik Reset untuk memulai simulasi baru dan membuat nomor referensi baru.
+- Dicantumkan dalam Cetak Ringkasan, Cetak Jadwal Angsuran, dan CSV.
+- Dibuat secara lokal tanpa server; tidak berurutan dan BUKAN nomor registrasi bank yang diverifikasi secara terpusat.
+- Hasil simulasi dan data debitur tidak disimpan otomatis.
 
-PERHATIAN:
-Tabel CHUBB mengacu pada referensi lama dari aplikasi. Tarif dan kecocokan cakupan wajib divalidasi terhadap polis aktual; usia atau tenor di luar tabel memerlukan pilihan AJK Lain atau pengaturan lain sesuai kebijakan bank.
-Pilihan Tanpa Asuransi tetap harus mengikuti ketentuan produk dan persetujuan yang relevan.
+FUNGSI LAIN TETAP:
+Biaya AJK semua produk, asuransi kebakaran untuk kredit usaha, biaya sesuai produk,
+validasi usia dan IDIR, ringkasan A4 satu halaman, jadwal angsuran, baki debet akhir nol.
 
 Design & Development © 2026 Luther Parinding, S.Si.
