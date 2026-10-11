@@ -1,0 +1,52 @@
+# Aplikasi Simulasi Kredit — Siap Pasang di HP (PWA)
+
+Situs tujuan: https://lparinding-ship-it.github.io/simulasi-kredit/
+Repo: https://github.com/lparinding-ship-it/simulasi-kredit
+
+Isi paket:
+- index.html : aplikasi lengkap + metadata PWA + pendaftaran service worker.
+- Simulasi-Kredit.html : salinan satu-file, opsional.
+- manifest.webmanifest : nama, ikon, dan mode tampilan aplikasi.
+- sw.js : service worker cache untuk akses setelah pernah dibuka secara online.
+- icon-192.png, icon-512.png, apple-touch-icon.png : ikon instalasi.
+
+LANGKAH PEMASANGAN DI GITHUB PAGES:
+1. Backup file index.html Anda yang saat ini berada di repo, karena paket ini dibuat
+   dari file final lokal yang tersedia dalam percakapan, bukan salinan langsung
+   dari commit terbaru yang kami unduh dari GitHub.
+2. Buka repo Github > Add file > Upload files.
+3. Tambahkan manifest.webmanifest, sw.js, icon-192.png, icon-512.png,
+   apple-touch-icon.png ke root repo dan commit perubahan.
+4. Untuk mengaktifkan instalasi PWA pada index.html yang sedang live,
+   tambahkan tag berikut DI DALAM <head>:
+   <link rel="manifest" href="./manifest.webmanifest">
+   <meta name="theme-color" content="#173d74">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-mobile-web-app-title" content="Simulasi Kredit">
+   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+   Lalu DI AKHIR <body> sebelum </body>:
+   <script>
+   if ('serviceWorker' in navigator) {
+     window.addEventListener('load', () =>
+       navigator.serviceWorker.register('./sw.js', {scope:'./'}).catch(console.warn));
+   }
+   </script>
+5. Alternatif: upload index.html dari paket ini untuk mengganti index secara utuh,
+   HANYA jika dipastikan perubahan aplikasi terbaru pada Github tidak hilang.
+6. Tunggu GitHub Pages memperbarui situs, lalu buka ulang tautan HTTPS.
+
+ANDROID (Chrome): buka URL > menu (⋮) > Instal aplikasi / Tambahkan ke layar utama.
+IPHONE (Safari): buka URL > Bagikan > Tambahkan ke Layar Utama > Tambah.
+
+CATATAN:
+- Ini PWA, bukan berkas APK. PWA bisa dipasang ke home screen Android/iPhone.
+- APK Android native memerlukan build Android tersendiri dan proses penandatanganan.
+- Aplikasi memerlukan akses internet setidaknya saat pertama kali dibuka dan
+  cache offline hanya berfungsi setelah service worker berhasil memasang file.
+- CETAK PDF di Android/iOS memakai fitur cetak OS/browser dan tetap perlu diuji
+  pada HP fisik (terutama Safari iPhone).
+- Repo dan GitHub Pages ini PUBLIC. Jangan mengunggah data debitur asli,
+  tabel nasabah, atau contoh dokumen berisi informasi rahasia ke repository.
+- Cache menyimpan kode aplikasi, bukan otomatis menyimpan data pribadi pada form.
+- Jika memperbarui index, naikkan APP_CACHE_VERSION dalam sw.js agar pengguna
+  segera mengambil cache aplikasi yang lebih baru.
