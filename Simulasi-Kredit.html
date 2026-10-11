@@ -1,5 +1,6 @@
-<!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Simulasi kredit anuitas, bunga flat dan EIR, dana pencairan, dan jadwal angsuran."><title>Simulasi Kredit</title><style>
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="Simulasi kredit anuitas, bunga flat dan EIR, dana pencairan, dan jadwal angsuran." name="description"/><title>Simulasi Kredit</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f5f7f9;color:#172d35;font-family:Inter,Segoe UI,Arial,sans-serif;font-size:14px}button,input,select{font:inherit}button,a,input,select,summary{-webkit-tap-highlight-color:transparent}button{cursor:pointer}header{height:82px;background:white;border-bottom:1px solid #e5e9ec;display:flex;align-items:center;gap:24px;padding:0 4.5%}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:19px;font-weight:700;color:#163768}.logo{background:#c93a45;color:white;border-radius:11px;padding:9px 13px}.brand-light{font-weight:400;color:#7b8b90}.header-note{margin-left:auto;color:#75848c;font-size:13px}.outline{background:white;border:1px solid #d8e1e3;border-radius:8px;padding:10px 14px;color:#24474b;font-weight:600}.outline:hover{background:#eef3fd}main{max-width:1440px;margin:auto;padding:40px 4.5% 20px}.intro{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}.eyebrow{font-size:11px;font-weight:750;letter-spacing:2px;color:#c93446}h1{font-size:32px;letter-spacing:-1px;font-weight:650;margin:10px 0}p{line-height:1.6}.intro p{color:#71818a;margin:0}.method{padding:9px 13px;border:1px solid #dbe4f3;background:#edf3ff;color:#315b9b;border-radius:30px;font-size:12px}.layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:26px;align-items:start}.card{background:white;border:1px solid #e3e9ec;border-radius:14px;padding:24px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}h2{font-size:16px;margin:0;font-weight:650}.text-button{border:0;background:none;color:#c42f41;font-size:12px}label{display:block;font-size:12px;font-weight:600;margin:20px 0 8px}label span,label output{float:right;color:#8a999e;font-weight:400}.field{display:flex;align-items:center;border:1px solid #dbe3e7;border-radius:8px;background:#fff;overflow:hidden}.field span{color:#87989c;padding:0 13px}.field input{border:0;min-width:0}input,select{width:100%;padding:12px 11px;border:1px solid #dbe3e7;border-radius:8px;background:white;color:#203b43;outline:none}input:focus,select:focus{outline:2px solid #769ed8;outline-offset:1px}.field:focus-within{outline:2px solid #769ed8}.field input:focus{outline:none}input[type=range]{padding:0;margin:18px 0 3px;accent-color:#235fa8}input[type=number]{appearance:textfield}.quick{display:flex;gap:8px;margin-top:10px}.quick button{font-size:11px;flex:1;background:#f6f8f9;border:1px solid #e2e9eb;border-radius:6px;padding:7px;color:#697e86}.range-labels{display:flex;justify-content:space-between;font-size:10px;color:#89989e}details{margin-top:23px;border-top:1px solid #e7edef;padding-top:18px}summary{cursor:pointer;font-size:12px;font-weight:650}details label{margin-top:15px}.hint{font-size:11px;color:#809098;line-height:1.6;margin-bottom:0}#error{color:#b34531;font-size:12px}.hero{background:#153d78;color:white;border-radius:15px;padding:28px 30px;position:relative;overflow:hidden}.hero:after{content:'';position:absolute;width:250px;height:250px;border:1px solid #ffffff0d;border-radius:50%;right:-100px;top:-80px;pointer-events:none}.hero-top{display:flex;align-items:center;justify-content:space-between;font-size:10px;letter-spacing:1.4px;color:#c7d9f1}.pill{letter-spacing:0;background:#ffffff12;border:1px solid #ffffff22;padding:6px 10px;border-radius:20px}.hero-value{font-size:43px;font-weight:600;letter-spacing:-1px;margin-top:20px}.hero p{font-size:11px;color:#b7cbea;margin:8px 0 25px}.hero-bottom{display:grid;grid-template-columns:1fr 1fr 1.2fr;border-top:1px solid #ffffff20;padding-top:21px;gap:10px}.hero-bottom span{display:block;color:#bccfeb;font-size:11px;margin-bottom:8px}.hero-bottom strong{font-weight:550;font-size:16px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}.metric{padding:20px}.metric span,.metric small{display:block;font-size:11px;color:#7c8c93}.metric strong{display:block;font-size:21px;margin:13px 0;letter-spacing:-.6px}.metric:last-child strong{color:#245a9f}.overview{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}.composition-inner{display:flex;align-items:center;gap:23px;margin-top:25px}.donut{height:124px;width:124px;flex-shrink:0;border-radius:50%;display:grid;place-items:center}.donut>div{height:92px;width:92px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;flex-direction:column}.donut strong{font-size:24px}.donut span{font-size:11px;color:#87969b}.legend p{font-size:11px;color:#788b91}.legend strong{display:block;color:#244149;font-size:13px;margin-top:7px}.legend i{display:inline-block;width:7px;height:7px;background:#2865b2;border-radius:50%;margin-right:5px}.legend i.mint{background:#dc5060}.detail-row{display:flex;justify-content:space-between;gap:8px;margin-top:17px;font-size:11px;color:#758990}.detail-row b{color:#304a51;font-weight:600}.status{padding:9px 11px;background:#edf3fc;border-radius:6px;color:#2e5e9b;font-size:11px;margin:16px 0 0}.status.warn{background:#fff2e5;color:#9e612d}.table-scroll{overflow:auto;max-height:640px}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:11px}th{font-weight:500;color:#768b92;background:#f5f8f9}td,th{text-align:right;padding:15px 12px;border-bottom:1px solid #edf1f2}td:first-child,th:first-child,td:nth-child(2),th:nth-child(2){text-align:left}td:last-child{font-weight:600;color:#315f9f}tfoot td{font-weight:650;background:#f1f5fc}.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:17px;font-size:11px;color:#819398}.pagination button{padding:6px 12px;margin-left:6px}.pagination button:disabled{opacity:.4;cursor:default}.notes{color:#7d9096;font-size:12px;border:0;margin:0;padding:0 4px}.notes p{max-width:850px}footer{display:flex;justify-content:space-between;font-size:10px;color:#8a9ca2;margin-top:40px;letter-spacing:1px}footer span{letter-spacing:0}[hidden]{display:none!important}@media(max-width:1150px){.layout{grid-template-columns:290px minmax(0,1fr);gap:18px}.overview{grid-template-columns:1fr}.metrics{gap:8px}.metric{padding:15px}.metric strong{font-size:17px}.hero-value{font-size:36px}}@media(max-width:760px){header{height:70px;padding:0 5%}.header-note,.brand-light{display:none}header .outline{margin-left:auto;font-size:11px}.intro{display:block}.method{display:inline-block;margin-top:16px}h1{font-size:27px}main{padding:28px 5%}.layout{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}.metric{display:grid;grid-template-columns:1fr 1fr}.metric strong{grid-column:2;grid-row:1 / 3;text-align:right;margin:6px 0;font-size:20px}.hero{padding:23px}.hero-value{font-size:37px}.hero-bottom{grid-template-columns:1fr 1fr}.hero-bottom>div:last-child{grid-column:1 / 3}.schedule{padding:17px}.schedule .section-title{align-items:flex-start}.schedule .outline{white-space:nowrap;font-size:11px}.intro p{font-size:13px}footer{gap:15px;font-size:9px}}@media print{body{background:white}header,.inputs,.intro,.notes,footer,.outline,.pagination{display:none!important}main{padding:0;max-width:none}.layout{display:block}.hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}.table-scroll{max-height:none;overflow:visible}.schedule{break-before:page}tr{break-inside:avoid}.overview{grid-template-columns:1fr 1fr}.card{padding:15px}.hero-value{font-size:30px}}
 
 .computed-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;font-size:11px;color:#627c82}.computed-row output{font-size:13px;font-weight:650;color:#245fa8;text-align:right}.insurance-box{margin-top:22px;padding:16px;background:#eef4fc;border:1px solid #d6e1f1;border-radius:10px}.insurance-box h3{margin:0;font-size:13px;color:#1c4c8c}.insurance-box label{font-size:11px}.unavailable{color:#9a6031!important}.disbursement{margin-bottom:22px}.cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}.cost-grid .detail-row:first-child{margin-top:0}.cost-grid .detail-row{font-size:12px;line-height:1.5}.cost-summary{padding:17px;background:#f2f5fc;border-radius:9px}.net-row{border-top:1px solid #d8e1f0;padding-top:15px}.net-row b{font-size:17px;color:#245fa8}.rate-source{margin-top:20px}.author-credit{margin-top:28px;padding:18px 12px;border-top:1px solid #dbe3f1;text-align:center;font-size:12px;line-height:1.7;color:#35527d}.print-only{display:none}@media(max-width:760px){.cost-grid{grid-template-columns:1fr;gap:20px}.disbursement{padding:20px}.net-row b{font-size:16px}}@media print{.print-only{display:block;font-size:11px;line-height:1.6}.disbursement{break-inside:avoid}.author-credit{display:block!important;break-inside:avoid}.cost-grid{grid-template-columns:1fr 1fr}.insurance-box,.cost-summary{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
@@ -309,72 +310,339 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
  body:not(.printing-schedule):not(.print-blocked) .salary-risk{font-size:6pt!important;line-height:1.13!important;padding:1mm 1.5mm!important;margin:0!important}
 }
 
+
+/* Flexible insurance options, additional charges, print compactness. */
+.insurance-box select{margin-top:2px}.insurance-box label{margin:12px 0 7px}.extra-fee-input{margin-top:14px}.extra-fee-input .hint{margin-top:8px}.extra-fee-input label span{float:none;display:block;margin-top:4px;color:#83929b;font-weight:400}.cost-grid .detail-row span{max-width:66%;overflow-wrap:anywhere}.cost-grid .detail-row b{white-space:nowrap}
+@media print{
+ body:not(.printing-schedule):not(.print-blocked) .disbursement .detail-row{align-items:baseline}
+ body:not(.printing-schedule):not(.print-blocked) .disbursement .hint{overflow-wrap:anywhere}
+ body:not(.printing-schedule):not(.print-blocked) #costInsuranceTag{max-width:47%;text-align:center;white-space:normal}
+}
+
+/* Pilihan AJK lintas penyedia. */
+.secondary-ajk{margin-top:14px;padding:11px 12px;background:#fff;border:1px solid #d3e0f0;border-radius:8px}
+.insurance-detail-fields{padding:6px 0 0}.insurance-detail-fields .hint{margin-bottom:4px}
+.secondary-ajk .secondary-ajk-toggle{display:flex;align-items:center;gap:9px;font-size:12px;color:#194d85;font-weight:700;margin:0 0 5px;cursor:pointer}
+.secondary-ajk-toggle input[type=checkbox]{width:17px!important;height:17px!important;margin:0!important;flex:0 0 auto;accent-color:#194d85}
+.secondary-ajk [hidden],.insurance-box [hidden]{display:none!important}
+@media print{body:not(.printing-schedule):not(.print-blocked) .cost-grid .detail-row{margin-top:1mm!important}body:not(.printing-schedule):not(.print-blocked) #insuranceDetail{font-size:6pt!important;line-height:1.18!important}}
+
+/* AJK dan asuransi kebakaran dipilih secara terpisah */
+.insurance-box+.insurance-box{margin-top:14px}
+.fire-insurance-box{border-color:#d6e4f2;background:#f8fbff}
+.fire-toggle{display:flex!important;align-items:center;gap:10px;margin:13px 0 10px;padding:10px 12px;background:#fff;border:1px solid #dbe5f0;border-radius:8px;font-weight:720;color:#27496d;cursor:pointer}
+.fire-toggle input{width:17px;height:17px;accent-color:#235e9b;flex:none}
+.total-premium-row{padding-top:10px;border-top:1px solid #d9e5f1;font-weight:750}
+.total-premium-row output{font-size:15px}
+@media print{body:not(.printing-schedule):not(.print-blocked) .cost-grid .detail-row{line-height:1.15!important}}
+
+#adminPercentBlock .field{max-width:100%}
+#adminPercentBlock .computed-row{border-top:1px dashed #d5e0ea;padding-top:8px}
+#productCostNote{padding:10px 12px;border-radius:8px;background:#f0f5fc;border:1px solid #e1eaf6;color:#38618e!important}
+#businessInsuranceFields[hidden]{display:none!important}
+@media print{#costInsuranceRow[hidden],#costFireRow[hidden],#costOtherRow[hidden]{display:none!important}}
+
+/* Alur input sesuai analisis kredit: Produk → Data → THP → IDIR → Tenor → Bunga → Kapasitas → Plafon → Biaya. */
+.inputs{padding:21px 18px}
+.inputs>.section-title{margin-bottom:15px}
+.input-group{border:1px solid #e1e9f2;border-radius:12px;background:#fff;padding:17px 15px 19px;margin-bottom:14px}
+.input-group-title{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:750;line-height:1.35;letter-spacing:.45px;color:#1b447a;border-bottom:1px solid #e5edf7;padding-bottom:13px;margin-bottom:5px}
+.input-group-index{display:inline-grid;place-items:center;background:#193f75;color:white;border-radius:8px;font-size:11px;width:30px;height:30px;flex:none;letter-spacing:0}
+.input-group-title small{display:block;font-size:10px;letter-spacing:0;font-weight:450;margin-top:4px;color:#8495a7}
+.input-field-block{margin-top:13px}
+.input-field-block>label,.input-field-block>label:first-child{margin:0 0 7px;font-size:12px;color:#37506a}
+.input-field-block>label span,.input-field-block>label output{color:#8093a7}
+.input-field-block input,.input-field-block select{font-size:13px;padding:11px 10px}
+.input-field-block .field input{padding:11px 9px}
+.input-field-block .quick{margin-top:8px}
+.input-field-block .range-labels{margin-top:2px}
+.field-note{margin:6px 0 0;color:#7189a3;font-size:10.5px;line-height:1.5}
+.input-policy{margin-top:12px}
+.input-policy .hint{margin:0 0 8px}
+.input-policy .policy-notice{margin:6px 0 0}
+.capacity-input-panel{margin:18px 0 12px;border-radius:11px;border:1px solid #bbd2ed;background:linear-gradient(155deg,#f4f8fe,#ecf4fe);padding:15px 13px;box-shadow:0 1px 3px rgba(17,64,120,.05)}
+.capacity-input-heading{display:flex;align-items:center;gap:7px;color:#194779;font-weight:750;font-size:11px;letter-spacing:.45px}
+.capacity-dot{display:inline-grid;place-items:center;border-radius:6px;background:#d8e8fc;color:#255792;width:22px;height:22px;font-size:14px}
+.automatic-pill{margin-left:auto;border:1px solid #bad1ec;border-radius:50px;padding:3px 6px;font-size:8px;color:#336ba6;background:white}
+.capacity-input-grid{display:grid;grid-template-columns:1fr;gap:9px;margin-top:13px}
+.capacity-input-item{display:flex;flex-direction:column;gap:4px}
+.capacity-input-item:not(:first-child){border-top:1px solid #d7e6f6;padding-top:9px}
+.capacity-input-item span{font-size:10px;color:#537294}
+.capacity-input-item output{font-variant-numeric:tabular-nums;color:#163e74;font-weight:750;font-size:19px;letter-spacing:-.45px}
+.capacity-input-footnote{font-size:9.5px;color:#6a84a1;line-height:1.5;margin:9px 0 0}
+.input-group-fees .cost-details{margin:0;border:0;padding:5px 0 0}
+.input-group-fees .cost-details summary{margin:0 0 10px;font-size:11px;color:#285582}
+.input-group-fees .cost-details label{margin-top:13px}
+.inputs #printGateNotice{margin:13px 1px}
+.inputs #error{margin:13px 1px}
+@media(min-width:1151px){.layout{grid-template-columns:360px minmax(0,1fr);gap:25px}}
+@media(min-width:761px) and (max-width:1150px){.layout{grid-template-columns:320px minmax(0,1fr)}}
+@media(max-width:760px){.inputs{padding:18px 13px}.input-group{padding:15px 12px}}
+@media print{.inputs,.input-group,.capacity-input-panel{display:none!important}}
+
+/* =======================================================================
+   ADAPTIVE DEVICE UI 2026 · screen-only: desktop / tablet / iOS / Android
+   The PDF/print document remains governed by the original print stylesheet.
+   ======================================================================= */
+@media screen {
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{min-width:0;overflow-x:clip}
+  main,.layout,.inputs,.results,.card,.input-group{min-width:0}
+  button,select,input{touch-action:manipulation}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #487cbb;outline-offset:3px}
+  .mobile-quick-nav,.mobile-table-hint{display:none}
+  .table-scroll{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  .top-print-button{transition:background .18s,border-color .18s,transform .18s}
+  .layout{min-width:0}
+}
+@media screen and (max-width:1100px){
+  main{padding:24px clamp(16px,3.4vw,34px) 32px}
+  .layout{grid-template-columns:minmax(0,1fr);gap:20px}
+  .inputs,.results{width:100%;min-width:0}
+  .results{display:block}
+  .intro{margin-bottom:15px}
+  .mobile-quick-nav{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+    position:sticky;top:0;z-index:20;
+    margin:0 0 18px;padding:8px;
+    border:1px solid #d9e4f1;border-radius:14px;
+    background:rgba(248,251,255,.96);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:0 5px 18px rgba(25,63,117,.08)
+  }
+  .mobile-quick-nav a{
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    text-decoration:none;text-align:center;min-width:0;min-height:44px;
+    padding:9px 5px;border-radius:9px;color:#28466c;font-size:13px;font-weight:720
+  }
+  .mobile-quick-nav a:active,.mobile-quick-nav a:focus-visible{background:#e4eefb}
+  .mobile-quick-nav a span{color:#2964a2;font-size:15px}
+  #form,#results,#schedule{scroll-margin-top:86px}
+  .hero-value{font-size:clamp(31px,4.8vw,43px)}
+  .salary-amount{font-size:clamp(27px,4.8vw,35px)}
+  .overview{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .metric{display:block}
+  .metric strong{font-size:clamp(16px,2.5vw,23px);margin:12px 0;text-align:left}
+}
+/* Tablets: content spans full width, form arranged in comfortable pairs. */
+@media screen and (min-width:601px) and (max-width:1100px){
+  .inputs{padding:20px}
+  .input-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:4px 18px}
+  .input-group-title,.input-policy,.capacity-input-panel,.input-group-fees .cost-details{grid-column:1/-1}
+  .capacity-input-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .capacity-input-item:not(:first-child){border-top:0;border-left:1px solid #d7e6f6;padding-top:0;padding-left:14px}
+  .input-group-fees{display:block}
+  .input-group-fees .cost-details{max-width:none}
+  .inputs .input-field-block input,.inputs .input-field-block select,.inputs .field input{min-height:48px;font-size:16px}
+  .results .overview{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .top-print-actions{flex:1;justify-content:flex-end}
+}
+/* Phones: bigger tap areas and readable inputs without iOS focus zoom. */
+@media screen and (max-width:600px){
+  body{font-size:14px}
+  main{padding:17px max(12px,env(safe-area-inset-left)) calc(32px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-right))}
+  header{padding:12px max(12px,env(safe-area-inset-left)) 11px max(12px,env(safe-area-inset-right));gap:12px}
+  .brand{font-size:18px;gap:8px}.logo{padding:8px 11px;border-radius:9px}
+  .header-note{display:none}
+  .top-print-actions{gap:9px}
+  .top-print-button{min-height:56px;padding:9px 7px;gap:7px;border-radius:11px;white-space:normal;box-shadow:none}
+  .top-print-button .action-icon{font-size:18px}
+  .top-print-button b{font-size:12px;line-height:1.2}
+  .top-print-button small{font-size:10px;line-height:1.25}
+  .intro{margin:8px 2px 15px}
+  .intro .eyebrow{font-size:10px;letter-spacing:1.5px}
+  h1{font-size:clamp(23px,6vw,29px);line-height:1.16;letter-spacing:-.6px;margin:9px 0 8px}
+  .intro p{font-size:12px;line-height:1.45}
+  .intro .method{margin-top:9px;font-size:11px;padding:6px 11px}
+  .mobile-quick-nav{margin-bottom:14px;padding:5px;gap:3px;border-radius:12px}
+  .mobile-quick-nav a{min-height:45px;gap:5px;font-size:12px;padding:9px 2px}
+  .mobile-quick-nav a span{font-size:13px}
+  .layout{gap:16px}
+  .card{border-radius:13px}
+  .inputs{padding:15px 12px}
+  .inputs>.section-title{margin:0 2px 14px}
+  .input-group{padding:14px 12px 17px;margin-bottom:12px;border-radius:10px}
+  .input-group-title{gap:9px;padding-bottom:11px;font-size:11px;letter-spacing:.25px}
+  .input-group-title small{font-size:10px}
+  .input-field-block{margin-top:15px}
+  .input-field-block>label{font-size:13px;line-height:1.45}
+  .inputs input:not([type=range]):not([type=checkbox]),
+  .inputs select{font-size:16px!important;min-height:49px!important;line-height:1.35!important;padding:12px 11px!important;max-width:100%}
+  .inputs .field input{flex:1;min-width:0;width:100%}
+  .inputs .field span{font-size:13px;flex:none}
+  .inputs input[type=date]{min-width:0;max-width:100%;display:block}
+  .inputs input[type=range]{min-height:30px;margin:9px 0 0;cursor:pointer}
+  .inputs button{min-height:44px}
+  .inputs .quick{gap:5px}
+  .inputs .quick button{font-size:12px;padding:8px 3px}
+  .insurance-box{padding:12px}
+  .insurance-box label{line-height:1.4}
+  .fire-toggle{min-height:46px;gap:10px}
+  .fire-toggle input[type=checkbox]{width:21px;height:21px}
+  .capacity-input-panel{padding:14px 11px}
+  .capacity-input-item output{font-size:clamp(18px,5.5vw,23px);overflow-wrap:anywhere}
+  .capacity-input-footnote{font-size:11px}
+  .results .hero{padding:18px 15px}
+  .hero-value{font-size:clamp(26px,7.3vw,37px);overflow-wrap:anywhere;margin:12px 0}
+  .hero-top{gap:10px;letter-spacing:1px}
+  .hero-bottom{grid-template-columns:1fr 1fr;gap:12px 8px}
+  .hero-bottom span{font-size:11px}.hero-bottom strong{font-size:14px}
+  .metrics{grid-template-columns:1fr;gap:8px;margin:12px 0}
+  .metric{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;padding:13px 15px}
+  .metric strong{grid-column:2;grid-row:1/3;text-align:right;margin:0;font-size:clamp(16px,4.7vw,21px);align-self:center;white-space:normal}
+  .metric span,.metric small{font-size:11px}
+  .overview{grid-template-columns:1fr;gap:12px;margin-bottom:12px}
+  .salary-highlight{grid-template-columns:1fr;padding:15px;gap:12px;margin:12px 0}
+  .salary-amount{font-size:clamp(26px,8vw,34px);white-space:normal;overflow-wrap:anywhere}
+  .salary-highlight-aside{border-left:0;border-top:1px solid var(--risk-border);padding:12px 0 0}
+  .salary-fact b{font-size:13px;white-space:normal;overflow-wrap:anywhere}
+  .cost-grid{grid-template-columns:minmax(0,1fr);gap:12px}
+  .disbursement{padding:15px}
+  .cost-grid .detail-row{gap:7px;margin-top:12px}
+  .cost-grid .detail-row span{max-width:62%;min-width:0}
+  .cost-grid .detail-row b{white-space:normal;max-width:45%;text-align:right;overflow-wrap:anywhere}
+  .schedule{padding:15px}
+  .schedule .section-title{flex-direction:column;align-items:stretch;gap:11px}
+  .schedule-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+  .schedule-actions button{min-width:0;min-height:44px;padding:9px 7px!important;font-size:11px!important;white-space:normal}
+  .mobile-table-hint{display:flex;justify-content:space-between;align-items:center;margin:8px 0 11px;padding:9px 11px;border-radius:8px;background:#eff5fd;color:#315e94;font-size:11px;line-height:1.3}
+  .mobile-table-hint span{font-size:17px;font-weight:800}
+  .table-scroll{overflow:auto;max-width:100%;border:1px solid #e2eaf4;border-radius:8px}
+  .table-scroll table{min-width:690px;font-size:12px}
+  .table-scroll td,.table-scroll th{padding:12px 10px}
+  .pagination button{min-width:44px;min-height:44px}
+  footer{flex-direction:column;text-align:center;gap:4px;margin-top:26px}
+}
+@media screen and (max-width:360px){
+  .top-print-button{gap:5px;padding:8px 5px}
+  .top-print-button .action-icon{font-size:16px}
+  .top-print-button b{font-size:11px}
+  .top-print-button small{font-size:9px}
+  .brand{font-size:16px}
+  .capacity-input-heading{font-size:10px;gap:4px}
+  .input-group-title{font-size:10px}
+  .pill{padding:5px 7px}
+  .metric strong{font-size:17px}
+}
+@media screen and (hover:none) and (pointer:coarse){
+  /* iPad and Android tablets also avoid WebKit focus-to-zoom */
+  input:not([type=checkbox]):not([type=range]),select,textarea{font-size:16px!important}
+  button,summary,.mobile-quick-nav a{touch-action:manipulation}
+}
+@media screen and (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.top-print-button{transition:none}}
+@media print{.mobile-quick-nav,.mobile-table-hint{display:none!important}}
 </style></head>
-<body><header><a class="brand" href="#"><span class="logo">K</span> Kredit<span class="brand-light"> / Simulasi</span></a><div class="top-print-actions" aria-label="Pilihan dokumen cetak">
- <button type="button" id="print" class="top-print-button summary-print-action" title="Cetak ringkasan 1 halaman A4"><span class="action-icon" aria-hidden="true">▣</span><span><b>Cetak Ringkasan</b><small>1 halaman A4</small></span></button>
- <button type="button" id="printScheduleTop" class="top-print-button schedule-print-action" title="Cetak seluruh jadwal angsuran"><span class="action-icon" aria-hidden="true">▤</span><span><b>Cetak Jadwal Angsuran</b><small>Seluruh bulan • A4</small></span></button>
- </div></header>
+<body><header><a class="brand" href="#"><span class="logo">K</span> Kredit<span class="brand-light"> / Simulasi</span></a><div aria-label="Pilihan dokumen cetak" class="top-print-actions">
+<button class="top-print-button summary-print-action" id="print" title="Cetak ringkasan 1 halaman A4" type="button"><span aria-hidden="true" class="action-icon">▣</span><span><b>Cetak Ringkasan</b><small>1 halaman A4</small></span></button>
+<button class="top-print-button schedule-print-action" id="printScheduleTop" title="Cetak seluruh jadwal angsuran" type="button"><span aria-hidden="true" class="action-icon">▤</span><span><b>Cetak Jadwal Angsuran</b><small>Seluruh bulan • A4</small></span></button>
+</div></header>
 <main><div class="intro"><div><div class="eyebrow">KALKULATOR KREDIT</div><h1>Rencanakan pinjaman Anda.</h1><p>Hitung angsuran, lihat dana yang diterima, dan telusuri setiap pembayaran.</p></div><span class="method">● Metode anuitas</span></div>
-<div class="layout"><aside class="card inputs"><div class="section-title"><h2>Parameter kredit</h2><button id="reset" class="text-button">Reset</button></div><form id="form"><label for="product">Pilihan produk</label><select id="product"><option value="asn">KREDIT CPNS/ASN</option><option value="pension">KREDIT PENSIUN</option><option value="business">KREDIT USAHA</option></select><div id="positionField"><label for="position">Jenis jabatan</label><select id="position"><option value="structural">Struktural</option><option value="functional">Fungsional/Guru</option></select></div><label for="birth">Tanggal lahir tertanggung</label><input id="birth" type="date" aria-describedby="policyRule insuranceMessage"><p id="policyRule" class="hint"></p><div id="policyNotice" class="policy-notice" role="alert" hidden></div><div id="printGateNotice" class="print-gate-notice" role="status" aria-live="polite"><strong id="printGateTitle">Memeriksa kelayakan cetak...</strong><div id="printGateReasons"></div></div><label for="principal">Plafond pinjaman</label><div class="field"><span>Rp</span><input id="principal" type="number" min="10000" max="1000000000000" step="1000" value="234200000" required></div><div class="quick"><button type="button" data-p="100000000">100 juta</button><button type="button" data-p="250000000">250 juta</button><button type="button" data-p="500000000">500 juta</button></div>
-<label for="months">Tenor pinjaman <output id="years"></output></label><div class="field"><input id="months" type="number" min="1" max="600" step="1" value="84" required><span>bulan</span></div><input aria-label="Geser tenor pinjaman" id="tenorRange" type="range" min="1" max="360" value="84"><div class="range-labels"><span>1 bulan</span><span>30 tahun</span></div>
-<label for="mode">Jenis bunga</label><select id="mode"><option value="flat">Flat per bulan</option><option value="eir">EIR per tahun</option></select><label for="interest">Suku bunga <span id="rateUnit">per bulan</span></label><div class="field"><input id="interest" type="number" min="0" max="100" step="0.001" value="0.6" required><span>%</span></div><label for="start">Tanggal awal kredit</label><input id="start" type="date" value="2026-10-10" required>
-<details open><summary>Gaji & kemampuan angsuran</summary><label for="salary">Gaji bersih / THP (Rp)</label><input id="salary" type="number" min="0" max="1000000000000" value="4494000" required><label for="idir">Batas potongan gaji / IDIR (%)</label><input id="idir" type="number" min="0" max="100" step="0.01" value="93.31" required></details>
-<details open><summary>Biaya & potongan pencairan</summary><p class="hint">Provisi dihitung dari plafond. Premi AJK otomatis mengikuti tabel CHUBB.</p><label for="provisionPercent">Provisi (% dari plafond)</label><div class="field"><input id="provisionPercent" type="number" min="0" max="100" step="0.01" value="1" required><span>%</span></div><div class="computed-row"><span>Biaya provisi</span><output id="provisionAmount">—</output></div><label for="admin">Administrasi (Rp)</label><input id="admin" type="number" min="0" value="0" required><div class="insurance-box"><h3>Asuransi AJK CHUBB</h3><div class="computed-row"><span>Rate premi</span><output id="insuranceRate">—</output></div><div class="computed-row"><span>Biaya asuransi AJK</span><output id="insurance">—</output></div><p id="insuranceMessage" class="hint" role="status">Isi tanggal lahir untuk menghitung premi.</p></div><label for="payoff">Pelunasan kredit lama (Rp)</label><input id="payoff" type="number" min="0" value="0" required></details><p id="error" role="alert"></p></form><p class="hint">Hasil diperbarui otomatis saat parameter berubah.</p></aside>
-<section class="results" id="results" aria-live="polite"><div class="print-heading"><div class="print-heading-title"><span class="print-mark">K</span><div><div class="print-eyebrow">SIMULASI KREDIT · INTERNAL</div><h1>RINGKASAN SIMULASI KREDIT</h1><p>Ringkasan pembiayaan dan kemampuan bayar</p></div></div><div class="print-heading-meta"><span>DOKUMEN INTERNAL</span><small id="printDate"></small></div></div><div class="product-summary"><strong id="productSummary"></strong><p id="policySummary" class="hint"></p></div><div class="print-facility">
-  <div class="section-kicker"><span>01</span> INFORMASI FASILITAS KREDIT</div>
-  <div class="facility-grid">
-   <div class="facility-cell"><span>PRODUK KREDIT</span><strong id="facProduct"></strong></div>
-   <div class="facility-cell"><span>PLAFON KREDIT</span><strong id="facPrincipal"></strong></div>
-   <div class="facility-cell"><span>TENOR PINJAMAN</span><strong id="facTenor"></strong></div>
-   <div class="facility-cell"><span>AWAL KREDIT</span><strong id="facStart"></strong></div>
-   <div class="facility-cell"><span>TANGGAL LAHIR</span><strong id="facBirth"></strong></div>
-   <div class="facility-cell"><span>GAJI / THP</span><strong id="facSalary"></strong></div>
-  </div>
- </div><div class="hero"><div class="hero-top"><span>ESTIMASI ANGSURAN BULANAN</span><span class="pill" id="tenorTag"></span></div><div class="hero-value" id="payment"></div><div class="hero-bottom"><div><span>EIR ekuivalen / tahun</span><strong id="eir"></strong></div><div><span id="flatLabel">Bunga flat / bulan</span><strong id="flat"></strong></div></div></div>
-<div class="salary-highlight risk-critical" id="salaryHighlight" role="group" aria-label="Indikator sisa gaji setelah angsuran">
-  <div class="salary-highlight-main">
-    <span class="salary-eyebrow">SISA GAJI SETELAH ANGSURAN</span>
-    <strong id="remaining" class="salary-amount">—</strong>
-    <small>Sisa THP setelah angsuran; belum dikurangi biaya hidup dan kewajiban lainnya.</small>
-  </div>
-  <div class="salary-highlight-aside">
-    <div class="salary-fact"><span>GAJI BERSIH (THP)</span><b id="salaryDisplay">—</b></div>
-    <div class="salary-fact"><span>IDIR AKTUAL</span><b id="salaryIdir">—</b></div>
-    <p id="salaryRisk" class="salary-risk" role="status">Menunggu perhitungan</p>
-  </div>
+<!-- Navigasi cepat otomatis untuk HP dan tablet; disembunyikan saat cetak. -->
+<nav class="mobile-quick-nav" aria-label="Navigasi simulasi kredit">
+  <a href="#form" aria-label="Ke parameter input kredit"><span aria-hidden="true">▤</span> Input</a>
+  <a href="#results" aria-label="Ke hasil simulasi kredit"><span aria-hidden="true">▦</span> Hasil</a>
+  <a href="#schedule" aria-label="Ke tabel jadwal angsuran"><span aria-hidden="true">▤</span> Angsuran</a>
+</nav>
+<div class="layout"><aside class="card inputs"><div class="section-title"><h2>Parameter kredit</h2><button class="text-button" id="reset">Reset</button></div><form id="form"><section aria-labelledby="groupDebitur" class="input-group">
+<div class="input-group-title" id="groupDebitur"><span class="input-group-index">01</span><div>DATA DEBITUR &amp; KEMAMPUAN BAYAR<small>Identitas, penghasilan, dan batas angsuran</small></div></div>
+<div class="input-field-block"><label for="product">Pilihan produk</label><select id="product"><option value="asn">KREDIT CPNS/ASN</option><option value="pension">KREDIT PENSIUN</option><option value="business">KREDIT USAHA</option></select></div><div id="positionField"><label for="position">Jenis jabatan</label><select id="position"><option value="structural">Struktural</option><option value="functional">Fungsional/Guru</option></select></div><div class="input-field-block"><label for="birth">Tanggal lahir tertanggung</label><input aria-describedby="policyRule insuranceMessage" id="birth" type="date"/></div><div class="input-field-block"><label for="start">Tanggal awal kredit</label><input id="start" required="" type="date" value="2026-10-10"/></div><div class="input-field-block"><label for="salary">Gaji bersih / THP (Rp)</label><input id="salary" max="1000000000000" min="0" required="" type="number" value="4494000"/></div><div class="input-field-block"><label for="idir">Batas potongan gaji / IDIR (%)</label><input id="idir" max="100" min="0" required="" step="0.01" type="number" value="93.31"/><p class="field-note" id="idirManualHint">Masukkan batas IDIR sesuai analisis; tidak boleh melebihi ketentuan produk.</p></div><div class="input-policy"><p class="hint" id="policyRule"></p><div class="policy-notice" hidden="" id="policyNotice" role="alert"></div></div></section><section aria-labelledby="groupFasilitas" class="input-group">
+<div class="input-group-title" id="groupFasilitas"><span class="input-group-index">02</span><div>PARAMETER FASILITAS KREDIT<small>Tenor, bunga, kapasitas, dan plafon pengajuan</small></div></div>
+<div class="input-field-block"><label for="months">Tenor pinjaman <output id="years"></output></label><div class="field"><input id="months" max="600" min="1" required="" step="1" type="number" value="84"/><span>bulan</span></div><input aria-label="Geser tenor pinjaman" id="tenorRange" max="360" min="1" type="range" value="84"/><div class="range-labels"><span>1 bulan</span><span>30 tahun</span></div></div><div class="input-field-block"><label for="mode">Jenis bunga</label><select id="mode"><option value="flat">Flat per bulan</option><option value="eir">EIR per tahun</option></select></div><div class="input-field-block"><label for="interest">Suku bunga <span id="rateUnit">per bulan</span></label><div class="field"><input id="interest" max="100" min="0" required="" step="0.001" type="number" value="0.6"/><span>%</span></div></div><div aria-label="Perhitungan kapasitas kredit otomatis" class="capacity-input-panel" role="group">
+<div class="capacity-input-heading"><span class="capacity-dot">↗</span> KAPASITAS OTOMATIS <span class="automatic-pill">OTOMATIS</span></div>
+<div class="capacity-input-grid">
+<div class="capacity-input-item"><span>Kapasitas Angsuran/Bulan</span><output id="capacityPayment">—</output></div>
+<div class="capacity-input-item"><span>Plafon Maksimum berdasar IDIR</span><output id="maxPrincipalPreview">—</output></div>
 </div>
-<div class="section-kicker print-section"><span>02</span> RINGKASAN PEMBIAYAAN</div><div class="metrics"><div class="card metric"><span>Total bunga</span><strong id="totalInterest"></strong><small>Sepanjang tenor pinjaman</small></div><div class="card metric"><span>Total pembayaran</span><strong id="total"></strong><small>Pokok + seluruh bunga</small></div><div class="card metric"><span>Dana bersih diterima</span><strong id="net"></strong><small id="netHint">Menunggu perhitungan premi AJK</small></div></div>
-<div class="overview"><div class="card composition"><h2>Komposisi pembayaran</h2><div class="composition-inner"><div id="donut" class="donut"><div><strong id="principalPercent"></strong><span>pokok</span></div></div><div class="legend"><p><i></i>Pokok pinjaman<strong id="principalLabel"></strong></p><p><i class="mint"></i>Total bunga<strong id="interestLabel"></strong></p></div></div></div><div class="card capacity"><div class="section-kicker print-section capacity-kicker"><span>03</span> ANALISIS KEMAMPUAN BAYAR</div><h2>Ringkasan kemampuan</h2><div class="idir-display"><div><span>RASIO ANGSURAN / THP</span><strong id="usedIdir"></strong></div><span class="risk-note">INDIKATOR IDIR</span></div><div class="idir-track"><div id="idirFill"></div></div><div class="detail-row"><span>Plafond sesuai IDIR</span><b id="maxPrincipal"></b></div><div class="detail-row"><span>Akhir pembayaran</span><b id="end"></b></div><div class="detail-row" id="ageRow" hidden><span>Usia akhir kredit</span><b id="age"></b></div><p id="status" class="status"></p></div></div>
-<div class="card disbursement"><div class="section-title"><div><div class="section-kicker print-section"><span>04</span> RINCIAN PENCAIRAN</div><h2>Rincian potongan & dana cair</h2></div><span class="method">AJK CHUBB</span></div><div class="cost-grid"><div><div class="detail-row"><span id="provisionLabel">Provisi</span><b id="costProvision"></b></div><div class="detail-row"><span>Administrasi</span><b id="costAdmin"></b></div><div class="detail-row"><span>Premi asuransi AJK</span><b id="costInsurance"></b></div><div class="detail-row"><span>Pelunasan kredit lama</span><b id="costPayoff"></b></div></div><div class="cost-summary"><div class="detail-row"><span>Total potongan</span><b id="totalDeductions"></b></div><div class="detail-row net-row"><span>Dana bersih diterima</span><b id="costNet"></b></div><p id="insuranceDetail" class="hint"></p></div></div><p class="hint rate-source">Tarif referensi CHUBB: tabel berlabel 1 November 2017 pada file yang diberikan. Premi = plafond × rate (‰) ÷ 1.000.</p></div><div class="card schedule"><div class="section-title"><div><h2>Jadwal angsuran</h2><p class="hint">Rincian pokok, bunga, dan sisa pinjaman setiap bulan.</p></div><div class="schedule-actions"><button type="button" id="printSchedule" class="print-schedule-button">▣ Cetak jadwal angsuran</button><button type="button" id="csv" class="outline">↓ Unduh CSV</button></div></div><div class="table-scroll"><table><thead><tr><th>Bulan</th><th>Tanggal</th><th>Angsuran</th><th>Pokok</th><th>Bunga</th><th>Baki debet</th></tr></thead><tbody id="rows"></tbody><tfoot id="totals"></tfoot></table></div><div class="pagination"><span id="pageInfo"></span><div><button id="prev" class="outline" aria-label="Halaman sebelumnya">←</button><button id="next" class="outline" aria-label="Halaman berikutnya">→</button></div></div></div>
-<details class="notes"><summary>Tentang perhitungan</summary><p>Ketentuan produk mengikuti konfigurasi internal: CPNS/ASN Struktural sampai ulang tahun ke-58, Fungsional/Guru sampai ulang tahun ke-60, dan Kredit Pensiun sampai ulang tahun ke-75. Jatuh tempo tepat pada tanggal batas masih diperbolehkan; setelahnya muncul notifikasi. Batas input IDIR dari THP adalah 85% untuk Kredit Pensiun dan 95% untuk Kredit CPNS/ASN serta Kredit Usaha. Kredit Usaha belum memiliki batas usia yang ditetapkan. Pemeriksaan produk dan ketersediaan tarif AJK ditampilkan terpisah.</p><p>Bunga flat dikonversi menjadi EIR bulanan dengan metode RATE setelah angsuran flat dibulatkan ke rupiah. EIR tahunan = EIR bulanan × 12. Angsuran bulanan menggunakan nominal tetap, termasuk bulan terakhir. Nilai tetap tersebut ditentukan dengan pembulatan internal per Rp100. Tingkat bunga anuitas ekuivalen disesuaikan secara matematis ke angsuran tetap setelah pembulatan; komposisi pokok dan bunga bulan terakhir menutup baki debet persis Rp0. Jadwal menggunakan bunga yang dibulatkan ke rupiah.</p><p>Jadwal mengikuti EDATE bulanan berurutan. Plafond berdasarkan IDIR dibulatkan turun ke Rp10.000. Biaya pencairan tidak dimasukkan dalam EIR. Nilai awal plafond, tenor, bunga, gaji, dan IDIR mengikuti contoh Excel. Provisi awal 1% dari plafond dan dapat diubah; administrasi serta pelunasan kredit lama dimulai dari nol. Hasil merupakan simulasi, bukan persetujuan kredit.</p><p>Premi AJK dihitung otomatis dari tanggal lahir, tanggal awal kredit, tenor, dan plafond. Usia asuransi dibulatkan naik ketika sisa usia mencapai 6 bulan. Tenor tarif dibulatkan naik ke tahun penuh mengikuti rumus utama Premi Chubb!M12. Premi dan provisi dibulatkan ke rupiah terdekat.</p><p>Sumber tarif: RATE PREMI ASURANSI CHUBB.xlsx, sheet Tabel ass Chubb, B7:V63 (usia 18–74 tahun, tenor 1–20 tahun). Nilai tarif sumber dipertahankan. Tarif nol atau di luar tabel memerlukan konfirmasi; tidak dianggap sebagai asuransi gratis. Selama premi belum tersedia, dana bersih belum dapat dihitung.</p></details><div class="author-credit">Design & Development © 2026 Luther Parinding, S.Si.</div><div class="report-disclaimer">Hasil simulasi bersifat indikatif dan bukan merupakan persetujuan kredit final.</div></section></div><footer>SIMULASI KREDIT <span>Perhitungan dilakukan di perangkat Anda.</span></footer></main><section id="schedulePrint" class="schedule-print-sheet" aria-label="Dokumen cetak jadwal angsuran">
-  <div class="sp-header">
-    <div class="sp-brand"><span class="sp-icon">K</span><div><span class="sp-eyebrow">DOKUMEN SIMULASI KREDIT</span><h1>JADWAL ANGSURAN KREDIT</h1><p>Rincian pembayaran pokok, bunga, dan baki debet bulanan</p></div></div>
-    <div class="sp-ref">INTERNAL<br><span id="spPrintDate"></span></div>
-  </div>
-  <div class="sp-facility">
-    <div><span>PRODUK KREDIT</span><b id="spProduct"></b></div>
-    <div><span>PLAFON KREDIT</span><b id="spPrincipal"></b></div>
-    <div><span>TENOR</span><b id="spTenor"></b></div>
-    <div><span>ANGSURAN BULANAN</span><b id="spPayment"></b></div>
-    <div><span>TANGGAL AWAL KREDIT</span><b id="spStart"></b></div>
-    <div><span>JATUH TEMPO TERAKHIR</span><b id="spEnd"></b></div>
-  </div>
-  <div class="sp-subtitle"><strong>RINCIAN ANGSURAN PER BULAN</strong><span id="spPeriod"></span></div>
-  <table class="sp-table" aria-label="Jadwal angsuran lengkap">
-    <colgroup><col class="sp-col-no"><col class="sp-col-date"><col class="sp-col-money"><col class="sp-col-money"><col class="sp-col-money"><col class="sp-col-money"></colgroup>
-    <thead><tr><th>Ke-</th><th>Jatuh tempo</th><th>Angsuran (Rp)</th><th>Pokok (Rp)</th><th>Bunga (Rp)</th><th>Baki debet (Rp)</th></tr></thead>
-    <tbody id="spRows"></tbody>
-    <tfoot><tr><td colspan="2">TOTAL SELURUH TENOR</td><td id="spTotalPayment"></td><td id="spTotalPrincipal"></td><td id="spTotalInterest"></td><td id="spFinalBalance"></td></tr></tfoot>
-  </table>
-  <div class="sp-verify">Keterangan: angsuran bulanan tetap sampai jatuh tempo terakhir. Total pokok sama dengan plafon, dan baki debet akhir Rp0.</div>
-  <div class="sp-bottom"><div class="sp-credit">Design &amp; Development © 2026 Luther Parinding, S.Si.</div><div>Dokumen simulasi untuk keperluan internal. Bukan merupakan persetujuan kredit.</div></div>
+<p class="capacity-input-footnote">Estimasi dari THP, batas IDIR, tenor, dan bunga. Bukan persetujuan plafon kredit.</p>
+</div><div class="input-field-block"><label for="principal">Plafon Kredit yang Diajukan (Rp)</label><div class="field"><span>Rp</span><input id="principal" max="1000000000000" min="10000" required="" step="1000" type="number" value="234200000"/></div><div class="quick"><button data-p="100000000" type="button">100 juta</button><button data-p="250000000" type="button">250 juta</button><button data-p="500000000" type="button">500 juta</button></div></div></section><section aria-labelledby="groupBiaya" class="input-group input-group-fees">
+<div class="input-group-title" id="groupBiaya"><span class="input-group-index">03</span><div>BIAYA &amp; ASURANSI<small>Komponen otomatis mengikuti produk kredit</small></div></div>
+<details class="cost-details" open=""><summary>Tampilkan / sembunyikan rincian biaya</summary><p class="hint" id="productCostNote">Komponen biaya disesuaikan otomatis dengan produk kredit yang dipilih.</p><label for="provisionPercent">Provisi (% dari plafond)</label><div class="field"><input id="provisionPercent" max="100" min="0" required="" step="0.01" type="number" value="1"/><span>%</span></div><div class="computed-row"><span>Biaya provisi</span><output id="provisionAmount">—</output></div><div id="adminRupiahBlock"><label for="admin">Administrasi (Rp)</label><input id="admin" min="0" required="" type="number" value="0"/></div><div hidden="" id="adminPercentBlock"><label for="adminPercent">Administrasi (% dari plafon)</label><div class="field"><input id="adminPercent" max="100" min="0" step="0.01" type="number" value="0"><span>%</span></input></div><div class="computed-row"><span>Biaya administrasi</span><output id="adminAmount">Rp 0</output></div></div><div class="extra-fee-input" hidden="" id="legacyOtherFeeFields"><label for="otherFee">Biaya lain-lain yang dipotong (Rp)</label><input id="otherFee" max="1000000000000" min="0" required="" step="1" type="number" value="0"/><label for="otherDesc">Keterangan biaya lain-lain <span>Wajib bila nominal &gt; Rp0</span></label><input id="otherDesc" maxlength="80" placeholder="Misal: notaris, materai, appraisal" type="text"/><p class="hint">Jangan masukkan kembali biaya yang sudah dicatat pada provisi, administrasi, atau asuransi.</p></div><div hidden="" id="businessInsuranceFields"><div class="insurance-box"><h3>1. ASURANSI JIWA KREDIT (AJK)</h3>
+<p class="hint">Pilih satu opsi AJK. “Tanpa Asuransi” di menu ini berarti tanpa AJK; Asuransi Kebakaran dapat tetap dipilih terpisah.</p>
+<label for="insuranceType">Pilihan AJK</label>
+<select id="insuranceType">
+<option value="ajk">1. AJK CHUBB (premi otomatis)</option>
+<option value="ajk_other">2. AJK LAIN (premi manual)</option>
+<option selected="" value="none">3. TANPA ASURANSI</option>
+</select>
+<div class="insurance-detail-fields" hidden="" id="ajkOtherField">
+<label for="ajkOtherCompany">Nama perusahaan AJK lain</label>
+<input id="ajkOtherCompany" maxlength="55" placeholder="Nama perusahaan asuransi" type="text"/>
+<label for="ajkOtherPremium">Premi AJK lain (Rp)</label>
+<input id="ajkOtherPremium" max="1000000000000" min="0" step="1" type="number" value="0"/>
+<p class="hint">Masukkan premi berdasarkan penawaran/polis yang telah dikonfirmasi.</p>
+</div>
+<div class="computed-row" id="insuranceRateRow"><span>Rate premi AJK CHUBB</span><output id="insuranceRate">—</output></div>
+<div class="computed-row"><span>Premi AJK</span><output id="insurance">—</output></div>
+<p class="hint" id="insuranceMessage" role="status">Isi tanggal lahir untuk menghitung premi AJK CHUBB.</p>
+</div>
+<div class="insurance-box fire-insurance-box"><h3>2. ASURANSI KEBAKARAN</h3>
+<p class="hint">Opsi terpisah dari AJK. Dapat digunakan bersama AJK CHUBB, AJK Lain, ataupun Tanpa AJK.</p>
+<label class="fire-toggle" for="fireEnabled"><input id="fireEnabled" type="checkbox"/><span>Gunakan Asuransi Kebakaran</span></label>
+<div hidden="" id="firePremiumField">
+<label for="firePremium">Premi Asuransi Kebakaran (Rp)</label>
+<input id="firePremium" max="1000000000000" min="0" step="1" type="number" value="0"/>
+<p class="hint">Isi berdasarkan penawaran/polis; tidak dihitung otomatis.</p>
+</div>
+<div class="computed-row"><span>Premi Kebakaran</span><output id="firePremiumDisplay">Rp 0</output></div>
+<div class="computed-row total-premium-row"><span>Total Premi Asuransi</span><output id="totalInsuranceDisplay">—</output></div>
+</div></div><label for="payoff">Pelunasan kredit lama (Rp)</label><input id="payoff" min="0" required="" type="number" value="0"/></details></section><div aria-live="polite" class="print-gate-notice" id="printGateNotice" role="status"><strong id="printGateTitle">Memeriksa kelayakan cetak...</strong><div id="printGateReasons"></div></div><p id="error" role="alert"></p></form><p class="hint">Hasil diperbarui otomatis saat parameter berubah.</p></aside>
+<section aria-live="polite" class="results" id="results"><div class="print-heading"><div class="print-heading-title"><span class="print-mark">K</span><div><div class="print-eyebrow">SIMULASI KREDIT · INTERNAL</div><h1>RINGKASAN SIMULASI KREDIT</h1><p>Ringkasan pembiayaan dan kemampuan bayar</p></div></div><div class="print-heading-meta"><span>DOKUMEN INTERNAL</span><small id="printDate"></small></div></div><div class="product-summary"><strong id="productSummary"></strong><p class="hint" id="policySummary"></p></div><div class="print-facility">
+<div class="section-kicker"><span>01</span> INFORMASI FASILITAS KREDIT</div>
+<div class="facility-grid">
+<div class="facility-cell"><span>PRODUK KREDIT</span><strong id="facProduct"></strong></div>
+<div class="facility-cell"><span>PLAFON KREDIT</span><strong id="facPrincipal"></strong></div>
+<div class="facility-cell"><span>TENOR PINJAMAN</span><strong id="facTenor"></strong></div>
+<div class="facility-cell"><span>AWAL KREDIT</span><strong id="facStart"></strong></div>
+<div class="facility-cell"><span>TANGGAL LAHIR</span><strong id="facBirth"></strong></div>
+<div class="facility-cell"><span>GAJI / THP</span><strong id="facSalary"></strong></div>
+</div>
+</div><div class="hero"><div class="hero-top"><span>ESTIMASI ANGSURAN BULANAN</span><span class="pill" id="tenorTag"></span></div><div class="hero-value" id="payment"></div><div class="hero-bottom"><div><span>EIR ekuivalen / tahun</span><strong id="eir"></strong></div><div><span id="flatLabel">Bunga flat / bulan</span><strong id="flat"></strong></div></div></div>
+<div aria-label="Indikator sisa gaji setelah angsuran" class="salary-highlight risk-critical" id="salaryHighlight" role="group">
+<div class="salary-highlight-main">
+<span class="salary-eyebrow">SISA GAJI SETELAH ANGSURAN</span>
+<strong class="salary-amount" id="remaining">—</strong>
+<small>Sisa THP setelah angsuran; belum dikurangi biaya hidup dan kewajiban lainnya.</small>
+</div>
+<div class="salary-highlight-aside">
+<div class="salary-fact"><span>GAJI BERSIH (THP)</span><b id="salaryDisplay">—</b></div>
+<div class="salary-fact"><span>IDIR AKTUAL</span><b id="salaryIdir">—</b></div>
+<p class="salary-risk" id="salaryRisk" role="status">Menunggu perhitungan</p>
+</div>
+</div>
+<div class="section-kicker print-section"><span>02</span> RINGKASAN PEMBIAYAAN</div><div class="metrics"><div class="card metric"><span>Total bunga</span><strong id="totalInterest"></strong><small>Sepanjang tenor pinjaman</small></div><div class="card metric"><span>Total pembayaran</span><strong id="total"></strong><small>Pokok + seluruh bunga</small></div><div class="card metric"><span>Dana bersih diterima</span><strong id="net"></strong><small id="netHint">Menunggu perhitungan biaya</small></div></div>
+<div class="overview"><div class="card composition"><h2>Komposisi pembayaran</h2><div class="composition-inner"><div class="donut" id="donut"><div><strong id="principalPercent"></strong><span>pokok</span></div></div><div class="legend"><p><i></i>Pokok pinjaman<strong id="principalLabel"></strong></p><p><i class="mint"></i>Total bunga<strong id="interestLabel"></strong></p></div></div></div><div class="card capacity"><div class="section-kicker print-section capacity-kicker"><span>03</span> ANALISIS KEMAMPUAN BAYAR</div><h2>Ringkasan kemampuan</h2><div class="idir-display"><div><span>RASIO ANGSURAN / THP</span><strong id="usedIdir"></strong></div><span class="risk-note">INDIKATOR IDIR</span></div><div class="idir-track"><div id="idirFill"></div></div><div class="detail-row"><span>Plafond sesuai IDIR</span><b id="maxPrincipal"></b></div><div class="detail-row"><span>Akhir pembayaran</span><b id="end"></b></div><div class="detail-row" hidden="" id="ageRow"><span>Usia akhir kredit</span><b id="age"></b></div><p class="status" id="status"></p></div></div>
+<div class="card disbursement"><div class="section-title"><div><div class="section-kicker print-section"><span>04</span> RINCIAN PENCAIRAN</div><h2>Rincian potongan &amp; dana cair</h2></div><span class="method" id="costInsuranceTag">AJK CHUBB</span></div><div class="cost-grid"><div><div class="detail-row"><span id="provisionLabel">Provisi</span><b id="costProvision"></b></div><div class="detail-row"><span id="costAdminLabel">Administrasi</span><b id="costAdmin"></b></div><div class="detail-row" id="costInsuranceRow"><span id="costInsuranceLabel">Premi AJK</span><b id="costInsurance"></b></div><div class="detail-row" hidden="" id="costFireRow"><span>Premi Asuransi Kebakaran</span><b id="costFire"></b></div><div class="detail-row" hidden="" id="costOtherRow"><span id="costOtherLabel">Biaya lain-lain</span><b id="costOther"></b></div><div class="detail-row"><span>Pelunasan kredit lama</span><b id="costPayoff"></b></div></div><div class="cost-summary"><div class="detail-row"><span>Total potongan</span><b id="totalDeductions"></b></div><div class="detail-row net-row"><span>Dana bersih diterima</span><b id="costNet"></b></div><p class="hint" id="insuranceDetail"></p></div></div><p class="hint rate-source" id="rateSource">Tarif referensi CHUBB: tabel berlabel 1 November 2017 pada file yang diberikan. Premi = plafond × rate (‰) ÷ 1.000.</p></div><div class="card schedule" id="schedule"><div class="section-title"><div><h2>Jadwal angsuran</h2><p class="hint">Rincian pokok, bunga, dan sisa pinjaman setiap bulan.</p></div><div class="schedule-actions"><button class="print-schedule-button" id="printSchedule" type="button">▣ Cetak jadwal angsuran</button><button class="outline" id="csv" type="button">↓ Unduh CSV</button></div></div><p class="mobile-table-hint" aria-hidden="true">Geser tabel ke samping untuk melihat kolom lainnya <span>→</span></p>
+<div class="table-scroll"><table><thead><tr><th>Bulan</th><th>Tanggal</th><th>Angsuran</th><th>Pokok</th><th>Bunga</th><th>Baki debet</th></tr></thead><tbody id="rows"></tbody><tfoot id="totals"></tfoot></table></div><div class="pagination"><span id="pageInfo"></span><div><button aria-label="Halaman sebelumnya" class="outline" id="prev">←</button><button aria-label="Halaman berikutnya" class="outline" id="next">→</button></div></div></div>
+<details class="notes"><summary>Tentang perhitungan</summary><p>Ketentuan produk mengikuti konfigurasi internal: CPNS/ASN Struktural sampai ulang tahun ke-58, Fungsional/Guru sampai ulang tahun ke-60, serta Kredit Pensiun dan Kredit Usaha sampai ulang tahun ke-75. Jatuh tempo tepat pada tanggal batas masih diperbolehkan; setelahnya muncul notifikasi. Batas IDIR dari THP adalah 95% untuk Kredit CPNS/ASN, 85% untuk Kredit Pensiun, dan 80% untuk Kredit Usaha. Batas usia akhir Kredit Usaha ditetapkan pada ulang tahun ke-75. Pemeriksaan produk dan ketersediaan tarif AJK ditampilkan terpisah.</p><p>Bunga flat dikonversi menjadi EIR bulanan dengan metode RATE setelah angsuran flat dibulatkan ke rupiah. EIR tahunan = EIR bulanan × 12. Angsuran bulanan menggunakan nominal tetap, termasuk bulan terakhir. Nilai tetap tersebut ditentukan dengan pembulatan internal per Rp100. Tingkat bunga anuitas ekuivalen disesuaikan secara matematis ke angsuran tetap setelah pembulatan; komposisi pokok dan bunga bulan terakhir menutup baki debet persis Rp0. Jadwal menggunakan bunga yang dibulatkan ke rupiah.</p><p>Jadwal mengikuti EDATE bulanan berurutan. Plafond berdasarkan IDIR dibulatkan turun ke Rp10.000. Biaya pencairan tidak dimasukkan dalam EIR. Nilai awal plafond, tenor, bunga, gaji, dan IDIR mengikuti contoh Excel. Provisi awal 1% dari plafond dan dapat diubah; administrasi serta pelunasan kredit lama dimulai dari nol. Hasil merupakan simulasi, bukan persetujuan kredit.</p><p>Jika Asuransi AJK dipilih, premi dihitung otomatis dari tanggal lahir, tanggal awal kredit, tenor, dan plafond. Usia asuransi dibulatkan naik ketika sisa usia mencapai 6 bulan. Tenor tarif dibulatkan naik ke tahun penuh mengikuti rumus utama Premi Chubb!M12. Premi dan provisi dibulatkan ke rupiah terdekat. AJK Lain menggunakan nominal premi manual sesuai penawaran resmi. Premi AJK dan Asuransi Kebakaran dapat dihitung bersamaan, tetapi ditampilkan sebagai dua komponen yang terpisah.</p><p>Sumber tarif: RATE PREMI ASURANSI CHUBB.xlsx, sheet Tabel ass Chubb, B7:V63 (usia 18–74 tahun, tenor 1–20 tahun). Nilai tarif sumber dipertahankan. Tarif nol atau di luar tabel memerlukan konfirmasi; tidak dianggap sebagai asuransi gratis. Jika jenis asuransi dipilih tetapi premi belum tersedia, dana bersih belum dapat dihitung. Asuransi Kebakaran dan AJK Lain memakai premi manual dari penawaran polis. Opsi Tanpa Asuransi menghasilkan premi Rp0, bukan pernyataan bahwa kredit tidak memerlukan perlindungan. Komponen biaya yang diperhitungkan menyesuaikan produk yang dipilih.</p><p>Alur input aplikasi: Produk Kredit → Tanggal Lahir dan Awal Kredit → Penghasilan Bersih/THP → Batas IDIR (input manual) → Tenor → Suku Bunga → Kapasitas Angsuran dan Plafon Maksimal (otomatis) → Plafon Pengajuan → Biaya dan Asuransi → Hasil Simulasi. Perkiraan plafon dibuat berdasarkan IDIR, tenor, bunga dan angsuran yang dibulatkan; keputusan kredit tetap membutuhkan analisis kelayakan yang terpisah.</p></details><div class="author-credit">Design &amp; Development © 2026 Luther Parinding, S.Si.</div><div class="report-disclaimer">Hasil simulasi bersifat indikatif dan bukan merupakan persetujuan kredit final.</div></section></div><footer>SIMULASI KREDIT <span>Perhitungan dilakukan di perangkat Anda.</span></footer></main><section aria-label="Dokumen cetak jadwal angsuran" class="schedule-print-sheet" id="schedulePrint">
+<div class="sp-header">
+<div class="sp-brand"><span class="sp-icon">K</span><div><span class="sp-eyebrow">DOKUMEN SIMULASI KREDIT</span><h1>JADWAL ANGSURAN KREDIT</h1><p>Rincian pembayaran pokok, bunga, dan baki debet bulanan</p></div></div>
+<div class="sp-ref">INTERNAL<br/><span id="spPrintDate"></span></div>
+</div>
+<div class="sp-facility">
+<div><span>PRODUK KREDIT</span><b id="spProduct"></b></div>
+<div><span>PLAFON KREDIT</span><b id="spPrincipal"></b></div>
+<div><span>TENOR</span><b id="spTenor"></b></div>
+<div><span>ANGSURAN BULANAN</span><b id="spPayment"></b></div>
+<div><span>TANGGAL AWAL KREDIT</span><b id="spStart"></b></div>
+<div><span>JATUH TEMPO TERAKHIR</span><b id="spEnd"></b></div>
+</div>
+<div class="sp-subtitle"><strong>RINCIAN ANGSURAN PER BULAN</strong><span id="spPeriod"></span></div>
+<table aria-label="Jadwal angsuran lengkap" class="sp-table">
+<colgroup><col class="sp-col-no"/><col class="sp-col-date"/><col class="sp-col-money"/><col class="sp-col-money"/><col class="sp-col-money"/><col class="sp-col-money"/></colgroup>
+<thead><tr><th>Ke-</th><th>Jatuh tempo</th><th>Angsuran (Rp)</th><th>Pokok (Rp)</th><th>Bunga (Rp)</th><th>Baki debet (Rp)</th></tr></thead>
+<tbody id="spRows"></tbody>
+<tfoot><tr><td colspan="2">TOTAL SELURUH TENOR</td><td id="spTotalPayment"></td><td id="spTotalPrincipal"></td><td id="spTotalInterest"></td><td id="spFinalBalance"></td></tr></tfoot>
+</table>
+<div class="sp-verify">Keterangan: angsuran bulanan tetap sampai jatuh tempo terakhir. Total pokok sama dengan plafon, dan baki debet akhir Rp0.</div>
+<div class="sp-bottom"><div class="sp-credit">Design &amp; Development © 2026 Luther Parinding, S.Si.</div><div>Dokumen simulasi untuk keperluan internal. Bukan merupakan persetujuan kredit.</div></div>
 </section>
-<section id="printBlockedSheet" class="print-blocked-sheet" aria-label="Dokumen gagal validasi cetak">
- <div class="print-blocked-banner">CETAK TIDAK DIIZINKAN</div>
- <h1>Simulasi Kredit Belum Memenuhi Ketentuan</h1>
- <p>Hasil simulasi ini tidak dapat dicetak atau disimpan sebagai PDF sebelum seluruh parameter usia kredit dan IDIR memenuhi persyaratan.</p>
- <div id="printBlockedReasons"></div>
- <footer>Design &amp; Development © 2026 Luther Parinding, S.Si.</footer>
+<section aria-label="Dokumen gagal validasi cetak" class="print-blocked-sheet" id="printBlockedSheet">
+<div class="print-blocked-banner">CETAK TIDAK DIIZINKAN</div>
+<h1>Simulasi Kredit Belum Memenuhi Ketentuan</h1>
+<p>Hasil simulasi ini tidak dapat dicetak atau disimpan sebagai PDF sebelum seluruh parameter usia kredit dan IDIR memenuhi persyaratan.</p>
+<div id="printBlockedReasons"></div>
+<footer>Design &amp; Development © 2026 Luther Parinding, S.Si.</footer>
 </section>
 <script>
 // Tarif dari file pengguna; nilai sumber dipertahankan.
@@ -409,14 +677,63 @@ function calculateInsurance({ principal, months, birth, start }) {
   return { available: true, premium: Math.round(principal * rate / 1000), rate, age, years, message: `Usia asuransi ${age} tahun · tenor tarif ${years} tahun` };
 }
 function calculateCharges(x) {
-  const insurance = calculateInsurance(x);
+  const isBusiness = x.product === 'business';
+  const type = isBusiness ? (x.insuranceType || 'none') : 'none';
+  const fireEnabled = isBusiness && !!x.fireEnabled;
+  let ajk;
+  if (type === 'none') {
+    ajk = {available: true, premium: 0, rate: null, age: null, years: null,
+      message: 'Tanpa AJK: hanya premi AJK bernilai Rp0. Asuransi Kebakaran dihitung secara terpisah.'};
+  } else if (type === 'ajk') {
+    ajk = calculateInsurance(x);
+  } else if (type === 'ajk_other') {
+    const company = (x.ajkOtherCompany || '').trim();
+    const amount = Number(x.ajkOtherPremium);
+    const ok = !!company && Number.isFinite(amount) && amount > 0;
+    ajk = {available: ok, premium: ok ? Math.round(amount) : null, rate: null, age: null, years: null,
+      message: ok ? `Premi AJK ${company} berdasarkan penawaran/polis yang telah diverifikasi.` : 'Isi nama perusahaan dan premi AJK Lain (> Rp0).'};
+  } else {
+    ajk = {available: false, premium: null, rate: null, age: null, years: null, message: 'Pilihan AJK tidak dikenal.'};
+  }
+  const fireValue = Number(x.firePremium);
+  const fireValid = !fireEnabled || (Number.isFinite(fireValue) && fireValue > 0);
+  const firePremium = !fireEnabled ? 0 : fireValid ? Math.round(fireValue) : null;
+  const available = ajk.available && fireValid;
+  const total = available ? ajk.premium + firePremium : null;
+  const primaryCompany = type === 'ajk' ? 'CHUBB' : type === 'ajk_other' ? (x.ajkOtherCompany || '').trim() : '';
+  const insurance = {
+    available, premium: total, ajkPremium: ajk.premium, primaryPremium: ajk.premium,
+    fireEnabled, firePremium, fireValid, primaryCompany,
+    type, rate: ajk.rate, age: ajk.age, years: ajk.years,
+    message: !ajk.available ? ajk.message : !fireValid ? 'Isi premi Asuransi Kebakaran (> Rp0) sesuai penawaran/polis.' :
+      (fireEnabled ? `${ajk.message} Asuransi Kebakaran ditambahkan sebagai premi terpisah.` : ajk.message)
+  };
   const provision = Math.round(x.principal * x.provisionPercent / 100);
-  const deductions = insurance.available ? provision + x.admin + insurance.premium + x.payoff : null;
-  return { insurance, provision, deductions, net: deductions === null ? null : x.principal - deductions };
+  // Only the five/three fees applicable to the selected product are included.
+  // Legacy "otherFee" fields are intentionally excluded from deductions.
+  const otherFee = 0;
+  const adminAmount = isBusiness ? Math.round(x.principal * x.adminPercent / 100) : Math.round(x.admin);
+  const deductions = available ? provision + adminAmount + total + x.payoff : null;
+  return { insurance, provision, adminAmount, otherFee, deductions, net: deductions === null ? null : x.principal - deductions };
 }
 if (typeof module !== 'undefined') module.exports = { calculateInsurance, calculateCharges, completedMonths };
 
-</script><script>
+</script><script>// Maximum nominal tested against the SAME Rp100-rounded instalment used by the schedule.
+function maxPrincipalForInput(x) {
+  const n = Number(x.months), interest = Number(x.interest), income = Number(x.salary), idir = Number(x.idir);
+  if (!(n >= 1 && Number.isInteger(n) && interest >= 0 && interest <= 100 && income > 0 && idir >= 0 && idir <= 100)) return null;
+  const capacity = income * idir / 100;
+  if (capacity < 100) return 0;
+  const perRupiah = x.mode === 'flat' ? 1/n + interest/100 : pmt(1, interest/1200, n);
+  if (!Number.isFinite(perRupiah) || perRupiah <= 0) return null;
+  const installment = principal => Math.max(100, Math.round(principal * perRupiah / 100) * 100, Math.ceil(principal / n / 100) * 100);
+  let guess = Math.min(1e12, Math.max(0, Math.floor((capacity / perRupiah) / 10000) * 10000));
+  // Correct around rounding boundaries, so projected plafond never breaches the IDIR input.
+  for (let i=0; i<6 && guess > 0 && installment(guess) > capacity + 1e-7; i++) guess-=10000;
+  for (let i=0; i<6 && guess+10000 <= 1e12 && installment(guess+10000) <= capacity + 1e-7; i++) guess+=10000;
+  return Math.max(0,guess);
+}
+
 function pmt(p,r,n){return r===0?p/n:p*r/(-Math.expm1(-n*Math.log1p(r)))}
 function rate(p,a,n){if(a<=p/n)return 0;let lo=0,hi=1;while(pmt(p,hi,n)<a)hi*=2;for(let i=0;i<100;i++){let m=(lo+hi)/2;if(pmt(p,m,n)>a)hi=m;else lo=m}return(lo+hi)/2}
 function nextMonth(s){let [y,m,d]=s.split('-').map(Number);let last=new Date(Date.UTC(y,m+1,0)).getUTCDate();return `${m===12?y+1:y}-${String(m===12?1:m+1).padStart(2,'0')}-${String(Math.min(d,last)).padStart(2,'0')}`}
@@ -447,7 +764,7 @@ function calculate(x){
   rows.push({month:i,date,payment,principal:principalDue,interest:interestDue,balance});
  }
  const totalInterest=rows.reduce((s,row)=>s+row.interest,0);
- return {rows,payment,rate:r,totalInterest,total:payment*n,...chargeCalculator(x),flat:((payment-p/n)/p)*100,maxPrincipal:Math.floor((x.salary*x.idir/100)/(1/n+(mode==='flat'?interest/100:(pmt(1,enteredRate,n)-1/n)))/10000)*10000};
+ return {rows,payment,rate:r,totalInterest,total:payment*n,...chargeCalculator(x),flat:((payment-p/n)/p)*100,maxPrincipal:maxPrincipalForInput(x)};
 }
 if(typeof module!=='undefined')module.exports={calculate,pmt,rate,nextMonth};
 
@@ -460,9 +777,9 @@ function ageLimitDate(birth, years) {
 }
 function checkProductPolicy(x, maturity) {
   const messages = [];
-  const maxIdir = x.product === 'pension' ? 85 : 95;
-  if (Number.isFinite(x.idir) && x.idir > maxIdir) messages.push('Kurangi Persetasi IDIR, Melebihi Ketentuan SKDIR');
-  const ageLimit = x.product === 'asn' ? (x.position === 'functional' ? 60 : 58) : x.product === 'pension' ? 75 : null;
+  const maxIdir = x.product === 'business' ? 80 : x.product === 'pension' ? 85 : 95;
+  if (Number.isFinite(x.idir) && x.idir > maxIdir) messages.push('IDIR yang diinput melebihi batas maksimum produk kredit.');
+  const ageLimit = x.product === 'asn' ? (x.position === 'functional' ? 60 : 58) : 75;
   let deadline = null, needsBirth = false;
   if (ageLimit !== null) {
     const birth = new Date((x.birth || '') + 'T00:00:00Z');
@@ -470,7 +787,7 @@ function checkProductPolicy(x, maturity) {
     if (!validBirth) needsBirth = true;
     else {
       deadline = ageLimitDate(x.birth, ageLimit);
-      if (maturity && maturity > deadline) messages.push(x.product === 'pension' ? 'Kredit Tidak Dapat Dilayani' : 'Jangka Waktu Melebihi BUP');
+      if (maturity && maturity > deadline) messages.push(x.product === 'business' ? 'Jangka waktu melampaui batas usia Kredit Usaha 75 tahun.' : x.product === 'pension' ? 'Kredit Tidak Dapat Dilayani' : 'Jangka Waktu Melebihi BUP');
     }
   }
   return { productName: PRODUCT_NAMES[x.product], ageLimit, deadline, needsBirth, messages, maxIdir };
@@ -483,24 +800,34 @@ const money = n => n === null || !Number.isFinite(n) ? '—' : 'Rp ' + Math.roun
 const pct = n => n.toLocaleString('id-ID', { maximumFractionDigits: 3 }) + '%';
 const perMille = n => n === null ? '—' : n.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ‰';
 const dateText = s => new Date(s + 'T00:00:00').toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-const creditFields = ['principal', 'months', 'interest', 'salary', 'idir', 'provisionPercent', 'admin', 'payoff'];
+const creditFields = ['principal', 'months', 'interest', 'salary', 'idir', 'provisionPercent', 'admin', 'adminPercent', 'payoff', 'otherFee', 'firePremium', 'ajkOtherPremium'];
 let result, page = 0;
 // Central print permission (applies to summary, all amortization pages, browser Print, and CSV).
 // Printing is allowed only after the configured age policy and the actual instalment/THP pass.
 let printAllowed = false;
 let printReasons = [];
 const EPS_IDIR = 1e-7;
+// Apply the approved product cap on product selection. A smaller user-entered
+// IDIR is preserved; manual values above the cap still fail form/print checks.
+function setProductIdirLimit(clampValue = false) {
+  const cap = $('product').value === 'business' ? 80 : $('product').value === 'pension' ? 85 : 95;
+  const field = $('idir');
+  field.max = String(cap);
+  field.title = `Batas IDIR maksimum untuk produk ini: ${cap}%`;
+  if (clampValue && Number(field.value) > cap) field.value = String(cap);
+}
 function printEligibility(x, current, formValid) {
   if (!formValid || !current || !current.rows?.length) {
+    const maxIdir = x.product === 'business' ? 80 : x.product === 'pension' ? 85 : 95;
+    if (Number.isFinite(x.idir) && x.idir > maxIdir + EPS_IDIR) {
+      return [`Batas IDIR yang diinput ${pct(x.idir)} melebihi ketentuan produk ${pct(maxIdir)}.`];
+    }
     return ['Lengkapi terlebih dahulu seluruh parameter simulasi yang wajib diisi.'];
   }
   const reasons = [];
   const p = current.policy;
   const maturity = current.rows.at(-1).date;
-  if (p.ageLimit === null) {
-    // Do not assume an unknown age policy passes. Update policy.js once approved.
-    reasons.push('Batas usia Kredit Usaha belum ditetapkan pada konfigurasi aplikasi.');
-  } else if (p.needsBirth || !p.deadline) {
+  if (p.needsBirth || !p.deadline) {
     reasons.push('Tanggal lahir belum valid, sehingga batas usia kredit tidak dapat diperiksa.');
   } else if (maturity > p.deadline) {
     reasons.push(`Jatuh tempo ${dateText(maturity)} melebihi batas usia ${p.ageLimit} tahun (maksimal ${dateText(p.deadline)}).`);
@@ -515,6 +842,9 @@ function printEligibility(x, current, formValid) {
     if (actualIdir > x.idir + EPS_IDIR) {
       reasons.push(`IDIR aktual ${pct(actualIdir)} melampaui batas yang diinput ${pct(x.idir)}.`);
     }
+  }
+  if (current.insurance && !current.insurance.available) {
+    reasons.push('Premi asuransi yang dipilih belum dapat ditentukan. Lengkapi atau verifikasi nominalnya.');
   }
   if (x.idir > p.maxIdir + EPS_IDIR) {
     reasons.push(`Batas IDIR yang diinput ${pct(x.idir)} melebihi ketentuan produk ${pct(p.maxIdir)}.`);
@@ -550,9 +880,25 @@ function canPrintNow() {
   return updatePrintGate(x, result, valid);
 }
 
+// Live indicators are independent of plafon/date fields and update while filling the form.
+function updateCapacityInput(x) {
+  const maxIdir = x.product === 'business' ? 80 : (x.product === 'pension' ? 85 : 95);
+  $('idirManualHint').textContent = `IDIR diisi manual. Batas maksimum untuk produk ini ${maxIdir}%; nilai di atas batas akan memblokir cetak.`;
+  const available = Number.isFinite(x.salary) && x.salary > 0 && Number.isFinite(x.idir) && x.idir >= 0 && x.idir <= maxIdir;
+  const allowance = available ? x.salary * x.idir / 100 : null;
+  $('capacityPayment').textContent = money(allowance);
+  $('maxPrincipalPreview').textContent = available ? money(maxPrincipalForInput(x)) : '—';
+  $('capacityPayment').title = available ? 'Gaji bersih × IDIR manual' : 'Periksa gaji dan batas IDIR';
+  $('maxPrincipalPreview').title = 'Estimasi berdasarkan tenor, bunga dan pembulatan angsuran ke Rp100';
+}
 function read() {
   const x = Object.fromEntries(creditFields.map(id => [id, Number($(id).value)]));
-  return { ...x, mode: $('mode').value, start: $('start').value, birth: $('birth').value, product: $('product').value, position: $('position').value };
+  const isBusiness = $('product').value === 'business';
+  return { ...x, mode: $('mode').value, start: $('start').value, birth: $('birth').value, product: $('product').value, position: $('position').value,
+    adminPercent: isBusiness ? x.adminPercent : 0, admin: isBusiness ? 0 : x.admin, otherFee: 0, otherDesc: '',
+    insuranceType: isBusiness ? $('insuranceType').value : 'none', ajkOtherCompany: isBusiness ? $('ajkOtherCompany').value.trim() : '',
+    ajkOtherPremium: isBusiness ? x.ajkOtherPremium : 0, fireEnabled: isBusiness && $('fireEnabled').checked,
+    firePremium: isBusiness ? x.firePremium : 0 };
 }
 function table(all = false) {
   const rows = all ? result.rows : result.rows.slice(page * 12, (page + 1) * 12);
@@ -564,21 +910,41 @@ function table(all = false) {
 }
 function showCharges(x) {
   const i = result.insurance;
+  const isChubb = x.insuranceType === 'ajk';
+  const isOther = x.insuranceType === 'ajk_other';
+  const isNone = x.insuranceType === 'none';
+  $('insuranceRateRow').hidden = !isChubb;
   $('provisionAmount').textContent = money(result.provision);
-  $('insurance').textContent = money(i.premium);
+  $('insurance').textContent = money(i.ajkPremium);
+  $('firePremiumDisplay').textContent = money(i.firePremium);
+  $('totalInsuranceDisplay').textContent = money(i.premium);
   $('insuranceRate').textContent = perMille(i.rate);
   $('insuranceMessage').textContent = i.message;
   $('insuranceMessage').className = 'hint' + (i.available ? '' : ' unavailable');
   $('costProvision').textContent = money(result.provision);
   $('provisionLabel').textContent = `Provisi (${pct(x.provisionPercent)} × plafond)`;
-  $('costAdmin').textContent = money(x.admin);
-  $('costInsurance').textContent = money(i.premium);
+  $('costAdmin').textContent = money(result.adminAmount);
+  $('costAdminLabel').textContent = x.product === 'business' ? `Administrasi (${pct(x.adminPercent)} × plafon)` : 'Administrasi (Rp)';
+  $('adminAmount').textContent = money(result.adminAmount);
+  $('costInsuranceRow').hidden = x.product !== 'business';
+  $('costInsuranceLabel').textContent = isChubb ? 'Premi AJK · CHUBB' : isOther ? `Premi AJK · ${i.primaryCompany || 'Lainnya'}` : 'Premi AJK (tidak digunakan)';
+  $('costInsurance').textContent = money(i.ajkPremium);
+  $('costFireRow').hidden = !x.fireEnabled;
+  $('costFire').textContent = money(i.firePremium);
+  $('costInsuranceTag').textContent = x.product === 'business' ? (isNone ? 'TANPA AJK' : isChubb ? 'AJK CHUBB' : 'AJK LAIN') + (x.fireEnabled ? ' + KEBAKARAN' : '') : 'BIAYA SESUAI PRODUK';
+  $('costOtherRow').hidden = true;
+  $('costOtherLabel').textContent = x.otherDesc ? `Biaya lain-lain (${x.otherDesc})` : 'Biaya lain-lain';
+  $('costOther').textContent = money(result.otherFee);
   $('costPayoff').textContent = money(x.payoff);
   $('totalDeductions').textContent = money(result.deductions);
   $('costNet').textContent = money(result.net);
-  $('insuranceDetail').textContent = i.available ? `Tarif ${perMille(i.rate)}: ${money(x.principal)} × ${i.rate.toLocaleString('id-ID')} ÷ 1.000 = ${money(i.premium)}. Usia asuransi ${i.age} tahun; tenor tarif ${i.years} tahun.` : i.message;
+  const ajkText = isChubb && i.ajkPremium !== null && i.rate !== null
+    ? `AJK CHUBB: ${perMille(i.rate)} × plafond = ${money(i.ajkPremium)}; usia ${i.age} tahun, tenor tarif ${i.years} tahun.`
+    : isOther && i.ajkPremium !== null ? `AJK ${i.primaryCompany}: premi manual ${money(i.ajkPremium)} sesuai penawaran/polis.` : 'Tanpa AJK.';
+  $('insuranceDetail').textContent = x.product === 'business' ? `${ajkText}${x.fireEnabled ? ` Asuransi Kebakaran: ${money(i.firePremium)} (premi manual).` : ''} Total premi: ${money(i.premium)}.` : 'Komponen biaya menyesuaikan ketentuan produk pada simulator.';
   $('insuranceDetail').className = 'hint' + (i.available ? '' : ' unavailable');
-  $('netHint').textContent = i.available ? 'Setelah seluruh potongan' : 'Menunggu perhitungan premi AJK';
+  $('rateSource').hidden = x.product !== 'business' || !isChubb;
+  $('netHint').textContent = i.available ? 'Setelah seluruh potongan' : 'Premi asuransi belum tersedia';
   $('facProduct').textContent = result.policy?.productName || ({asn:'KREDIT CPNS/ASN',pension:'KREDIT PENSIUN',business:'KREDIT USAHA'}[x.product]);
   $('facPrincipal').textContent = money(x.principal);
   $('facTenor').textContent = x.months + ' bulan';
@@ -590,7 +956,7 @@ function showCharges(x) {
 function showPolicy(x, maturity) {
   const p = checkProductPolicy(x, maturity);
   $('positionField').hidden = x.product !== 'asn';
-  $('policyRule').textContent = p.ageLimit === null ? 'Batas usia Kredit Usaha belum ditetapkan. Batas IDIR 95% dari THP.' : `Batas jatuh tempo: ulang tahun ke-${p.ageLimit}. Batas IDIR ${p.maxIdir}% dari THP.`;
+  $('policyRule').textContent = `Batas jatuh tempo: ulang tahun ke-${p.ageLimit}. Batas IDIR maksimum ${p.maxIdir}% dari THP.`;
   const details = [...p.messages];
   if (p.needsBirth) details.push('Isi tanggal lahir yang valid untuk memeriksa batas usia produk.');
   if (p.deadline) details.push('Tanggal batas usia: ' + dateText(p.deadline));
@@ -606,16 +972,39 @@ function showPolicy(x, maturity) {
 }
 function update() {
   const x = read();
+  updateCapacityInput(x);
+  const isBusiness = x.product === 'business';
+  $('adminRupiahBlock').hidden = isBusiness;
+  $('adminPercentBlock').hidden = !isBusiness;
+  $('admin').disabled = isBusiness;
+  $('adminPercent').disabled = !isBusiness;
+  $('businessInsuranceFields').hidden = !isBusiness;
+  $('insuranceType').disabled = !isBusiness;
+  $('fireEnabled').disabled = !isBusiness;
+  $('productCostNote').textContent = isBusiness
+    ? 'Kredit Usaha (usia akhir maks. 75 tahun; IDIR maks. 80%): Provisi (%), Administrasi (%), AJK, Asuransi Kebakaran, dan Pelunasan Kredit Lama. Premi hanya dihitung bila dipilih.'
+    : 'CPNS/ASN dan Pensiun: Provisi (%), Administrasi (Rp), dan Pelunasan Kredit Lama. Biaya asuransi tidak dihitung.';
+  $('ajkOtherField').hidden = !isBusiness || x.insuranceType !== 'ajk_other';
+  $('firePremiumField').hidden = !isBusiness || !x.fireEnabled;
+  $('insuranceRateRow').hidden = !isBusiness || x.insuranceType !== 'ajk';
+  $('ajkOtherCompany').required = isBusiness && x.insuranceType === 'ajk_other';
+  $('ajkOtherPremium').required = isBusiness && x.insuranceType === 'ajk_other';
+  $('ajkOtherPremium').min = isBusiness && x.insuranceType === 'ajk_other' ? '1' : '0';
+  $('firePremium').required = isBusiness && x.fireEnabled;
+  $('firePremium').min = isBusiness && x.fireEnabled ? '1' : '0';
+  $('otherDesc').required = false;
+  $('otherFee').disabled = true;
+  $('otherDesc').disabled = true;
   showPolicy(x, null);
   const valid = $('form').checkValidity() && x.start >= '1900-01-01' && x.start <= '2200-12-31';
-  $('error').textContent = valid ? '' : 'Lengkapi input dengan nilai yang valid. Tenor 1–600 bulan; tanggal awal antara tahun 1900 dan 2200.';
+  $('error').textContent = valid ? '' : (x.fireEnabled && x.firePremium <= 0 ? 'Isi premi Asuransi Kebakaran berdasarkan penawaran/polis (> Rp0).' : x.otherFee > 0 && !x.otherDesc ? 'Isi keterangan biaya lain-lain agar potongan dapat ditelusuri.' : x.insuranceType === 'ajk_other' && (!x.ajkOtherCompany || x.ajkOtherPremium <= 0) ? 'Isi nama perusahaan dan premi AJK Lain (> Rp0).' : 'Lengkapi input dengan nilai yang valid.');
   $('results').hidden = !valid;
   // Validation for print/export is separate from simulation visibility.
   updatePrintGate(x, null, false);
   if (!valid) {
     result = null;
     ['provisionAmount', 'insurance', 'insuranceRate'].forEach(id => $(id).textContent = '—');
-    $('insuranceMessage').textContent = 'Lengkapi parameter kredit untuk menghitung premi.';
+    $('insuranceMessage').textContent = 'Lengkapi parameter kredit, asuransi, atau keterangan biaya lain-lain.';
     return;
   }
   result = calculate(x); page = 0;
@@ -673,13 +1062,18 @@ function csvRows() {
   return [
     ['Simulasi kredit'], ['Design & Development © 2026 Luther Parinding, S.Si.'],
     ['Produk', result.policy.productName], ['Jabatan', x.product === 'asn' ? (x.position === 'functional' ? 'Fungsional/Guru' : 'Struktural') : 'Tidak berlaku'],
-    ['Batas usia', result.policy.ageLimit ?? 'Belum ditetapkan'], ['Tanggal batas usia', result.policy.deadline ?? 'Belum tersedia'],
+    ['Batas usia', result.policy.ageLimit], ['Tanggal batas usia', result.policy.deadline ?? 'Belum tersedia'],
     ['IDIR (%)', x.idir], ['Batas IDIR (%)', result.policy.maxIdir], ['Notifikasi ketentuan', result.policy.messages.join(' | ') || (result.policy.needsBirth ? 'Tanggal lahir belum valid' : 'Tidak ada pelanggaran pada batas yang diperiksa')],
     ['Plafond', x.principal], ['Tenor (bulan)', x.months], ['Tanggal awal kredit', x.start], ['Tanggal lahir', x.birth],
     ['EIR per tahun (%)', result.rate * 1200], ['Provisi (%)', x.provisionPercent], ['Biaya provisi (Rp)', result.provision],
-    ['Administrasi (Rp)', x.admin], ['Asuransi AJK', 'CHUBB'], ['Usia asuransi (tahun)', i.age ?? ''],
-    ['Tenor tarif (tahun, dibulatkan naik)', i.years ?? ''], ['Rate premi (per mil)', i.rate ?? ''],
-    ['Premi AJK (Rp)', i.premium ?? 'Belum dapat dihitung'], ['Status premi', i.message],
+    [x.product === 'business' ? 'Administrasi (%)' : 'Administrasi (Rp)', x.product === 'business' ? x.adminPercent : result.adminAmount],
+    ['Biaya administrasi (Rp)', result.adminAmount],
+    ['Pilihan AJK', x.product !== 'business' ? 'Tidak berlaku' : x.insuranceType === 'ajk' ? 'AJK CHUBB' : x.insuranceType === 'ajk_other' ? 'AJK Lain' : 'Tanpa Asuransi (AJK)'],
+    ['Perusahaan AJK', i.primaryCompany || ''], ['Premi AJK (Rp)', i.ajkPremium ?? 'Belum tersedia'],
+    ['Asuransi Kebakaran digunakan', x.fireEnabled ? 'Ya' : 'Tidak'], ['Premi Asuransi Kebakaran (Rp)', i.firePremium ?? 'Belum tersedia'],
+    ['Usia asuransi AJK (tahun)', i.age ?? ''], ['Tenor tarif AJK (tahun)', i.years ?? ''], ['Rate premi AJK (per mil)', i.rate ?? ''],
+    ['Total premi asuransi (Rp)', i.premium ?? 'Belum dapat dihitung'], ['Keterangan asuransi', i.message],
+    ['Komponen biaya aktif', x.product === 'business' ? 'Provisi; Administrasi %; AJK; Kebakaran; Pelunasan Lama' : 'Provisi; Administrasi Rp; Pelunasan Lama'],
     ['Pelunasan kredit lama (Rp)', x.payoff], ['Total potongan (Rp)', result.deductions ?? 'Belum dapat dihitung'],
     ['Dana bersih (Rp)', result.net ?? 'Belum dapat dihitung'], [],
     ['Bulan', 'Tanggal', 'Angsuran', 'Pokok', 'Bunga', 'Baki debet'],
@@ -689,6 +1083,8 @@ function csvRows() {
 }
 $('form').addEventListener('submit', e => e.preventDefault());
 $('form').addEventListener('input', e => { if (e.target.id !== 'mode') update(); });
+$('product').addEventListener('change', () => { setProductIdirLimit(true); update(); });
+$('insuranceType').addEventListener('change', update);
 $('tenorRange').addEventListener('input', () => { $('months').value = $('tenorRange').value; update(); });
 document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { $('principal').value = b.dataset.p; update(); });
 $('mode').addEventListener('change', () => {
@@ -698,7 +1094,7 @@ $('mode').addEventListener('change', () => {
 });
 $('prev').onclick = () => { page--; table(); };
 $('next').onclick = () => { page++; table(); };
-$('reset').onclick = () => { $('form').reset(); $('rateUnit').textContent = 'per bulan'; update(); };
+$('reset').onclick = () => { $('form').reset(); $('rateUnit').textContent = 'per bulan'; setProductIdirLimit(true); update(); };
 $('csv').onclick = () => {
   if (!canPrintNow()) return;
   const csv = csvRows().map(row => row.map(value => '"' + String(value).replaceAll('"', '""') + '"').join(';')).join('\r\n');
@@ -771,6 +1167,7 @@ document.addEventListener('keydown', e => {
     e.stopPropagation();
   }
 }, true);
+setProductIdirLimit();
 update();
 
 </script></body></html>
