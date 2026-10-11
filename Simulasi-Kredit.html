@@ -557,8 +557,8 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 <p class="capacity-input-footnote">Estimasi dari THP, batas IDIR, tenor, dan bunga. Bukan persetujuan plafon kredit.</p>
 </div><div class="input-field-block"><label for="principal">Plafon Kredit yang Diajukan (Rp)</label><div class="field"><span>Rp</span><input id="principal" max="1000000000000" min="10000" required="" step="1000" type="number" value="234200000"/></div><div class="quick"><button data-p="100000000" type="button">100 juta</button><button data-p="250000000" type="button">250 juta</button><button data-p="500000000" type="button">500 juta</button></div></div></section><section aria-labelledby="groupBiaya" class="input-group input-group-fees">
 <div class="input-group-title" id="groupBiaya"><span class="input-group-index">03</span><div>BIAYA &amp; ASURANSI<small>Komponen otomatis mengikuti produk kredit</small></div></div>
-<details class="cost-details" open=""><summary>Tampilkan / sembunyikan rincian biaya</summary><p class="hint" id="productCostNote">Komponen biaya disesuaikan otomatis dengan produk kredit yang dipilih.</p><label for="provisionPercent">Provisi (% dari plafond)</label><div class="field"><input id="provisionPercent" max="100" min="0" required="" step="0.01" type="number" value="1"/><span>%</span></div><div class="computed-row"><span>Biaya provisi</span><output id="provisionAmount">—</output></div><div id="adminRupiahBlock"><label for="admin">Administrasi (Rp)</label><input id="admin" min="0" required="" type="number" value="0"/></div><div hidden="" id="adminPercentBlock"><label for="adminPercent">Administrasi (% dari plafon)</label><div class="field"><input id="adminPercent" max="100" min="0" step="0.01" type="number" value="0"><span>%</span></input></div><div class="computed-row"><span>Biaya administrasi</span><output id="adminAmount">Rp 0</output></div></div><div class="extra-fee-input" hidden="" id="legacyOtherFeeFields"><label for="otherFee">Biaya lain-lain yang dipotong (Rp)</label><input id="otherFee" max="1000000000000" min="0" required="" step="1" type="number" value="0"/><label for="otherDesc">Keterangan biaya lain-lain <span>Wajib bila nominal &gt; Rp0</span></label><input id="otherDesc" maxlength="80" placeholder="Misal: notaris, materai, appraisal" type="text"/><p class="hint">Jangan masukkan kembali biaya yang sudah dicatat pada provisi, administrasi, atau asuransi.</p></div><div hidden="" id="businessInsuranceFields"><div class="insurance-box"><h3>1. ASURANSI JIWA KREDIT (AJK)</h3>
-<p class="hint">Pilih satu opsi AJK. “Tanpa Asuransi” di menu ini berarti tanpa AJK; Asuransi Kebakaran dapat tetap dipilih terpisah.</p>
+<details class="cost-details" open=""><summary>Tampilkan / sembunyikan rincian biaya</summary><p class="hint" id="productCostNote">Komponen biaya disesuaikan otomatis dengan produk kredit yang dipilih.</p><label for="provisionPercent">Provisi (% dari plafond)</label><div class="field"><input id="provisionPercent" max="100" min="0" required="" step="0.01" type="number" value="1"/><span>%</span></div><div class="computed-row"><span>Biaya provisi</span><output id="provisionAmount">—</output></div><div id="adminRupiahBlock"><label for="admin">Administrasi (Rp)</label><input id="admin" min="0" required="" type="number" value="0"/></div><div hidden="" id="adminPercentBlock"><label for="adminPercent">Administrasi (% dari plafon)</label><div class="field"><input id="adminPercent" max="100" min="0" step="0.01" type="number" value="0"><span>%</span></input></div><div class="computed-row"><span>Biaya administrasi</span><output id="adminAmount">Rp 0</output></div></div><div class="extra-fee-input" hidden="" id="legacyOtherFeeFields"><label for="otherFee">Biaya lain-lain yang dipotong (Rp)</label><input id="otherFee" max="1000000000000" min="0" required="" step="1" type="number" value="0"/><label for="otherDesc">Keterangan biaya lain-lain <span>Wajib bila nominal &gt; Rp0</span></label><input id="otherDesc" maxlength="80" placeholder="Misal: notaris, materai, appraisal" type="text"/><p class="hint">Jangan masukkan kembali biaya yang sudah dicatat pada provisi, administrasi, atau asuransi.</p></div><div id="businessInsuranceFields"><div class="insurance-box"><h3>1. ASURANSI JIWA KREDIT (AJK)</h3>
+<p class="hint">Pilih AJK CHUBB, AJK Lain, atau Tanpa Asuransi. Premi AJK berlaku untuk semua produk; Asuransi Kebakaran hanya tersedia pada Kredit Usaha.</p>
 <label for="insuranceType">Pilihan AJK</label>
 <select id="insuranceType">
 <option value="ajk">1. AJK CHUBB (premi otomatis)</option>
@@ -576,7 +576,7 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 <div class="computed-row"><span>Premi AJK</span><output id="insurance">—</output></div>
 <p class="hint" id="insuranceMessage" role="status">Isi tanggal lahir untuk menghitung premi AJK CHUBB.</p>
 </div>
-<div class="insurance-box fire-insurance-box"><h3>2. ASURANSI KEBAKARAN</h3>
+<div class="insurance-box fire-insurance-box" id="businessFireFields"><h3>2. ASURANSI KEBAKARAN</h3>
 <p class="hint">Opsi terpisah dari AJK. Dapat digunakan bersama AJK CHUBB, AJK Lain, ataupun Tanpa AJK.</p>
 <label class="fire-toggle" for="fireEnabled"><input id="fireEnabled" type="checkbox"/><span>Gunakan Asuransi Kebakaran</span></label>
 <div hidden="" id="firePremiumField">
@@ -585,8 +585,7 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 <p class="hint">Isi berdasarkan penawaran/polis; tidak dihitung otomatis.</p>
 </div>
 <div class="computed-row"><span>Premi Kebakaran</span><output id="firePremiumDisplay">Rp 0</output></div>
-<div class="computed-row total-premium-row"><span>Total Premi Asuransi</span><output id="totalInsuranceDisplay">—</output></div>
-</div></div><label for="payoff">Pelunasan kredit lama (Rp)</label><input id="payoff" min="0" required="" type="number" value="0"/></details></section><div aria-live="polite" class="print-gate-notice" id="printGateNotice" role="status"><strong id="printGateTitle">Memeriksa kelayakan cetak...</strong><div id="printGateReasons"></div></div><p id="error" role="alert"></p></form><p class="hint">Hasil diperbarui otomatis saat parameter berubah.</p></aside>
+</div><div class="insurance-box total-premium-box"><div class="computed-row total-premium-row"><span>Total Premi Asuransi</span><output id="totalInsuranceDisplay">—</output></div></div></div><label for="payoff">Pelunasan kredit lama (Rp)</label><input id="payoff" min="0" required="" type="number" value="0"/></details></section><div aria-live="polite" class="print-gate-notice" id="printGateNotice" role="status"><strong id="printGateTitle">Memeriksa kelayakan cetak...</strong><div id="printGateReasons"></div></div><p id="error" role="alert"></p></form><p class="hint">Hasil diperbarui otomatis saat parameter berubah.</p></aside>
 <section aria-live="polite" class="results" id="results"><div class="print-heading"><div class="print-heading-title"><span class="print-mark">K</span><div><div class="print-eyebrow">SIMULASI KREDIT · INTERNAL</div><h1>RINGKASAN SIMULASI KREDIT</h1><p>Ringkasan pembiayaan dan kemampuan bayar</p></div></div><div class="print-heading-meta"><span>DOKUMEN INTERNAL</span><small id="printDate"></small></div></div><div class="product-summary"><strong id="productSummary"></strong><p class="hint" id="policySummary"></p></div><div class="print-facility">
 <div class="section-kicker"><span>01</span> INFORMASI FASILITAS KREDIT</div>
 <div class="facility-grid">
@@ -678,7 +677,7 @@ function calculateInsurance({ principal, months, birth, start }) {
 }
 function calculateCharges(x) {
   const isBusiness = x.product === 'business';
-  const type = isBusiness ? (x.insuranceType || 'none') : 'none';
+  const type = x.insuranceType || 'none';
   const fireEnabled = isBusiness && !!x.fireEnabled;
   let ajk;
   if (type === 'none') {
@@ -709,7 +708,7 @@ function calculateCharges(x) {
       (fireEnabled ? `${ajk.message} Asuransi Kebakaran ditambahkan sebagai premi terpisah.` : ajk.message)
   };
   const provision = Math.round(x.principal * x.provisionPercent / 100);
-  // Only the five/three fees applicable to the selected product are included.
+  // AJK for all products; fire insurance only for business; administration type follows product.
   // Legacy "otherFee" fields are intentionally excluded from deductions.
   const otherFee = 0;
   const adminAmount = isBusiness ? Math.round(x.principal * x.adminPercent / 100) : Math.round(x.admin);
@@ -896,8 +895,8 @@ function read() {
   const isBusiness = $('product').value === 'business';
   return { ...x, mode: $('mode').value, start: $('start').value, birth: $('birth').value, product: $('product').value, position: $('position').value,
     adminPercent: isBusiness ? x.adminPercent : 0, admin: isBusiness ? 0 : x.admin, otherFee: 0, otherDesc: '',
-    insuranceType: isBusiness ? $('insuranceType').value : 'none', ajkOtherCompany: isBusiness ? $('ajkOtherCompany').value.trim() : '',
-    ajkOtherPremium: isBusiness ? x.ajkOtherPremium : 0, fireEnabled: isBusiness && $('fireEnabled').checked,
+    insuranceType: $('insuranceType').value, ajkOtherCompany: $('ajkOtherCompany').value.trim(),
+    ajkOtherPremium: x.ajkOtherPremium, fireEnabled: isBusiness && $('fireEnabled').checked,
     firePremium: isBusiness ? x.firePremium : 0 };
 }
 function table(all = false) {
@@ -926,12 +925,12 @@ function showCharges(x) {
   $('costAdmin').textContent = money(result.adminAmount);
   $('costAdminLabel').textContent = x.product === 'business' ? `Administrasi (${pct(x.adminPercent)} × plafon)` : 'Administrasi (Rp)';
   $('adminAmount').textContent = money(result.adminAmount);
-  $('costInsuranceRow').hidden = x.product !== 'business';
-  $('costInsuranceLabel').textContent = isChubb ? 'Premi AJK · CHUBB' : isOther ? `Premi AJK · ${i.primaryCompany || 'Lainnya'}` : 'Premi AJK (tidak digunakan)';
+  $('costInsuranceRow').hidden = false;
+  $('costInsuranceLabel').textContent = isChubb ? 'Premi AJK · CHUBB' : isOther ? `Premi AJK · ${i.primaryCompany || 'Lainnya'}` : 'Premi AJK (Tanpa Asuransi)';
   $('costInsurance').textContent = money(i.ajkPremium);
   $('costFireRow').hidden = !x.fireEnabled;
   $('costFire').textContent = money(i.firePremium);
-  $('costInsuranceTag').textContent = x.product === 'business' ? (isNone ? 'TANPA AJK' : isChubb ? 'AJK CHUBB' : 'AJK LAIN') + (x.fireEnabled ? ' + KEBAKARAN' : '') : 'BIAYA SESUAI PRODUK';
+  $('costInsuranceTag').textContent = (isNone ? 'TANPA AJK' : isChubb ? 'AJK CHUBB' : 'AJK LAIN') + (x.fireEnabled ? ' + KEBAKARAN' : '');
   $('costOtherRow').hidden = true;
   $('costOtherLabel').textContent = x.otherDesc ? `Biaya lain-lain (${x.otherDesc})` : 'Biaya lain-lain';
   $('costOther').textContent = money(result.otherFee);
@@ -941,9 +940,9 @@ function showCharges(x) {
   const ajkText = isChubb && i.ajkPremium !== null && i.rate !== null
     ? `AJK CHUBB: ${perMille(i.rate)} × plafond = ${money(i.ajkPremium)}; usia ${i.age} tahun, tenor tarif ${i.years} tahun.`
     : isOther && i.ajkPremium !== null ? `AJK ${i.primaryCompany}: premi manual ${money(i.ajkPremium)} sesuai penawaran/polis.` : 'Tanpa AJK.';
-  $('insuranceDetail').textContent = x.product === 'business' ? `${ajkText}${x.fireEnabled ? ` Asuransi Kebakaran: ${money(i.firePremium)} (premi manual).` : ''} Total premi: ${money(i.premium)}.` : 'Komponen biaya menyesuaikan ketentuan produk pada simulator.';
+  $('insuranceDetail').textContent = `${ajkText}${x.fireEnabled ? ` Asuransi Kebakaran: ${money(i.firePremium)} (premi manual).` : ''} Total premi: ${money(i.premium)}.`;
   $('insuranceDetail').className = 'hint' + (i.available ? '' : ' unavailable');
-  $('rateSource').hidden = x.product !== 'business' || !isChubb;
+  $('rateSource').hidden = !isChubb;
   $('netHint').textContent = i.available ? 'Setelah seluruh potongan' : 'Premi asuransi belum tersedia';
   $('facProduct').textContent = result.policy?.productName || ({asn:'KREDIT CPNS/ASN',pension:'KREDIT PENSIUN',business:'KREDIT USAHA'}[x.product]);
   $('facPrincipal').textContent = money(x.principal);
@@ -978,18 +977,19 @@ function update() {
   $('adminPercentBlock').hidden = !isBusiness;
   $('admin').disabled = isBusiness;
   $('adminPercent').disabled = !isBusiness;
-  $('businessInsuranceFields').hidden = !isBusiness;
-  $('insuranceType').disabled = !isBusiness;
+  $('businessInsuranceFields').hidden = false;
+  $('businessFireFields').hidden = !isBusiness;
+  $('insuranceType').disabled = false;
   $('fireEnabled').disabled = !isBusiness;
   $('productCostNote').textContent = isBusiness
     ? 'Kredit Usaha (usia akhir maks. 75 tahun; IDIR maks. 80%): Provisi (%), Administrasi (%), AJK, Asuransi Kebakaran, dan Pelunasan Kredit Lama. Premi hanya dihitung bila dipilih.'
-    : 'CPNS/ASN dan Pensiun: Provisi (%), Administrasi (Rp), dan Pelunasan Kredit Lama. Biaya asuransi tidak dihitung.';
-  $('ajkOtherField').hidden = !isBusiness || x.insuranceType !== 'ajk_other';
+    : 'CPNS/ASN dan Pensiun: Provisi (%), Administrasi (Rp), AJK (CHUBB/Lain/Tanpa Asuransi), serta Pelunasan Kredit Lama. Asuransi Kebakaran tidak berlaku.';
+  $('ajkOtherField').hidden = x.insuranceType !== 'ajk_other';
   $('firePremiumField').hidden = !isBusiness || !x.fireEnabled;
-  $('insuranceRateRow').hidden = !isBusiness || x.insuranceType !== 'ajk';
-  $('ajkOtherCompany').required = isBusiness && x.insuranceType === 'ajk_other';
-  $('ajkOtherPremium').required = isBusiness && x.insuranceType === 'ajk_other';
-  $('ajkOtherPremium').min = isBusiness && x.insuranceType === 'ajk_other' ? '1' : '0';
+  $('insuranceRateRow').hidden = x.insuranceType !== 'ajk';
+  $('ajkOtherCompany').required = x.insuranceType === 'ajk_other';
+  $('ajkOtherPremium').required = x.insuranceType === 'ajk_other';
+  $('ajkOtherPremium').min = x.insuranceType === 'ajk_other' ? '1' : '0';
   $('firePremium').required = isBusiness && x.fireEnabled;
   $('firePremium').min = isBusiness && x.fireEnabled ? '1' : '0';
   $('otherDesc').required = false;
@@ -1068,12 +1068,12 @@ function csvRows() {
     ['EIR per tahun (%)', result.rate * 1200], ['Provisi (%)', x.provisionPercent], ['Biaya provisi (Rp)', result.provision],
     [x.product === 'business' ? 'Administrasi (%)' : 'Administrasi (Rp)', x.product === 'business' ? x.adminPercent : result.adminAmount],
     ['Biaya administrasi (Rp)', result.adminAmount],
-    ['Pilihan AJK', x.product !== 'business' ? 'Tidak berlaku' : x.insuranceType === 'ajk' ? 'AJK CHUBB' : x.insuranceType === 'ajk_other' ? 'AJK Lain' : 'Tanpa Asuransi (AJK)'],
+    ['Pilihan AJK', x.insuranceType === 'ajk' ? 'AJK CHUBB' : x.insuranceType === 'ajk_other' ? 'AJK Lain' : 'Tanpa Asuransi (AJK)'],
     ['Perusahaan AJK', i.primaryCompany || ''], ['Premi AJK (Rp)', i.ajkPremium ?? 'Belum tersedia'],
     ['Asuransi Kebakaran digunakan', x.fireEnabled ? 'Ya' : 'Tidak'], ['Premi Asuransi Kebakaran (Rp)', i.firePremium ?? 'Belum tersedia'],
     ['Usia asuransi AJK (tahun)', i.age ?? ''], ['Tenor tarif AJK (tahun)', i.years ?? ''], ['Rate premi AJK (per mil)', i.rate ?? ''],
     ['Total premi asuransi (Rp)', i.premium ?? 'Belum dapat dihitung'], ['Keterangan asuransi', i.message],
-    ['Komponen biaya aktif', x.product === 'business' ? 'Provisi; Administrasi %; AJK; Kebakaran; Pelunasan Lama' : 'Provisi; Administrasi Rp; Pelunasan Lama'],
+    ['Komponen biaya aktif', x.product === 'business' ? 'Provisi; Administrasi %; AJK; Kebakaran; Pelunasan Lama' : 'Provisi; Administrasi Rp; AJK; Pelunasan Lama'],
     ['Pelunasan kredit lama (Rp)', x.payoff], ['Total potongan (Rp)', result.deductions ?? 'Belum dapat dihitung'],
     ['Dana bersih (Rp)', result.net ?? 'Belum dapat dihitung'], [],
     ['Bulan', 'Tanggal', 'Angsuran', 'Pokok', 'Bunga', 'Baki debet'],
@@ -1083,7 +1083,17 @@ function csvRows() {
 }
 $('form').addEventListener('submit', e => e.preventDefault());
 $('form').addEventListener('input', e => { if (e.target.id !== 'mode') update(); });
-$('product').addEventListener('change', () => { setProductIdirLimit(true); update(); });
+// Keep a separate explicit selection for each product to avoid carrying a business AJK choice into salary/pension.
+const ajkByProduct = { asn: 'ajk', pension: 'ajk', business: 'none' };
+let selectedProduct = $('product').value;
+$('insuranceType').value = ajkByProduct[selectedProduct];
+$('product').addEventListener('change', () => {
+  ajkByProduct[selectedProduct] = $('insuranceType').value;
+  selectedProduct = $('product').value;
+  $('insuranceType').value = ajkByProduct[selectedProduct];
+  setProductIdirLimit(true);
+  update();
+});
 $('insuranceType').addEventListener('change', update);
 $('tenorRange').addEventListener('input', () => { $('months').value = $('tenorRange').value; update(); });
 document.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { $('principal').value = b.dataset.p; update(); });
