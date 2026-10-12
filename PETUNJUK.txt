@@ -1,0 +1,13 @@
+SIMULASI KREDIT 6 PRODUK — JADWAL METODE 1 & 2 TANPA KOLOM KET.
+
+VERSI OFFLINE (TANPA LOGIN FIREBASE)
+1. Klik ZIP OFFLINE lalu pilih Ekstrak Semua / Extract All.
+2. Buka BUKA_INI_SIMULASI_KREDIT_OFFLINE.html dari folder hasil ekstrak.
+3. Pilih Pegawai Plus — Metode 1 atau Metode 2.
+4. Klik 02 Jadwal Angsuran. Kolom terakhir adalah Saldo Akhir.
+5. Unduh Jadwal CSV bila perlu. CSV juga tanpa kolom Keterangan.
+
+Kolom perhitungan bunga, pokok, angsuran, dan saldo akhir tetap.
+Kartu Angsuran, Cetak Ringkasan CPNS/ASN, Pensiun, Usaha, dan THT tidak diubah.
+
+Paket ONLINE_GITHUB memerlukan konfigurasi Firebase dan belum perlu diunggah sebelum pemeriksaan offline.

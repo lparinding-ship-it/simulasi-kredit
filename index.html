@@ -669,12 +669,703 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
  body:not(.printing-schedule):not(.print-blocked) .disbursement .cost-summary{padding:2mm!important}
  body:not(.printing-schedule):not(.print-blocked) .disbursement .section-title{margin-bottom:.8mm!important}
 }
-</style></head>
-<body><header><a class="brand" href="#"><span class="logo">K</span> Kredit<span class="brand-light"> / Simulasi</span></a><div aria-label="Pilihan dokumen cetak" class="top-print-actions">
+
+/* === Firebase monitoring: isolated from the loan formulas and print templates === */
+#monitorAccess[hidden],#monitorAppControls[hidden],#monitorAdmin[hidden]{display:none!important}
+body.monitor-locked>header,body.monitor-locked>main,body.monitor-locked>.schedule-print-sheet{display:none!important}
+body.monitor-admin-open>header,body.monitor-admin-open>main{display:none!important}
+#monitorAccess{min-height:100dvh;display:grid;place-items:center;padding:25px;background:linear-gradient(125deg,#e9f0fa,#f8fafd);color:#1c3b62}
+.monitor-login-card{width:min(100%,435px);padding:30px;border:1px solid #d7e3f1;background:white;border-radius:19px;box-shadow:0 20px 60px #173f7820}
+.monitor-mark{width:45px;height:45px;border-radius:12px;background:#173e72;color:#fff;display:grid;place-items:center;font-size:25px;font-weight:800;margin-bottom:15px}
+.monitor-login-card h1{font-size:23px;color:#15395f;margin:0 0 5px}
+.monitor-login-card p{font-size:12px;color:#687e96;margin:0 0 19px}
+.monitor-login-card label{font-size:12px;margin:13px 0 6px;color:#244769}
+.monitor-login-card input{min-height:48px;font-size:16px}
+.monitor-primary{border:0;background:#174a83;color:#fff;border-radius:9px;min-height:43px;padding:10px 16px;font-size:12px;font-weight:750}
+.monitor-primary:hover{background:#2166a9}.monitor-primary:disabled{opacity:.48;cursor:not-allowed}
+.monitor-muted{color:#6b7e92;font-size:11px;line-height:1.6}
+.monitor-error{color:#b92c44!important}
+#monitorLoginStatus{min-height:24px;margin-top:12px;font-size:12px}
+#monitorAppControls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px clamp(14px,4.5%,65px);background:#eaf1fa;border-bottom:1px solid #d6e3f2;color:#294e7c}
+#monitorWho{font-size:12px;font-weight:700;margin-right:auto}
+.monitor-small-btn{border:1px solid #cbdced;background:white;border-radius:8px;min-height:35px;padding:7px 11px;color:#194779;font-size:11px;font-weight:700}
+.monitor-save-card{margin-top:16px;padding:15px;border:1px solid #b9d6ec;border-radius:10px;background:#f5faff}
+.monitor-save-card h3{margin:0 0 6px;font-size:13px;color:#1e4c78}
+.monitor-save-card p{font-size:11px;margin:6px 0 12px;color:#59708a;line-height:1.55}
+.monitor-save-card button{width:100%}
+#monitorSaveStatus{min-height:16px;margin-top:9px!important}
+#monitorAdmin{min-height:100dvh;padding:25px max(16px,3vw);background:#f3f7fb;color:#233e5e}
+.monitor-admin-inner{max-width:1540px;margin:auto}
+.monitor-admin-title{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.monitor-admin-title h1{color:#153b69;margin:8px 0;font-size:24px}
+.monitor-admin-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.monitor-admin-toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:16px 0}
+.monitor-admin-toolbar input{max-width:360px;font-size:14px}
+.monitor-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0}
+.monitor-kpi{padding:18px;background:white;border:1px solid #dbe6f2;border-radius:11px}
+.monitor-kpi span{font-size:11px;color:#72859b;display:block}.monitor-kpi strong{font-size:23px;color:#184677;margin-top:6px;display:block;overflow-wrap:anywhere}
+.monitor-table-wrap{overflow:auto;background:#fff;border:1px solid #dce5f1;border-radius:12px}
+.monitor-table{border-collapse:collapse;width:100%;min-width:1120px;white-space:nowrap;font-size:11px}
+.monitor-table th,.monitor-table td{padding:12px 9px;border-bottom:1px solid #e5ebf3;text-align:left;color:#344b67}
+.monitor-table th{position:sticky;top:0;background:#edf3fa;font-weight:750;color:#284d79}
+.monitor-table td:nth-child(n+8){text-align:right;font-variant-numeric:tabular-nums}
+.monitor-table th:nth-child(n+8){text-align:right}
+@media(max-width:760px){#monitorAppControls{gap:6px;padding:9px 12px}#monitorWho{width:100%}.monitor-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.monitor-kpi strong{font-size:17px}#monitorAdmin{padding:13px}.monitor-login-card{padding:23px}}
+@media print{#monitorAccess,#monitorAppControls,#monitorAdmin,.monitor-save-card{display:none!important}body.monitor-locked>header,body.monitor-locked>main{display:none!important}}
+</style>
+<style id="combinedProductStyles">
+#globalProductNav,#plusMain[hidden],#plusDocument[hidden]{display:none!important}
+#globalProductNav{border-bottom:1px solid #d9e4ef;background:#fff;padding:10px max(16px,4vw);position:relative;z-index:3}
+.gpn-inner{max-width:1450px;margin:auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.gpn-caption{display:flex;flex-direction:column;gap:3px;margin-right:auto}.gpn-caption b{font-size:12px;color:#19446f;letter-spacing:.5px}.gpn-caption span{font-size:10px;color:#74899f}
+#globalProductNav label{margin:0;color:#537095;white-space:nowrap;font-size:10px;font-weight:800}
+#globalProductSelect{max-width:430px;min-width:265px;background:#f1f6fc;color:#183f6c;border:1px solid #cddff0;border-radius:9px;padding:11px;font-weight:750;font-size:13px}
+#gpnStatus{white-space:nowrap;color:#587c93;font-size:11px}
+#plusMain{max-width:1450px;padding:18px 2.2% 28px;margin:0 auto}
+.plus-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid #dde7f0;border-radius:12px;padding:13px 18px;margin-bottom:10px}
+.plus-topline>div:first-child{display:flex;flex-direction:column;gap:4px}.plus-topline b{font-size:15px;color:#184778}.plus-topline span{color:#7d91a5;font-size:11px}
+.plus-actions{display:flex;gap:8px;flex-wrap:wrap}.plus-actions button{cursor:pointer;border-radius:7px;border:1px solid #c1d3e4;padding:10px 13px;font:700 12px Arial,sans-serif;color:#1e5687;background:#f6f9fc}
+.plus-actions button:first-child{background:#174879;color:#fff;border-color:#174879}
+#plusSaveStatus{font-size:12px;color:#375e83;min-height:19px;padding:4px 9px}
+#plusFrame{display:block;border:0;background:transparent;width:100%;min-height:1450px;height:2000px}
+body.plus-active #coreMain{display:none!important}
+body.monitor-locked #globalProductNav,body.monitor-locked #plusMain{display:none!important}
+body.monitor-admin-open #globalProductNav,body.monitor-admin-open #plusMain{display:none!important}
+#plusDocument{max-width:1000px;margin:0 auto 24px;padding:0 15px;color:#203851;background:#fff}
+#plusPreviewToolbar{position:sticky;z-index:10;top:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#edf4fb;border-bottom:1px solid #dae5f0;padding:14px 18px;margin:0 -15px 18px}
+#plusPreviewToolbar>div:first-child{display:flex;flex-direction:column;gap:2px;font-size:14px;color:#234c77}#plusPreviewToolbar small{font-size:10px;color:#6b85a1}
+body.plus-document-preview>header,body.plus-document-preview>#globalProductNav,body.plus-document-preview>#coreMain,body.plus-document-preview>#plusMain{display:none!important}
+.pd-summary{padding:20px 18px;background:#fff;line-height:1.35}
+.pd-head{display:flex;justify-content:space-between;align-items:start;gap:14px;border-bottom:2px solid #c53d50;padding-bottom:12px;margin-bottom:14px}
+.pd-head h1{font-size:22px;letter-spacing:-.6px;color:#173f78;margin:0}.pd-head small{font-size:10px;color:#6e87a1}
+.pd-head-meta{text-align:right;font-size:10px;color:#55718d;line-height:1.7}
+.pd-section-title{font-size:11px;color:#2d598a;letter-spacing:.7px;font-weight:750;margin:13px 0 6px}
+.pd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.pd-datum{background:#f6f9fe;border:1px solid #e2eaf4;border-radius:6px;padding:9px;min-width:0}.pd-datum span{display:block;font-size:10px;color:#738aa5}.pd-datum strong{display:block;font-size:12px;color:#194572;margin-top:4px;overflow-wrap:anywhere}
+.pd-hero{margin:11px 0;background:#153e79;color:#fff;border-radius:9px;padding:15px 20px;display:grid;grid-template-columns:1fr 1fr;gap:9px}.pd-hero span{display:block;font-size:10px;color:#c5d9f0}.pd-hero strong{display:block;font-size:22px;margin-top:4px}
+.pd-foot{padding-top:10px;border-top:1px solid #dbe5f2;margin-top:15px;text-align:center;color:#6483a2;font-size:10px}
+.pd-alert{border:1px solid #e5baaf;background:#fff3ef;color:#922f2d;padding:12px;border-radius:8px;font-size:11px;margin-top:10px}
+.pd-schedule-page{padding:8px 12px 12px;background:#fff}.pd-schedule-page .pd-head h1{font-size:17px}
+.pd-schedule-table{width:100%;border-collapse:collapse;font-size:10px;white-space:nowrap;table-layout:fixed}
+.pd-schedule-table th{background:#1e4a7c;color:white;padding:7px 5px}.pd-schedule-table td{padding:5px 5px;border-bottom:1px solid #e0e9f2;text-align:right}
+.pd-schedule-table th:first-child,.pd-schedule-table td:first-child{text-align:center}.pd-schedule-table th:nth-child(2),.pd-schedule-table td:nth-child(2){text-align:left}
+.pd-schedule-table tbody tr:nth-child(even){background:#f5f8fc}.pd-schedule-table tfoot td{font-weight:bold;background:#eaf2fa}
+.pd-schedule-table th:nth-child(1){width:6%}.pd-schedule-table th:nth-child(2){width:17%}
+.pd-schedule-table th:nth-child(3){width:12%}
+.pd-schedule-table th:nth-child(n+4){width:16.25%}
+@media (max-width:760px){#globalProductNav{padding:10px 12px}.gpn-inner{gap:7px}.gpn-caption{width:100%}#globalProductNav label{display:none}#globalProductSelect{max-width:none;min-width:0;width:100%}#gpnStatus{display:none}#plusMain{padding:10px 7px}#plusFrame{height:1950px}.plus-actions button{padding:9px 10px;font-size:11px}.pd-grid{grid-template-columns:repeat(2,1fr)}.pd-hero strong{font-size:17px}}
+@media print{
+ @page{size:A4 portrait;margin:9mm 10mm}
+ body.plus-document-preview>header,body.plus-document-preview>#monitorAppControls,body.plus-document-preview>#globalProductNav,body.plus-document-preview>main,body.plus-document-preview>.schedule-print-sheet,body.plus-document-preview>#printBlockedSheet,body.plus-document-preview>#monitorAdmin{display:none!important}
+ body.plus-document-preview #plusDocument{display:block!important;padding:0!important;margin:0!important;max-width:none!important}
+ body.plus-document-preview #plusPreviewToolbar{display:none!important}
+ body.plus-document-preview .pd-summary{padding:0!important;break-inside:avoid!important}
+ body.plus-document-preview .pd-summary .pd-head h1{font-size:17pt!important}
+ body.plus-document-preview .pd-grid{gap:2mm!important}
+ body.plus-document-preview .pd-datum{padding:2.1mm!important}
+ body.plus-document-preview .pd-hero{padding:3mm 4mm!important;margin:3mm 0!important}
+ body.plus-document-preview .pd-hero strong{font-size:18pt!important}
+ body.plus-document-preview .pd-section-title{margin:3mm 0 1.5mm!important}
+ body.plus-document-preview .pd-foot{font-size:8pt!important;margin-top:2mm!important}
+ body.plus-document-preview .pd-schedule-page{padding:0!important}
+ body.plus-document-preview .pd-schedule-table{font-size:7.5pt!important}
+ body.plus-document-preview .pd-schedule-table td{padding:1.5mm!important}
+ body.plus-document-preview .pd-schedule-table th{padding:2mm!important}
+ body.plus-document-preview .pd-schedule-page + .pd-schedule-page{break-before:page;page-break-before:always}
+ body.plus-document-preview>.print-blocked-sheet{display:none!important}
+ body.plus-document-preview #plusDocument,body.plus-document-preview .pd-summary,body.plus-document-preview .pd-schedule-page{color:#1a3858!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* ===== RINGKASAN SERAGAM 5 PRODUK · Desain mengikuti keluaran CPNS/ASN, Pensiun, Usaha ===== */
+.ps-unified{font-family:Inter,"Segoe UI",Arial,sans-serif;color:#183b63!important;background:#fff;font-size:12px;line-height:1.3}
+.ps-unified .ps-report-header{display:flex;align-items:center;justify-content:space-between;gap:15px;padding-bottom:13px;border-bottom:1.6px solid #d3dfed;margin-bottom:10px}
+.ps-heading-left{display:flex;align-items:center;gap:13px;min-width:0}.ps-logo{display:grid;place-items:center;width:44px;height:44px;background:#153e74;color:white;font-size:23px;font-weight:800;border-radius:9px;flex:none}
+.ps-title-block .ps-eyebrow{display:block;font-size:8px;letter-spacing:1.3px;color:#6280a0;font-weight:800}.ps-unified .ps-title-block h1{font-size:20px;letter-spacing:-.6px;line-height:1.15;margin:3px 0;color:#153a67}.ps-unified .ps-title-block p{font-size:10px;color:#7d92a8;margin:3px 0 0}
+.ps-header-meta{display:flex;align-items:flex-end;flex-direction:column;gap:4px;max-width:220px;text-align:right;font-size:9px;color:#607a99}.ps-header-meta small{font-size:9px;overflow-wrap:anywhere}
+.ps-meta-badge{padding:6px 8px;border:1px solid #d7e5f6;background:#edf4fd;border-radius:15px;color:#315f96;font-size:8px;font-weight:780;white-space:nowrap}
+.ps-document-identity{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:10px;background:#f9fbfe;border:1px solid #dbe5f2;border-radius:8px;padding:10px 13px;margin:0 0 9px}
+.ps-field{min-width:0}.ps-field span{display:block;font-size:9px;letter-spacing:.35px;color:#8095ae;font-weight:700}.ps-field strong{display:block;margin-top:4px;color:#1a426e;font-size:12px;overflow-wrap:anywhere}
+.ps-product-note{background:#f8fbff;border:1px solid #dbe5f4;border-radius:7px;padding:10px 13px}.ps-product-note strong{color:#224f86;font-size:12px}.ps-product-note p{font-size:9px;margin:3px 0 0;color:#6a83a0}
+.ps-unified .ps-section-kicker{display:flex;align-items:center;gap:6px;color:#315d8c;font-size:10px;font-weight:800;letter-spacing:.6px;margin:11px 0 6px}.ps-section-kicker em{display:grid;place-items:center;background:#e9f1fb;width:22px;height:22px;border-radius:5px;font-style:normal;color:#224f83;font-size:10px}
+.ps-facility-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 12px;background:#f9fbfe;border:1px solid #dce5f1;border-radius:7px;padding:12px 14px}
+.ps-hero{background:linear-gradient(115deg,#10355e,#1f5c9c);padding:15px 18px;border-radius:10px;color:#fff;margin:10px 0}.ps-hero-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:9px;letter-spacing:1px;color:#c7d9ef;font-weight:780}
+.ps-pill{border-radius:20px;background:#eaf2ff;color:#1a4c7d;padding:5px 8px;letter-spacing:0;white-space:nowrap}
+.ps-two-payments{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:11px}.ps-phase{min-width:0}.ps-phase+.ps-phase{border-left:1px solid #ffffff4d;padding-left:14px}.ps-phase small{display:block;color:#cfddf0;font-size:9px;letter-spacing:.6px}.ps-phase strong{display:block;color:#fff;font-size:22px;letter-spacing:-.5px;white-space:nowrap;margin:5px 0}.ps-phase span{font-size:9px;color:#d0e1f6}
+.ps-salary{background:#eef8f2;border:1px solid #bfdfd0;border-left:4px solid #197355;border-radius:8px;padding:11px 14px;margin:10px 0}.ps-salary-heading{font-size:10px;font-weight:800;color:#276e55;letter-spacing:.8px}.ps-salary-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+.ps-salary-cell+.ps-salary-cell{border-left:1px solid #c7e2d5;padding-left:15px}.ps-salary-cell span{display:block;font-size:9px;color:#537a69;font-weight:700}.ps-salary-cell strong{display:block;font-size:19px;font-weight:800;color:#176f50;margin:2px 0}.ps-salary-cell small{color:#5b8270;font-size:9px}.ps-salary-note{font-size:9px;color:#59806f;margin:7px 0 0}
+.ps-financing-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.ps-financing-metrics .ps-field{padding:12px 13px;border:1px solid #dae6f2;border-radius:8px;background:#fff}.ps-financing-metrics .ps-field strong{font-size:17px;margin-top:7px;white-space:nowrap}.ps-financing-metrics .ps-field:last-child strong{color:#17745b}
+.ps-capacity{border:1px solid #dce7f3;border-radius:8px;padding:11px 14px}.ps-capacity-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.ps-capacity-item>span{color:#7990aa;font-size:9px;font-weight:730}.ps-capacity-row{display:flex;align-items:baseline;justify-content:space-between;gap:9px;margin-top:4px}.ps-capacity-row b{font-size:17px;color:#214d7b}.ps-capacity-row small{color:#718ba7;font-size:9px}
+.ps-capacity-bottom{display:flex;justify-content:space-between;border-top:1px solid #e2eaf4;padding-top:8px;margin-top:9px;font-size:10px;color:#6a809c}.ps-capacity-bottom strong{color:#194b83}.ps-capacity-note{font-size:9px;margin:6px 0 0;background:#eef5fd;padding:7px 9px;border-radius:5px;color:#315b91}
+.ps-fees{display:grid;grid-template-columns:1.2fr 1fr;gap:15px;padding:12px 14px;border:1px solid #dae6f0;border-radius:8px}.ps-fee-row{display:flex;align-items:baseline;justify-content:space-between;gap:9px;font-size:10px;padding:4px 0;color:#647d9a}.ps-fee-row b{font-size:10px;color:#2a4b70;white-space:nowrap}.ps-cost-summary{background:#f0f5fc;border-radius:7px;padding:10px 12px;align-self:stretch}.ps-net{display:flex;flex-direction:column;gap:4px;margin-top:10px;border-top:1px solid #d3e1f1;padding-top:9px;color:#6582a0;font-size:9px;font-weight:730}.ps-net strong{font-size:19px;color:#17745d;white-space:nowrap}
+.ps-report-footer{text-align:center;border-top:1px solid #d5e1ef;margin-top:11px;padding-top:10px;color:#627d9c;font-size:9px}.ps-report-footer strong,.ps-report-footer small{display:block}.ps-report-footer small{margin-top:3px;font-size:8px;color:#7c91a8}
+@media(max-width:760px){.ps-unified{padding:12px 10px}.ps-report-header{flex-wrap:wrap}.ps-header-meta{align-items:flex-start;text-align:left}.ps-document-identity{grid-template-columns:1fr 1fr}.ps-facility-grid{grid-template-columns:1fr 1fr}.ps-phase strong{font-size:17px}.ps-salary-cell strong{font-size:17px}.ps-financing-metrics .ps-field strong{font-size:13px}.ps-fees{grid-template-columns:1fr}.ps-capacity-grid{gap:9px}}
+@media print{
+  body.plus-document-preview .ps-unified{padding:0!important;font-size:8pt!important;line-height:1.2!important}
+  body.plus-document-preview .ps-report-header{padding-bottom:2mm!important;margin-bottom:1.6mm!important}
+  body.plus-document-preview .ps-logo{width:9.5mm;height:9.5mm;font-size:16pt;border-radius:2mm}
+  body.plus-document-preview .ps-title-block h1{font-size:14pt!important}
+  body.plus-document-preview .ps-title-block p{font-size:7pt!important}
+  body.plus-document-preview .ps-header-meta small{font-size:6pt!important}
+  body.plus-document-preview .ps-document-identity{padding:1.8mm 2.5mm!important;margin-bottom:1.5mm!important;gap:2mm!important;grid-template-columns:1.1fr 1fr 1fr!important}
+  body.plus-document-preview .ps-field span{font-size:6.7pt!important;margin:0!important}
+  body.plus-document-preview .ps-field strong{font-size:8pt!important;margin-top:.65mm!important}
+  body.plus-document-preview .ps-product-note{padding:1.8mm 2.5mm!important}
+  body.plus-document-preview .ps-product-note strong{font-size:8.5pt!important}
+  body.plus-document-preview .ps-product-note p{font-size:6.8pt!important;margin-top:.5mm!important;line-height:1.15}
+  body.plus-document-preview .ps-section-kicker{margin:1.7mm 0 1mm!important;font-size:7.8pt!important}
+  body.plus-document-preview .ps-section-kicker em{width:5mm;height:5mm;font-size:7pt}
+  body.plus-document-preview .ps-facility-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:2mm!important;padding:2.3mm 3mm!important}
+  body.plus-document-preview .ps-hero{padding:3mm 4mm!important;margin:2mm 0!important}
+  body.plus-document-preview .ps-hero-top{font-size:7pt!important}
+  body.plus-document-preview .ps-two-payments{margin-top:1.5mm!important;gap:3mm!important}
+  body.plus-document-preview .ps-phase strong{font-size:18pt!important;margin:1mm 0!important}
+  body.plus-document-preview .ps-phase small,body.plus-document-preview .ps-phase span{font-size:7pt!important}
+  body.plus-document-preview .ps-salary{padding:2mm 3mm!important;margin:1.7mm 0!important}
+  body.plus-document-preview .ps-salary-grid{margin-top:1mm!important;gap:3mm!important}
+  body.plus-document-preview .ps-salary-cell strong{font-size:15pt!important;margin:.5mm 0!important}
+  body.plus-document-preview .ps-salary-cell span,body.plus-document-preview .ps-salary-cell small,body.plus-document-preview .ps-salary-note{font-size:6.8pt!important}
+  body.plus-document-preview .ps-salary-note{margin-top:1mm!important}
+  body.plus-document-preview .ps-financing-metrics{gap:2mm!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  body.plus-document-preview .ps-financing-metrics .ps-field{padding:2.3mm 3mm!important}
+  body.plus-document-preview .ps-financing-metrics .ps-field strong{font-size:12pt!important;margin-top:1mm!important}
+  body.plus-document-preview .ps-capacity{padding:2.3mm 3mm!important}
+  body.plus-document-preview .ps-capacity-grid{gap:3mm!important}
+  body.plus-document-preview .ps-capacity-row b{font-size:12pt!important}
+  body.plus-document-preview .ps-capacity-bottom{margin-top:1.3mm!important;padding-top:1.3mm!important}
+  body.plus-document-preview .ps-capacity-note{padding:1.1mm 2mm!important;font-size:6.6pt!important;margin-top:1mm!important}
+  body.plus-document-preview .ps-fees{grid-template-columns:1.2fr 1fr!important;gap:3mm!important;padding:2.2mm 3mm!important}
+  body.plus-document-preview .ps-fee-row{font-size:7pt!important;padding:.5mm 0!important}
+  body.plus-document-preview .ps-fee-row b{font-size:7pt!important}
+  body.plus-document-preview .ps-cost-summary{padding:2mm 3mm!important}
+  body.plus-document-preview .ps-net{margin-top:1.6mm!important;padding-top:1.4mm!important}
+  body.plus-document-preview .ps-net strong{font-size:13pt!important}
+  body.plus-document-preview .ps-report-footer{margin-top:1.7mm!important;padding-top:1.5mm!important}
+  body.plus-document-preview .ps-report-footer strong{font-size:7pt!important}
+  body.plus-document-preview .ps-report-footer small{font-size:6.6pt!important;margin-top:.5mm!important}
+  body.plus-document-preview .ps-product-note,body.plus-document-preview .ps-hero,body.plus-document-preview .ps-salary,body.plus-document-preview .ps-financing-metrics,body.plus-document-preview .ps-capacity,body.plus-document-preview .ps-fees{break-inside:avoid!important}
+}
+
+</style>
+
+<style id="singleProductSelectStyles">
+/* One and only visible product selector for the five products. */
+#coreInternalProductField{display:none!important}
+#globalProductNav:not([hidden]){display:block!important}
+#globalProductNav[hidden]{display:none!important}
+#globalProductSelect{font-size:16px;min-height:47px}
+@media print{#globalProductNav{display:none!important}}
+</style>
+
+<style id="identityPlusStyles">
+/* Identitas dokumen tunggal untuk kelima produk; panel dipindah antar kalkulator tanpa duplikasi field. */
+#plusIdentitySlot{max-width:1440px;margin:0 auto 14px}
+#plusIdentitySlot .input-group-document{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px 13px;background:#fff;border:1px solid #ccdaeb;border-radius:13px;padding:18px 20px;box-shadow:0 3px 18px rgba(20,51,90,.05)}
+#plusIdentitySlot .input-group-title,#plusIdentitySlot .doc-note{grid-column:1/-1}
+#plusIdentitySlot .input-field-block{margin:0;min-width:0}
+#plusIdentitySlot .input-field-block label{display:block;margin:0 0 7px;font-size:11px;color:#37506a}
+#plusIdentitySlot .input-field-block input{width:100%;min-width:0;border:1px solid #dbe3e7;border-radius:8px;padding:10px 11px;background:white;color:#203b43;font-size:12px}
+#plusIdentitySlot .input-field-block input[readonly]{background:#f0f5fb}
+#plusIdentitySlot .doc-note{margin:1px 0 0;color:#647a94}
+#plusIdentitySlot .input-group-index{background:#184c82}
+@media(max-width:1100px){#plusIdentitySlot .input-group-document{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){#plusIdentitySlot .input-group-document{grid-template-columns:repeat(2,minmax(0,1fr));padding:13px 11px;gap:12px 8px}}
+@media(max-width:450px){#plusIdentitySlot .input-group-document{grid-template-columns:minmax(0,1fr)}}
+@media print{#plusIdentitySlot{display:none!important}}
+</style>
+<style id="print-button-feedback-style">
+/* Print action: validasi dapat dijelaskan melalui tombol, bukan kondisi tidak responsif. */
+#printActionFeedback[hidden]{display:none!important}
+#printActionFeedback{position:fixed;top:85px;right:18px;z-index:10000;width:min(520px,calc(100vw - 28px));padding:14px 44px 14px 17px;box-shadow:0 10px 32px rgba(19,45,75,.18);border-radius:12px;border:1px solid #e7c58f;border-left:5px solid #b37a21;background:#fff9e9;color:#624616;font:13px/1.5 Inter,Segoe UI,Arial,sans-serif}
+#printActionFeedback b{display:block;color:#624616;font-size:13px;margin-bottom:5px}
+#printActionFeedback ol{margin:7px 0 0 20px;padding:0}
+#printActionFeedback li{margin:3px 0}
+#printFeedbackClose{position:absolute;right:12px;top:9px;border:0;background:transparent;color:#795420;font-size:23px;line-height:1;padding:3px 6px;cursor:pointer}
+#globalProductNav .top-print-button[data-pending-validation="true"],.top-print-button[data-pending-validation="true"]{opacity:.86;cursor:help}
+@media(max-width:760px){#printActionFeedback{top:10px;right:10px;left:10px;width:auto}}
+@media print{#printActionFeedback{display:none!important}}
+</style>
+<style id="professionalDesignV2">
+/* Simulasi Kredit — Enterprise Design System 2026. SCREEN ONLY. */
+@media screen {
+:root {--pro-navy:#112f58;--pro-blue:#1e5fa7;--pro-blue-hover:#154b89;--pro-ink:#172b45;--pro-sub:#607389;--pro-bg:#f2f6fb;--pro-line:#dce5ef;--pro-glow:0 12px 36px rgba(20,51,92,.055);--pro-radius:16px}
+html{scroll-behavior:smooth} body{background:var(--pro-bg)!important;color:var(--pro-ink)}
+body,button,input,select{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+#globalProductNav{background:#fff!important;border-bottom:1px solid var(--pro-line)!important;box-shadow:0 2px 18px rgba(25,52,87,.035);position:relative;z-index:11}
+#globalProductNav .gpn-inner{max-width:1440px!important;margin:auto;display:flex;gap:18px!important;align-items:center;min-height:88px;padding:12px 26px!important;flex-wrap:wrap}
+#globalProductNav .gpn-caption{flex:1;min-width:170px}
+#globalProductNav .gpn-caption b{font-size:12px;letter-spacing:.85px;color:var(--pro-navy)}
+#globalProductNav .gpn-caption span{font-size:11px;color:var(--pro-sub)}
+#globalProductNav label{font-size:10px;font-weight:800;color:#526981;letter-spacing:1px}
+#globalProductSelect{background:#f8fbff;border:1px solid #b9cde4!important;border-radius:11px!important;font-size:14px!important;font-weight:750;color:var(--pro-navy)!important;min-height:49px;max-width:min(100%,440px);box-shadow:0 0 0 3px #eaf2fc}
+#gpnStatus{border:1px solid #daebf2;background:#f1f8fc;border-radius:100px;color:#376681!important;padding:8px 11px;font-size:11px!important;font-weight:750}
+.offline-preview-banner{max-width:1400px;margin:12px auto 0!important;background:#fff9e8!important;color:#6c5223!important;border:1px solid #efe1bb!important;border-radius:11px!important;padding:9px 14px!important;font-size:11px!important}
+.offline-preview-banner small{color:#877253!important}
+.ux-workspace{max-width:1440px;margin:0 auto;padding:19px 26px 4px}
+.ux-welcome{background:linear-gradient(116deg,#102f56 0%,#1e5189 75%,#2765a3 100%);padding:24px 26px;color:#fff;border-radius:19px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(30,77,132,.13)}
+.ux-welcome:after{content:'';position:absolute;width:300px;height:300px;border:1px solid #ffffff1a;border-radius:50%;right:-70px;top:-230px;pointer-events:none}
+.ux-welcome .ux-eyebrow{font-size:10px;color:#b8d9fa;letter-spacing:1.9px;font-weight:850;text-transform:uppercase}
+.ux-welcome h2{font-size:clamp(19px,2vw,27px);letter-spacing:-.65px;line-height:1.15;color:#fff;margin:7px 0 6px}
+.ux-welcome p{font-size:12px;color:#d9e9fa;margin:0;max-width:650px}
+.ux-welcome .ux-method{white-space:nowrap;flex:none;border:1px solid #ffffff50;border-radius:999px;padding:8px 13px;background:#ffffff1a;font-size:11px;font-weight:700;color:white;z-index:1}
+.ux-steps{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--pro-line);border-radius:13px;margin:12px 0 13px;padding:8px;box-shadow:var(--pro-glow);position:sticky;top:0;z-index:40}
+.ux-step{flex:1;min-width:0;text-align:left;border:0;border-radius:9px;background:transparent;color:#63768a;padding:12px 10px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:750;cursor:pointer;transition:background .16s}
+.ux-step:hover,.ux-step:focus-visible{background:#ecf4fe;outline:2px solid #aec9ee;outline-offset:0}
+.ux-step.is-active{background:#e9f2ff;color:#124d89}
+.ux-step span:first-child{display:grid;place-items:center;width:29px;height:29px;flex:none;border-radius:8px;background:#edf2f9;color:#647f9b;font-size:10px;font-weight:900}
+.ux-step.is-active span:first-child{background:#1d5b9f;color:white}
+.ux-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:10px}
+.ux-stat{background:#fff;box-shadow:var(--pro-glow);border:1px solid var(--pro-line);border-radius:13px;padding:15px 17px;min-width:0;position:relative}
+.ux-stat:before{content:'';position:absolute;top:15px;bottom:15px;left:0;width:3px;background:#bed4ee;border-radius:3px}
+.ux-stat.primary:before{background:#2869b1}.ux-stat.good:before{background:#18906d}.ux-stat.warn:before{background:#d09c3b}
+.ux-stat small{display:block;text-transform:uppercase;color:#64798d;font-size:9px;letter-spacing:1.0px;font-weight:850}
+.ux-stat strong{display:block;font-size:clamp(15px,1.6vw,24px);font-variant-numeric:tabular-nums;letter-spacing:-.6px;color:#173e67;margin:7px 0 2px;overflow-wrap:anywhere}
+.ux-stat.good strong{color:#137757}.ux-stat em{font-size:10px;color:#728498;font-style:normal;display:block}
+.ux-disclosure{border:1px solid #d7e5f0;background:#f5faff;border-left:4px solid #2d78bd;color:#315270;padding:10px 14px;border-radius:10px;font-size:11px;line-height:1.6;margin-bottom:7px}
+.ux-disclosure strong{color:#173e6f}
+.ux-disclosure.ux-alert{background:#fff9ee;border-color:#e9d6ab;border-left-color:#c58d36;color:#715225}
+.ux-inline-status{display:inline-block;border-radius:100px;background:#e8f5f0;color:#176c53;padding:3px 9px;font-weight:750}
+/* Existing engine: corporate alignment, not touching calculator/output IDs */
+#coreMain{max-width:1440px!important;margin:auto;padding:12px 26px 24px!important}
+#coreMain>.intro{display:none!important}
+#coreMain .layout{grid-template-columns:minmax(305px,360px) minmax(0,1fr)!important;gap:20px!important}
+#coreMain .card{border:1px solid var(--pro-line)!important;border-radius:15px!important;box-shadow:var(--pro-glow)!important}
+#coreMain .inputs{background:#fff;padding:17px!important}
+#coreMain .input-group{border:1px solid #e1e9f2!important;background:#fbfdff!important;border-radius:12px!important;padding:15px!important;margin-bottom:12px}
+#coreMain .input-group-title{color:#244f80!important;font-size:11px;letter-spacing:.3px}
+#coreMain .input-group-index{background:#21578e!important;color:white!important}
+#coreMain .input-field-block>label{font-size:12px!important;font-weight:750!important;color:#34516d}
+#coreMain input,#coreMain select{border:1px solid #d3dfeb;border-radius:9px;color:#203955;min-height:43px}
+#coreMain input:focus-visible,#coreMain select:focus-visible{outline:3px solid #afcffa!important;outline-offset:1px!important}
+#coreMain .print-heading{border-color:#d6e3f0!important}
+#coreMain .hero{background:linear-gradient(116deg,#123e73,#215e9b)!important;border:0!important;box-shadow:0 13px 25px #16467718}
+#coreMain .hero-value{font-variant-numeric:tabular-nums}
+#coreMain .salary-highlight{border-radius:13px!important}
+#coreMain .metric{border-radius:13px!important}
+#coreMain .schedule{border-radius:13px!important}
+/* THT: same field language, clear two-column hierarchy */
+#thtMain{max-width:1440px!important;margin:auto;padding:14px 26px 34px!important}
+#thtMain .tht-head{background:white;border:1px solid var(--pro-line);border-radius:15px;padding:20px 22px;box-shadow:var(--pro-glow);margin-bottom:14px}
+#thtMain .tht-head h2{font-size:21px!important;color:#1b426e;letter-spacing:-.5px}
+#thtMain .tht-head p{color:#647b90}
+#thtMain .tht-box{border:1px solid var(--pro-line)!important;border-radius:15px!important;box-shadow:var(--pro-glow)!important;background:#fff!important;margin-bottom:15px}
+#thtMain .tht-box h3{color:#1c4776!important;padding-bottom:12px;border-bottom:1px solid #e6eef6;letter-spacing:.2px}
+#thtMain .tht-field label{color:#3a5771;font-size:12px!important;font-weight:750}
+#thtMain .tht-field input,#thtMain .tht-field select{border-radius:9px!important;border:1px solid #d5e1ec!important;min-height:44px}
+#thtMain #thtSave,.monitor-primary{background:#205b9a!important;border-color:#205b9a!important;color:#fff!important;border-radius:10px!important;font-weight:750!important;min-height:42px}
+/* Identitas dokumen: consistent across all product pages */
+#coreMain .input-group-document,#plusIdentitySlot .input-group-document,#thtIdentitySlot .input-group-document{background:#f8fbff!important;border:1px solid #d8e7f6!important;border-radius:13px!important;box-shadow:0 6px 22px #103e7010;padding:18px!important;margin-bottom:16px}
+#plusMain{max-width:1440px!important;padding:13px 26px 30px!important;margin:auto}
+#plusMain .plus-topline{background:#fff!important;border:1px solid var(--pro-line);box-shadow:var(--pro-glow);border-radius:15px!important;padding:16px 19px!important;margin-bottom:14px}
+#plusMain .plus-topline b{color:var(--pro-navy);font-size:14px!important}
+#plusMain .plus-topline span{color:var(--pro-sub)}
+#plusMain #plusSaveStatus{color:#4d6580;font-size:11px;background:#f3f8fd;border:1px solid #e1eaf4;border-radius:10px;padding:11px 13px;margin-bottom:10px}
+#plusFrame{border:0!important;display:block;width:100%;background:transparent;border-radius:14px}
+/* Source tariff from user's CHUBB file: info only, not an approval. */
+.ux-source-note{font-size:10px;color:#775c2f;background:#fffbef;border:1px solid #eddcb6;border-radius:9px;padding:9px 11px;margin:10px 0}
+button{transition:background .12s ease, box-shadow .12s ease}button:focus-visible{outline:3px solid #80b6ed!important;outline-offset:2px}
+@media(max-width:1100px){#coreMain .layout{grid-template-columns:1fr!important}#globalProductNav .gpn-inner{padding:12px 19px!important}}
+@media(max-width:720px){
+ #globalProductNav .gpn-inner{gap:7px!important;padding:13px 15px!important;min-height:unset;display:grid;grid-template-columns:1fr!important}
+ #globalProductNav .gpn-caption{min-width:0}#globalProductNav label{margin:3px 0 0}
+ #globalProductSelect{max-width:100%;width:100%;font-size:15px!important;min-height:48px}
+ #gpnStatus{justify-self:start;padding:5px 10px}
+ .offline-preview-banner{margin:7px 12px 0!important;font-size:10px!important}
+ .ux-workspace{padding:10px 12px 0}
+ .ux-welcome{padding:17px 17px;display:block;border-radius:15px}
+ .ux-welcome h2{font-size:21px}.ux-welcome p{font-size:11px}
+ .ux-welcome .ux-method{display:inline-block;margin-top:12px;font-size:10px}
+ .ux-steps{overflow-x:auto;overscroll-behavior-x:contain;margin-top:10px;padding:6px;gap:4px;border-radius:11px;top:0;scrollbar-width:none}
+ .ux-steps::-webkit-scrollbar{display:none}
+ .ux-step{flex:0 0 auto;padding:8px;gap:5px;font-size:10px;white-space:nowrap}
+ .ux-step span:first-child{width:23px;height:23px;font-size:9px;border-radius:6px}
+ .ux-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .ux-stat{padding:13px 11px;border-radius:11px;min-height:83px}
+ .ux-stat strong{font-size:clamp(14px,4.1vw,20px);line-height:1.2;letter-spacing:-.4px}
+ .ux-stat small{font-size:9px;letter-spacing:.5px}.ux-stat em{font-size:9px}
+ .ux-disclosure{font-size:11px;padding:10px 11px}
+ #coreMain,#thtMain,#plusMain{padding:10px 12px 25px!important}
+ #coreMain .inputs{padding:12px!important}
+ #coreMain .input-group{padding:13px!important}
+ #coreMain input,#coreMain select,#thtMain input,#thtMain select,#plusIdentitySlot input{font-size:16px!important}
+ #coreMain .print-heading{padding:13px 8px}
+ #thtMain .tht-head{padding:15px;display:flex;flex-wrap:wrap}
+ #plusMain .plus-topline{padding:14px!important}
+ #plusMain .plus-topline .plus-actions{align-self:stretch}
+ #plusMain #plusSave{min-height:45px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+}
+@media print {.ux-workspace,.ux-source-note{display:none!important}}
+
+</style>
+<style id="bankCleanUi2026">
+/* Bank Professional Clean UI — perbaikan visual, tidak mengubah kalkulasi. */
+@media screen {
+  #globalProductNav{border-bottom:1px solid #e2e8f0!important;box-shadow:none!important}
+  #globalProductNav .gpn-inner{max-width:1440px!important;min-height:66px!important;padding:9px 22px!important;gap:16px!important;display:flex!important;flex-wrap:nowrap!important;align-items:center!important}
+  #globalProductNav .gpn-caption{flex:0 0 auto!important;min-width:0!important}
+  #globalProductNav .gpn-caption b{font-size:17px!important;letter-spacing:-.35px!important;color:#173e68!important;text-transform:none!important}
+  #globalProductNav .gpn-caption span,#gpnStatus{display:none!important}
+  #globalProductNav label{font-size:11px!important;font-weight:700!important;letter-spacing:0!important;white-space:nowrap;color:#506680!important}
+  #globalProductSelect{flex:1 1 300px!important;width:clamp(220px,31vw,420px)!important;max-width:420px!important;min-width:170px!important;min-height:41px!important;height:42px!important;padding:7px 11px!important;background:#fff!important;box-shadow:none!important;border:1px solid #c9d8e7!important;border-radius:8px!important;font-size:13px!important}
+  #globalProductNav .top-print-actions{display:flex!important;align-items:center!important;gap:8px!important;flex:0 0 auto!important;min-width:0!important;margin-left:auto!important;width:auto!important}
+  #globalProductNav .top-print-button{min-height:42px!important;height:42px!important;min-width:0!important;padding:8px 12px!important;border-radius:8px!important;box-shadow:none!important;gap:7px!important;white-space:nowrap!important;font-size:12px!important;text-align:center!important}
+  #globalProductNav .top-print-button b{font-size:12px!important}
+  #globalProductNav .top-print-button small{display:none!important}
+  #globalProductNav .top-print-button .action-icon{font-size:15px!important}
+  header.ui-legacy-header{display:none!important}
+  .offline-preview-banner{margin:0!important;max-width:none!important;border-radius:0!important;border:0!important;border-bottom:1px solid #eadfbf!important;background:#fffbf0!important;color:#8a6b35!important;padding:5px max(18px,calc((100vw - 1400px)/2))!important;font-size:11px!important;line-height:1.45!important;text-align:left!important;letter-spacing:0!important;font-weight:600!important}
+  .offline-preview-banner small{display:none!important}
+  .ux-workspace{padding:12px 22px 0!important;max-width:1440px!important}
+  .ux-welcome{display:none!important}
+  .ux-steps{position:relative!important;top:auto!important;z-index:1!important;display:flex!important;flex-wrap:nowrap!important;gap:13px!important;padding:0 0 7px!important;margin:0 0 11px!important;border:0!important;border-bottom:1px solid #dbe4ee!important;background:transparent!important;box-shadow:none!important;border-radius:0!important}
+  .ux-step{flex:0 1 auto!important;min-width:0!important;padding:7px 8px!important;gap:6px!important;background:transparent!important;border-radius:0!important;color:#698096!important;white-space:nowrap!important;font-size:12px!important;line-height:1.4!important}
+  .ux-step.is-active{background:transparent!important;color:#19558e!important;box-shadow:inset 0 -2px #2263a0!important}
+  .ux-step span:first-child{width:20px!important;height:20px!important;border-radius:5px!important;font-size:9px!important}
+  .ux-cards{gap:9px!important;margin:0 0 9px!important}
+  .ux-stat{padding:12px 14px!important;min-height:76px!important;border-radius:10px!important;box-shadow:none!important;border-color:#dfe7ee!important}
+  .ux-stat:before{top:12px!important;bottom:12px!important}
+  .ux-stat small{font-size:10px!important;letter-spacing:.35px!important}
+  .ux-stat strong{font-size:clamp(17px,1.65vw,23px)!important;margin:5px 0 0!important}
+  .ux-stat em{display:none!important}
+  .ux-disclosure{padding:8px 11px!important;margin-bottom:3px!important;border-width:1px!important;border-left-width:3px!important;border-radius:8px!important;font-size:11px!important;box-shadow:none!important}
+  #coreMain{padding-top:8px!important}
+  #coreMain .mobile-quick-nav{display:none!important}
+  #coreMain .print-heading{display:none!important} /* Ringkasan cetak tetap aktif pada @media print */
+  #coreMain .product-summary{border-radius:9px!important;padding:10px 13px!important}
+  /* Ringkasan utama ditampilkan sekali di 4 kartu; detail fasilitas tetap muncul di cetak. */
+  #coreMain .print-facility{display:none!important}
+  #coreMain .hero{padding:12px 18px!important;background:#fff!important;border:1px solid #dfe7ee!important;border-radius:10px!important;box-shadow:none!important;color:#183e65!important;min-height:0!important}
+  #coreMain .hero:before,#coreMain .hero:after,#coreMain .hero-top,#coreMain .hero-value,#coreMain .hero>p{display:none!important}
+  #coreMain .hero-bottom{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px 15px!important;padding:0!important;margin:0!important;border:0!important}
+  #coreMain .hero-bottom span{color:#667d94!important;font-size:10px!important;margin-bottom:3px!important}
+  #coreMain .hero-bottom strong{color:#1a4777!important;font-size:15px!important}
+  #coreMain .hero-bottom>div:last-child{grid-column:auto!important}
+
+  #plusMain .plus-topline{display:none!important}
+  #plusMain{padding-top:8px!important}
+  #plusMain .plus-actions{justify-content:flex-end!important}
+  #plusMain .plus-save-actions-clean{display:flex!important;justify-content:flex-end!important;padding:9px 0 4px!important}
+  #plusMain .plus-save-actions-clean button{min-height:42px!important}
+  #thtMain{padding-top:8px!important}
+  #thtMain .tht-head{padding:9px 13px!important;min-height:0!important;box-shadow:none!important;margin-bottom:9px!important;align-items:center!important}
+  #thtMain .tht-head h2{display:none!important}
+  #thtMain .tht-head p{font-size:11px!important;margin:0!important}
+  #thtMain .tht-head button{white-space:nowrap!important}
+}
+@media screen and (max-width:1030px){
+  #globalProductNav .gpn-inner{flex-wrap:wrap!important;gap:9px!important}
+  #globalProductNav .gpn-caption{flex:1 0 180px!important}
+  #globalProductNav .top-print-actions{margin-left:auto!important}
+}
+@media screen and (max-width:680px){
+  #globalProductNav .gpn-inner{padding:10px 14px!important;display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
+  #globalProductNav .gpn-caption b{font-size:15px!important}
+  #globalProductNav label{display:none!important}
+  #globalProductSelect{width:100%!important;max-width:100%!important;min-width:0!important;font-size:14px!important;min-height:44px!important}
+  #globalProductNav .top-print-actions{width:100%!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin:0!important}
+  #globalProductNav .top-print-button{min-width:0!important;white-space:normal!important;padding:7px 5px!important}
+  #globalProductNav .top-print-button b{font-size:11px!important}
+  .offline-preview-banner{font-size:10px!important;padding:5px 14px!important}
+  .ux-workspace{padding:9px 12px 0!important}
+  .ux-steps{gap:3px!important;padding-bottom:5px!important;margin-bottom:8px!important}
+  .ux-step{flex:1 1 0!important;padding:7px 2px!important;font-size:10px!important;display:flex!important;flex-direction:column!important;gap:3px!important}
+  .ux-step span:first-child{width:18px!important;height:18px!important;font-size:9px!important}
+  .ux-cards{gap:7px!important}
+  .ux-stat{padding:10px!important;min-height:72px!important}
+  .ux-stat small{font-size:9px!important;letter-spacing:0!important}
+  .ux-stat strong{font-size:clamp(14px,4.4vw,19px)!important}
+  #plusMain,#coreMain,#thtMain{padding-top:7px!important}
+  #thtMain .tht-head{padding:8px 10px!important}
+}
+@media print{body .offline-preview-banner,.ux-workspace,#globalProductNav,#globalProductNav:not([hidden]),header.ui-legacy-header,.plus-save-actions-clean{display:none!important}}
+
+</style>
+<style id="bankHybridOriginalTht2026">/* Desain produk: CPNS/ASN, Pensiun, Usaha, THT = tampilan awal.
+   Hanya Pegawai Plus Metode 1 dan 2 = Clean UI dua fase.
+   Perubahan layar saja, TIDAK berlaku untuk cetak. */
+@media screen {
+  body.ui-kredit-awal #uxWorkspace{display:none!important}
+  body.ui-kredit-awal #globalProductNav{background:#fff;border-bottom:1px solid #d8e3f0}
+  body.ui-kredit-awal #globalProductNav .gpn-caption b{color:#19446f}
+  body.ui-kredit-awal #globalProductNav #gpnStatus{display:none}
+  body.ui-kredit-awal .offline-preview-banner{font-size:11px;line-height:1.45;padding:8px 16px;max-width:1440px;margin:9px auto 0}
+  body.ui-kredit-awal #coreMain{max-width:1440px}
+  body.ui-kredit-awal #thtMain{max-width:1440px;padding:25px 4.5% 30px;color:#253b54}
+  /* Skema-3 THT: gunakan komposisi kolom, tipografi, dan warna produk CPNS/ASN awal */
+  body.ui-kredit-awal #thtMain .tht-head{background:transparent!important;color:#17375f!important;border:0!important;border-radius:0!important;padding:5px 0 12px!important;box-shadow:none!important;min-height:0!important;margin:0 0 13px!important;display:flex!important;justify-content:space-between!important;align-items:center!important}
+  body.ui-kredit-awal #thtMain .tht-head h2{display:block!important;color:#17375f!important;font-size:clamp(22px,2.3vw,31px)!important;font-weight:670!important;letter-spacing:-.65px!important;margin:0 0 4px!important}
+  body.ui-kredit-awal #thtMain .tht-head p{color:#708298!important;font-size:12px!important;margin:0!important;line-height:1.5!important}
+  body.ui-kredit-awal #thtMain .tht-head button{background:#fff!important;color:#1c4d83!important;border:1px solid #cbdbea!important;border-radius:8px!important;box-shadow:none!important;min-height:42px!important;white-space:nowrap!important}
+  body.ui-kredit-awal #thtMain .tht-grid{grid-template-columns:minmax(300px,360px) minmax(0,1fr)!important;gap:24px!important;align-items:start!important}
+  body.ui-kredit-awal #thtMain .tht-box{background:#fff!important;border:1px solid #dce5ee!important;border-radius:12px!important;padding:20px!important;margin-bottom:18px!important;box-shadow:0 5px 24px rgba(20,51,90,.027)!important}
+  body.ui-kredit-awal #thtMain .tht-box h3{font-size:13px!important;letter-spacing:.35px!important;font-weight:750!important;color:#194474!important;border-bottom:1px solid #e5edf7!important;padding:0 0 12px!important;margin:0 0 16px!important}
+  body.ui-kredit-awal #thtMain .tht-fieldgrid{grid-template-columns:minmax(0,1fr)!important;gap:12px!important}
+  body.ui-kredit-awal #thtMain .tht-field.wide{grid-column:auto!important}
+  body.ui-kredit-awal #thtMain .tht-field label{font-size:12px!important;font-weight:650!important;color:#37506a!important;margin:0 0 6px!important}
+  body.ui-kredit-awal #thtMain .tht-field input,body.ui-kredit-awal #thtMain .tht-field select{background:#fff!important;border:1px solid #dbe3e7!important;border-radius:8px!important;min-height:42px!important;color:#203b43!important;font-size:13px!important;padding:10px 11px!important}
+  body.ui-kredit-awal #thtMain .tht-field small{font-size:10.5px!important;line-height:1.5!important}
+  /* Atas: plafon biru besar; bawah: tiga angka pembiayaan di kartu terang */
+  body.ui-kredit-awal #thtMain .tht-metrics{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin:0 0 16px!important}
+  body.ui-kredit-awal #thtMain .tht-metric{padding:18px 15px!important;min-width:0!important;background:#fff!important;border:1px solid #dde7f0!important;border-radius:11px!important;box-shadow:0 3px 14px rgba(20,51,90,.025)!important;color:#173d67!important}
+  body.ui-kredit-awal #thtMain .tht-metric.primary{grid-column:1/-1!important;background:linear-gradient(119deg,#10355f 0%,#174a80 61%,#2564a1 100%)!important;color:#fff!important;border:none!important;border-radius:14px!important;padding:25px 27px!important;min-height:145px!important}
+  body.ui-kredit-awal #thtMain .tht-metric.primary span{color:#c8dbf3!important;font-size:10px!important;letter-spacing:1.2px!important}
+  body.ui-kredit-awal #thtMain .tht-metric.primary strong{color:#fff!important;font-size:clamp(30px,3vw,43px)!important;margin-top:19px!important;letter-spacing:-.7px!important;line-height:1.1!important}
+  body.ui-kredit-awal #thtMain .tht-metric.positive{background:#eef8f2!important;border-color:#cde8dc!important}
+  body.ui-kredit-awal #thtMain .tht-metric.positive strong{color:#15765c!important}
+  body.ui-kredit-awal #thtMain .tht-metric:not(.primary) span{color:#7890a3!important;font-size:10px!important}
+  body.ui-kredit-awal #thtMain .tht-metric:not(.primary) strong{font-size:clamp(15px,1.45vw,21px)!important;overflow-wrap:anywhere!important;white-space:normal!important}
+  body.ui-kredit-awal #thtMain .tht-info{background:#edf3fc!important;border-left:3px solid #2f6eaf!important;color:#305b88!important;border-radius:7px!important;font-size:11px!important}
+  body.ui-kredit-awal #thtMain .tht-detail{border-bottom:1px solid #edf1f2!important}
+  body.ui-kredit-awal #thtMain .tht-status{border-radius:8px!important}
+  body.ui-kredit-awal #thtMain #thtIdentitySlot{margin:0 0 17px!important;padding:0!important;max-width:100%!important}
+  body.ui-kredit-awal #thtMain #thtIdentitySlot>.input-group-document{background:#fff!important;box-shadow:0 5px 24px rgba(20,51,90,.027)!important;padding:19px 16px!important;margin:0!important}
+  body.ui-kredit-awal #thtMain .tht-table-wrap{overflow-x:auto!important}
+}
+@media screen and (max-width:1100px){
+  body.ui-kredit-awal #thtMain{padding:18px 3.5%!important}
+  body.ui-kredit-awal #thtMain .tht-grid{grid-template-columns:minmax(0,1fr)!important;gap:15px!important}
+  body.ui-kredit-awal #thtMain .tht-grid>div, body.ui-kredit-awal #thtMain .tht-box, body.ui-kredit-awal #thtMain .tht-metrics{min-width:0!important;max-width:100%!important}
+  body.ui-kredit-awal #thtMain .tht-fieldgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.ui-kredit-awal #thtMain .tht-field.wide{grid-column:1/-1!important}
+}
+@media screen and (max-width:650px){
+  body.ui-kredit-awal #thtMain{padding:13px 12px!important}
+  body.ui-kredit-awal #thtMain .tht-head h2{font-size:22px!important}
+  body.ui-kredit-awal #thtMain .tht-head{flex-wrap:wrap!important;gap:9px!important}
+  body.ui-kredit-awal #thtMain .tht-head button{min-width:100%!important}
+  body.ui-kredit-awal #thtMain .tht-box{padding:16px!important}
+  body.ui-kredit-awal #thtMain .tht-fieldgrid{grid-template-columns:minmax(0,1fr)!important}
+  body.ui-kredit-awal #thtMain .tht-field.wide{grid-column:auto!important}
+  body.ui-kredit-awal #thtMain .tht-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  body.ui-kredit-awal #thtMain .tht-metric.primary{grid-column:1/-1!important;padding:20px!important;min-height:125px!important}
+  body.ui-kredit-awal #thtMain .tht-metric:not(.primary):last-child{grid-column:1/-1!important}
+  body.ui-kredit-awal #thtMain .tht-metric:not(.primary){padding:13px 11px!important}
+  body.ui-kredit-awal #thtMain .tht-metric:not(.primary) strong{font-size:16px!important}
+  body.ui-kredit-awal #thtMain .tht-metric.primary strong{font-size:32px!important}
+}
+</style>
+
+<style id="bankPremium3D2026">
+@media screen {
+  #bankPremiumHub{display:none;max-width:1440px;margin:0 auto;padding:18px 22px 8px;font-family:Inter,"Segoe UI",Arial,sans-serif;color:#193b62}
+  body.bank-premium-active #bankPremiumHub{display:block}
+  #bankPremiumHub *{box-sizing:border-box}
+  #bankPremiumHub .bp-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin:0 0 14px}
+  #bankPremiumHub .bp-intro h2{font-size:clamp(21px,2.5vw,29px);letter-spacing:-.8px;margin:2px 0 5px;color:#173a66}
+  #bankPremiumHub .bp-intro p{color:#6b8197;margin:0;font-size:12px}
+  #bankPremiumHub .bp-kicker{font-size:10px;color:#476e99;font-weight:800;letter-spacing:1.4px}
+  #bankPremiumHub .bp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;min-width:min(100%,650px)}
+  #bankPremiumHub .bp-tab{display:flex;gap:12px;align-items:center;text-align:left;min-height:69px;padding:11px 14px;border-radius:12px;border:1px solid #d3e0f1;background:#fff;color:#1b4472;cursor:pointer;box-shadow:0 5px 18px rgba(23,61,100,.055);font:inherit;transition:transform .15s,box-shadow .15s}
+  #bankPremiumHub .bp-tab:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(23,61,100,.13)}
+  #bankPremiumHub .bp-tab:focus-visible{outline:3px solid #8bc5fd;outline-offset:2px}
+  #bankPremiumHub .bp-tab.active{background:linear-gradient(120deg,#0c4a9b,#146ac6);border-color:#1e65b5;color:white;box-shadow:0 8px 18px rgba(23,88,166,.24)}
+  #bankPremiumHub .bp-tab-ico{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#e9f3ff;font-size:18px;flex-shrink:0}
+  #bankPremiumHub .bp-tab.active .bp-tab-ico{background:#ffffff26}
+  #bankPremiumHub .bp-tab-copy{display:flex;flex-direction:column;min-width:0;gap:3px}
+  #bankPremiumHub .bp-tab-copy b{font-size:13px;line-height:1.25;white-space:normal}
+  #bankPremiumHub .bp-tab-copy small{font-size:10.5px;color:#7c90a7}
+  #bankPremiumHub .bp-tab.active .bp-tab-copy small{color:#d8e9fc}
+  #bankPremiumHub .bp-hero{position:relative;overflow:hidden;isolation:isolate;min-height:225px;margin:6px 0 13px;padding:33px 42px;border-radius:17px;color:#fff;background:linear-gradient(113deg,#103258 0%,#19497f 45%,#247bd2 100%);box-shadow:0 16px 35px rgba(15,62,115,.17)}
+  #bankPremiumHub .bp-hero::after{content:"";position:absolute;right:0;top:0;bottom:0;width:53%;z-index:-1;background-image:linear-gradient(90deg,#17467d 0%,transparent 24%),url("data:image/webp;base64,UklGRlglAABXRUJQVlA4IEwlAACw4gCdASqsAh4BPoFAm0mlJDItJXNJ8kAQCWVu2MZPinb+RVXU+RU0JfE53fOrf/OGWzjOEnngyBv5vmz8X/2PRIfG/6nrK/s3qIf23y0vWz5mfOw9I39032j0HfOY9YT+47/Z0c7TeNvrbdgPgj8ndQ7JP/G96yAP9A/v3nOzcfqPQ9xsFAXygP+TzmaGoVakC/R+JUDOWaKJLfIlV6Fy5AzlmiiS3yJVehcuQM5Zookt8iVXoXLjpVVUGMrSgsv0fyPqjDXv2k5WKl4B+VNj8G6UjwWSYAAYc57TXHJuq5HH6onUoza9LuhROU1q2CfneCK06qPPmQB+yEE8gGc3QOO57O2yfVCuU1wQCbB/81n8cEO5XF6OsbsbCSd2Y9cMcXq1PoubrXy2r7pW6Nn0TXMcGtIk27+fiXGcXQvPAXRLTZduGcFPnXCTTiurp7al0RPq77LnXgGKpvMBCPCdBoM8JimEnPP0bl8U/du2ka7BrZgcN78fdifPC9Nst/EBYq54CR31S6jAOQ4OEUwR4QPQ7+QY9Flfb2c34rTTH6gaKyz+PM7P47MCca6bOsX1oc6IFsOi+7NlABRC2zh0qI0SByybtNjyBsnPZ0S4ht6HWMg3KPDH2r9SRoVZhcC7HLqUOEptMCc4MygPfEXqy0TWjFiFcSu8If5GAojOqZv/LlUVZZ/dv009b9aCNVWYeAJydxYvGw+JQihr2YCga0vwBGIOZHQEA1v4DlrCNoXP9FXvMT2mXACi2H4BodOV2pTY7aPgx7JXygieyrjip90UnOs37p2zS4pzkNf1yJdCe68yGKyjbunYCmzeu62gp+Yn8aC/hd/I1aLajavXBLvIbb/LMbVfaQkC00K0vm9MdWrJ2K5rcDbIWjz8fldH3zaFtLCA0tdFw3xrZzuqWigMYuodNR9ZGLcgm141pv6DesumjJRwzFZzazCrdaNQ9LfhmPb87Eht3KlpaK7+2uJ21rniBT+Yb/3IVPgHe1Cj5lq790AEw7We7ZsNmqaKgCkdK0gwNi38EDX79aB4f/f/ATCVgIscvBTiOB9uYbPcQ07GabMVrGMLRwWsEyHd9gIsZypwQGd+TvwjQzP3/TtRuN7cYmot3L7neTcsItzffdxvRMn3tuQkIP9ttQ2wjj5NZC3bmf/ywYP7mCi+SMJC9UD3KmNQLGnoH2ygJpyjXov07luwHZsS8+WaN/iNJGi8vLSL4JNtjC4ufOvNiHbpY68kmYs41OpYHAuRnCnMaKvGROw7FAc7i89Z5wdEP1LUQ2q7PE5IziZ/P/Qx4Bx5xuynmE4a2Vv8/hpoMMYhlvEG1RCBDDmXeUp94kpP/YhRHMTPa3VKSgKPNGz1ZuMsez6b8oRs1DpbqTaLsnBI0mdYJC9EAvbiXemhHcUEoI3hnnp7fuS45/5z6zfjrhP70XuCn9sT2IiBzgGtq4puDLpynrbW6Mf0cLTBl3MArPl2e4Y1UMr+swCSddUrgbJNZSNvToaxYfyU/qCROyZdqLMJXxhTFFZ3TSb1tDANEoC2Iy3IDiAsCSN5HAf3aTtRqm8kMl+UQOsFXPxnSic+vjzN6zGSwNkdiBmzEp4Fnml9XEswXqUezfkt4scSSgPmiUebW1olkZpBjMlz///a7R/36PG54jla56WHcIkq3GtmhLcbrOlxh3JbEnXRUfkd6QgyGbx7n9Vuki9Pnv0DWt90K5yANRJRhURJw9wZVx95T4cwI5UUyhSIdV1pe1aZV60EZ53iOxDop3KEEz8Ajf+wBDMcByPubwa7P/+ZVf/LjCdalNgNsQErfRf8qYXlgwE2satGes8AweX3MuoLj0KyrbKbd7dGwu5jk/FVIh3hCwvbPEKnkTOiCwIMR7fT0sAXkIitdXjhY0mHjnI7KVPySk8i6ZuQGmzcHcJy1VkHJYfkiRv8Q/U/mE4dI/boazstBzQhyO5yRZJqfR382Bj2c+xYzeLlCzpOMlIJhNsidX+pSlQAP21wltF2i+USIQTUYKL2Z7ZlibbHu1dJCL5kIG44Y5oVijTUsC3suR2/HQwP6H4jOior7TGCqxp+cb3b/VgAWWhwj9enYVYS5SEAndwL2sqtdzGLEYNeaOrJKyUM5p/kVjR1GimKzmIkXRYcOPmwqnSElqEMQmbL6+yE0c6xZRmFsmWE2jHLJeBRZ82MyORFLkxxl1jjjnid3Yzr1A2X6VLO9EXFKOvoAE8aCNWInuG4+8f09z71VbgnPK/6zn63sq45FwScLpSWlr+zGCtRNl1BghxqeDoQxBW5qtf1YdrTdKpFNXGzznxl/gU8owv+IiEVHNLB5yj+9/hAEIAie1pxBASsLfXGX2UlTc1+KjksQWZEq5T7v9jAA3Rr/digF5Nkp5+alGiBdYp2vLUE4NQ4urDTapLgG9NTJREi/qfpGk+wAP72f35vZB128IJcIfa/s/FM8VYR4KQIJSPEUWjcCwX/GCw7C0SffAWc/19oeUP74VMwDb3sBuiYrRT0w/zBIJKaGYPCb9DAHVk2EekKBoyTIVuaFxLK5Rt1y02UEzAGClsWsA/IBCuEehWMBLAjlKqeCk8DTqd6ecR1ujiv0QiAveh8ZZA3zGxXgY2IjuqcD3R4ZVNbDxk8DQfnNVE5SYEV9YJGH2r+xZUflgQzSsBVTDNt+tNSTs/3/orkcvIVoFhzIka9FmiB2/ggsi6LrhPlNcTXnhlXC2qXvAPuLV9YeUqLSZRkLI42h1NTUbXNf7TUA+WCZPRU3MUdcHxFCl5cqDvoUZc4zKC6dVyPIATgAAIdGUGzXYxrCrLB7yrzfdk3ziuaUSvidEHp+FqdNLvOLmh6wQjkiNSYhAEyLpKqpjJOGkF9Z6SUfl862i893iuZrn1/Mmf9yK123cxtlvU3vMAk/dYJiI4gkaP+nUxBMRymQXpW5+rd/kHLB1VYwAfLfYUr8H4gXGxy3xCUIq36ZHJceK9cvzsKSYAADijCKwGOZXb0/+cyHsc3tSK1QU3cGygXobbzM5ksw8xvyj7dk5OtHv8t0Mtkq9kKFihQhisVHUxW7Q1YjCfeKYd8Kl1UzBzfitygg1ZIGb6VJbdvtIrFRhsqTKNpllV8uAFDyluh1hyU4fCeB0CM1VneUc0GG/6yJ8pTOFn2OArZIeEudLNQfeWMlcCZhqeULlZ6MHiNsrzu5RF5I1IHqCGhrOWgM72bKVUvtuok6rH8v3aIHHpL6A7A4kR439xazcsK/5jFu0oFAl+Xj38vHlBi8a8B5AKJr8Y3BkmAKibokKRIWSdVu9axdyHZziHE9sKg0uTTeCwyH5qadfrcVF3IFFg2Ot1aPoVr82uZmGWmjySAYSSns62/6qyL0YhQhKyL7ctAp3lxT4tBaWoob3DQcN4fN1hFZVE4VD3KZNHnnJnEmAbEdzXBTr6Zm9/BavHqKQ7cBVCO4hVDQG77OHp0gOtcSbUxJBUVVSkJge1Om0T/eWgN08sdS3we1XnPwIuxP7qH7rKGwx3FDA4lzpgraUeJuCjaBpBJEn7Ul/AxxcOdjqDuigm9DeAxE1EA6gtl+3gfPb3ytUgXwOHL6oPdEQFwB3xi5NVwuB+wYtLq/FadJlkazztU19UqZ37AUJ6JEWj7UM5BWNprrTb2amxm6ttGmqW+TvLo7tpH3gSRkzvt5LHqM0acyq9EqbjRbexJ7bmbgwpAonhnIhXwrKFISHvxrl9Z6jWmJzctQurR3if7M3/2mkPYUctYeg2aRWx9P1i3lKMVrt9KG+78sZnpecVlC9DDSRgLnlLwL0be8xIl/S1NQS35P1Q4AC8sKaRD8uhM1RCJcdyeKoCTBugA567yKXt87lAHhKjGam+SjnYkpOfg1aNJqSa3zdUNtaMwhnukX/ijXbuTKQaPQ12jPARZF5p0tLYcR1I4YsCpDOehe4H8XhVFynz9lQaHrGVANwIrehuH7FTiS2L6iWquyrvGxXvZiTrduse7DyS3ByrQ0+GLuSwo9nz9E6pMyVWQKBGC4/qa+ObSk95h0utLPH6qZXnY5z5nLE8nCyLBFdapToDZF2Z9JmX/P1ZX90Zi0WgRJiGwHHU4uTIU9GESx4B4SGg4WcIA7dSRlLCIx0cHOQ08hrQ4mI3i6sYGKl8fCM9GnQAYaNk8BA1hUqc2Hny9EtKygXb1jpG+sySQLyQ4lqvt429P+dMRcGJmIBm826T5MszaEBsTvC9s4KysQCKAEF7jgPtDAV96RDtznLUPeViBsMdmZD1PvYXd5fvzLCAYZ1SxW1Ev6wKV7FvBghQDghXtEFq6w9KsvhIONzZGxKuB1z1+nTnWbWCLSuBF2E1d33wEDLBzSpTFTzjSpD1G/S0ArUuZoyaHzST5nkP2PbRGkmsgpf3ciCzNpkzPkSwSnRtpCCiN46hyxAqAX76TWcwGPyIM8RSq3GaammetTh7CNPOcz4Wlm2kaa40mCNiv3LcChJetV02banrYRluwOpzy+oi+K3fLYfeRwBYHEssphO0yx85COhID+Pb3FIdbU9kJQvZJotJrWbolqaIWukaLYRWWEafP/oEMv+RP/ljbaK9bGVR7hD7iE42mFcVccMUeyLsMZ1DVbidD2C1QNmJJrDnzAGRtC6PgdRCvnY0z7Ckc+BeHv607hK76DhCKb5CsPF+JRDXoV0r6GvjYKxB42shvoEVDkNNe0kDikEuaLImQ6huScgL3HWUCcIPndcOoO6b/12sNdyUaRKKETDuiOnNC8YA8Cy52lDHjWA+qJOE9G38gnthvUNESCiXvhvEoeJv7HwcdM2zPnPyN5NHeDA8x0rlOYhSaW2aTLJJIKZlLXVcQo7j+5pOgLfsTSA+y0EO39Vwz2kaYU3GQYsTWmrhMq9eb0/+O0I/8BnBWgDtfV3Vtg2uLUhpMU+BJRWe4KGxlynh4clG44mRXrH1FThY06JXnYjWdQuVGh8uSHpoWBizBctnlrWrKmEwrDZlaKGvrbjDK//GG4PqbZsVDUp4Gs5qWqQEde7CwDz0AUgblJVcK56p3kzrB2VyjfusoHGWifxPR9Fer84dMWhODyL5b479vOlgby7+w1uHVrky+irfra53A0B5bWltafgv8MqJc6DN0mORMxjj4tQ/6zBoMrT0bY3cuQzlkzqrTP4xXCqLcSP70bv5op6jY/1cDem7NVLaXi8KfhTClsX0OyNMIwkqip4K6XfPbmkI7hs5DBC3XY/4FbbZkMj+P0IbjvJ9PbnWNUDh4/5PAc0eaHFoYrMbVFeRJ60JQfij2ctgZa5/4HsLTNIKT7Z8u3lVhlRc2bWJTHxIuNMHjl/9KI3GT88I1k3QVtO62rWcQn6WmvH+Y7APUE3f40tx7bEpIZOFVVOBaNd3TdQYuMcu6+kj3E07AlXiH+eNWUgqB1Ctrh1UuaQZDdfKqO3nbulxcFjfUEX2KZp+e+x313/S0Mgcr7Wnn0AN+nE/1eFvbNwVyWmyRMEXKtB5uQjZGvPTzEH0a2pHPaq3Dmrp5hswldmNuJIyaSvYaSV6sUAPFo92xsxiE4RMYEQCozFkzGExGeJSCypifBlJOoTnxkk78sJjymAzk235ifRCjRdhRDgDWCpeje53V/sy3r5VpHbl5k96DUmKgvEeZdhqsvxRycDzHBd/5Ydur86rGfg3L4B6tGEWiIiLriAP11pyBSp44E98mEdPRds1YLMa+GLHE+/Ftb4XXlA8Ii7GqnoO+my/R/BkcGcc/xPLprSVR57qnQCA+vPVyOoTh8m0VZtfOU87rqm68ieu7xtMStLRs1zZVvr6FMHnzDbz/0DIhaqhKCNhSF3IuH1SDnCPo98TtwQL7MfD42m+nIwKNwEFfuJOtxO6Ky5DLpOaFc3r6l9O+agx1jkrn/ud3EHIl4BH+keS4FU4tgSOb+nhEp5MfMSdoryB7/tajiTM5ZkN9AS4n2UzZeA1cmIIxecZoyCKeJ+9j2aOBabs+0aT8CQRx7d/2Xnauii34USQGuyhU1WX5VlFaoz+f5EfftPduWuZv2/xhz7ZFjjeDigaS0tZ92QdK8XxXmmm/YDN8UjMh+A7ndYjv/OUD7Sjek1961rYGttQjab8FHiG2X462lyAhZVARZy+CitNLgxrb0JWszj0LrcnGNwK0tjN2UPEhSUrN0/jlxD7b1ceH8UUoj3SilEXRRTP3o0hElxOb+CVwEIS3k+EjprlcOaVzP3ZFrmTzZaP/dlUEdnVn1Wh4mP+vQj2CwRaCFCynRgpPQzkINKXGTRWBliQu+nDTmNwlZ8dFN37bK6teX8ReltnwxFmaokBAmRqOq7GE2o2qlH0jSQEWVok/iq7+LvcxGsCXjEJgIjBvllauC7vMWRN9yrsJGC3wadeT/Kd4wJ4z4YX9MsDgt6cx3aBLh6U7lJetl3lHvQ/VZj8c8YlEVdicTYpK9mT9cstPLtDFtlOx3C3xYyUihI8U+xlEAc4MD2SH32/26b6Hl+lZk0Q+/36CpDRuL233naKTXu9Vcb/yg0G1UKA1u+iepN8xLZcvvY8cd69xVSBWQI7w1cHWvkHu3cgL7ydiORdv/ITEzS/mnWxv19GSKhQxVmt/m39q2XrwVwmTHBNo60ghDdvlfCe3e3ZQS9Z+rJtksHHAjpZlgpcZiSGfC7SW5mFtvX631zYiWQqCQQkCasnreiZbl59irnEvSe9FoH40EUQdE9wWJ6TcTv9UvrOJPTl8+H0B/iF4bdJu7W3CqNKQuM2tasd2kYUY/8ttyGkJ3p96wiYQI73Qy2PZxQTwKmS77hveOIuGGF83i4ZPac/t/YDPl+STQ/OfykW6fKpVuRIb+JnnniVKQWzHLpEt1/jKdaXF404i8ONDR40085jVKC0iuji+6YmMg+zBqm3qJB249MTwj9Ys4Pbz5VTkTSWzmwvXJD7p+JoSrAene4IViEItLVgEABQTTV5zTzwloNFeUFC/NLIFYMxo1ZgkLsH7GD3avj80OqS6KAjbKqvln4SFQ7jJpCxqhg5tqx5JV451wKxiS8V0Z2hdAI+gFnoo7ROol/WZuWOUUobbD5qM4l+XpXmph9sj+9Dk+RvgN4W5hHw7JnMawa4pFKSTHRlw1t+Xbk5zzodgf/eSueVmKi64LQLJOS2pjVZjaxmkx9OUDORRQD527CeeqUZKV9Jlt3Pq6TVd6LNyMce4asDnBpB6VxurSJYZMODe1npdhWdmtOuW38dRjYhlb76GUT2akQGK+7e6PtB8q5ArCPlXy+JU/29jJsr67oEuDx3WoVo8WCqdjkB2jBcLXW80eUOQj/D5miiFet/jUd+X2jjUruWntPRs3kUT+hr5DFqB1RxBpZHMdhsNVC4KzGjkVTQsZ6ChotLD4HPsH545y0sKZ6LqgLTK56JJqnMvhYmg+je310D4rpsmSwcxdRIhGzSSSY7PhD+Z/ShGW+g/gMikM/HygkPCS7/4G//tTncJd/5WN5x3aBpPlRwItkPZB2jIE9+NymIGSkLckmgtNgRMZzbLTpKWuAwK4+RiMPv3RsVbrcEfub2SLk0Nqo5zMLuCu7o08Z8vk1hMIAlg9IdelpfRAJuj1KEzfwXy7xd5G6XAn0809Upa0lmVxedybuvvmOq0KBEKBlJj8gaemIG4ZT3+Yr5TzXGbqUK1/ZUkEL78/mGW/UJskaIeaxgO57KNTCugJRuN4Q3a3UlNdVmKbQNldOiLINK+6ZV75KEBm6Cm0lR4xa5EFWbppZCCKHulmpy3xZJkWYhz8lAiwpgea6QouJmWgY/y39FKWmKfLfBzfsgcYUidJojGT5dQxkeCTkCcNCaEUfa/YlgZJXJyKzvBPWo15nKXMDXr0OGo1M5r6XWKyTM4P0+awN1l+9ZbbzgtC58j8OK4IElE/OI9brR9mVH4uYGB06F6AlkDx7KHeZKXNJK2RYYU0pzDKuZT1S2C3Blyo7ZK8bk8PdmUeNBSdV1DKbas56QSyl80LTDB2T1aYsIpODzhWrLb8SlGktANT8eqI/HKp9k5eloFqhg0uU9UefmLzsRGJskOwPbhWKCAW32B3nbF5vjjy4hUwypl4/wV2Z4x1mMeXd8d1KJGZQn25HPKBlDdjHv84J2HSIaFtKG4Ep6A8ebkAybDyd+BzWU5RtMaTo4NIOXvnTp5xDQ9AZ/ZWgKiybt24Ebs/xtXX3I/Hh3f+gbduPSV3UrpQHSGl3xdLIXwRLD30i3FNrJbey65HyTu5/gCNxscCl+POv2FZGH0Lis6ewI69jPEULt8QEHQkIp6x55dvzw79awMH4m+ufAj6TRPNmn9eOF+Agg/SHOMh+1TB4HXNwZGgTHJTjxWobcK9zQo4nV/D/KXeeUy8CVQcdKTPKWpoityhR2gi2Pn/5JQyZwYVnsX23UnvhXJAoRvrwQnMlMD9kN9f4UmyoOXAQKzoRuLX8orufobEMsUoeHclI/mkT5WY1QYe3qrx30zZfNw8kcidNCgyH18IGuDRS/A77fVfQwACg34iGzVR7TWbbWjKLAZAkZC118ycRK0AenQu5AbpiaqSG81B8Z/YZnyFLcjpY8wKyKCMVeJLQcUHMDLcTZ0DtgqgRMxG44Pe0FaoRGkyZBac2izBe9Kt+OO8eEa9frgoWqPN+6UH8xkJNGbkEBgzpdQFQF8mODCMlUA7wLk7yfTQi+J1D7MnZo3qA2mag/64Lbf2PXSzoHMkNNRDjzkGF3f+T/UsKDNFlWpPdWr8Y123M1C2r+9Lrg3LYC92BLb9kCHmM2z+PVittQcClv+viyq73NzixppLykU35n7z6GLZmkJFbO+SyNYlc0Ubm+btO0FRt69YXf0h11rcfHboLr+vVcx7v6WobbdREaEvn1M6enSF2qdxXl4CtLj0gFhoDapb4eTfleBK9Kaca2tqstjHOACLvmYC1DO32fdJvVta2E9WrXSkNaB6JH5GljIjT63eKlvFEyPpZFzGKdaa/l7seMga+LgP8ZCo19OvD/4pARI1svWLTeeg3Vmsl9O2ns9a6AkxtrH1ae27M4N8H9UcpogzLKyGjoIKhrBPcSQlP7DvTVtENYxQN1M0eRUdM6UYEeDnG9ffd/T1I3unkxzWgW8fwJxyTwzGuIjPHySGYdYG0nRJWDOY4WKfYd5AupcoQmjSlKOg4I9Fcq/uOMlL7Iof9sJyyGUXt3FM9DOxvI/6UmIYN6pzz19LPommQiLEbscf5WhRq/fcUG8HOVRt74nWoX6lsd1SyB4f19ntV6aHyXHz8oVdXaebNGOyvuMAqMwFCO2GUEWLZcyn/ubUwL2cSmcdZ/UOucj0qdTfr3fKOasJlX+o/4/oY/jw4qTqcb5WEDjM3zFDZh5G6d4mSigLL8fW/u/KFnMMo4Pk3J9GhcWFt04uouw5/VCm10z0JMIxcOvDySzBgxgExCbqWp9YkM9qM4t6Ou4JF0f2QmfKR920dy4u8A9pofbC13J2Mli2gCpoIa3P2oDGI1Cr7nILcamw1zrp7wVr4uBrxzBbZXnNBPvrBHBoBMXm+ILji+sKdy5dmYsHk9BQK7zXP1w6hPDErOu0T+4U9d+Omc/sFoB7IJ5X26T7l5+7UECY0S3UhptRJZF4IXMfcAlNYKhmZ03XQ9MERsY/wpU7EW2bQnHJ5PPz5GzZ2KkjcptAcM13JV9a3BZt5k8iUEvW7poeAPpPeD9ni1tbplpTxMBVQNnY6T9DbseDnGipcd/APIVM6T+35g0Fv6NB/smAUrRviB7JlEFz820v5rLobX3jALSQKQkz5jCFpQ9jVg/7OMSoCECxISPX8YNsKRsCqbCuGSP32cn5HAhT9yTO3Txgxv2ub4sQB6KGvvPMev8tEBSAnw9lerBI/55Ug9S8Ud8Z9lYJhdKshCXokm2j+D09oBGGozNcw2SYdQAGHxajOFFjEsFkF1YgJ14CzCx1DBXfba7nH4lybbjiZuJxN9USdkK8aDX6GVSPiy1RuWt7L9vHJloUZkrqGrc5utfLpiRDwg5n0HxDvtRXeZPWRC2gjgMo5ZMmZbnF8uzZFbkzFw4ujxEePQrzN9RCt45D6B+3ZCPI1bl8n3adDwjYlYC+keu712tIDSS8BWJchMxWySHIv9fY1bW9rV1jgI/bmVhiC5/KTlTZ3TsoqDiZtYb7VEC5CrF32kI5nFzNT5aY5y+/zlBcpeJagxQBf5AQ6EmZHs8MYcRg8z8s17HtwHfbFPofsSucLRbnveGLFNoVbYT985ljJ4L5XXeFE7OudNDFHFzmwmQ5n74OSI2R4GcP4LG5LIkE0WreDaOrd+A0B1hHhTMePgrSaw04DC+30PrdElr5xD4fAY2feGoP7aDwQnKRUuvJFerb8t4Odf+/+0f4zcuFj/HHUBiSzX9jBVE3vGC85DF2Ybz/GXl3K61KUxcjdgYCioEnRpr/2SMRxDIovlm+b2EeSu3dz7pDmCXDfSjfHEVjmgapViRi522ywuvGixQvCcDecqPfEqqTZ1NhvItkz56BoXjtA+e/XarRt0uXOBIfSz6MYj7jEOUG0xC41aYFHzhNoiVfzZlkQfDR3i4F6lzwYA2HxKvNDi2d0aUBRabvk8tze6CpdhTHiWwsrS5+9aDfM0Icy2BYWmCkBpfYz+Clm3MRvtITXwwFGWy81+J3H6qWuHTNr12YvWaD0lTODTTXiYIauWLp8u8huAV0+xdOODvKj2AfyXcqHme3Ul0iEPuAgaBvBPnniewG9fuTtNs4KRiRNZyiO3+YHwcPWVgq04lmhM4G2V8Lh4IauXS/YsOw3FUuMIS4Cc3DTm8yjBIfWzUruXhntuBZ3vpAw3UhvR+ROUeFiQKRpUBa8F4+feSLnybuSY43iA/2K2rIfghAyHal4FUk0vCLzx7HJWIUcVUglKRqnkVZq1nC8OsSDXzqxUD4KvYXi23MS+zo6lnrEkGxCisbh6+Q8P94C0/5NhwWnq5j6c97BUkJerGDP6Yta4EhdOJ5cfujQXO07DjzRRav7dAIXovkQC2Bq86i0nQwG83/a4xz1vdnqCvbfHm+pOoDbcrcEb7kK1NyR3jgS38dlewou5Fpi+mXncInvYtOhRHGGGCNYstEw++mfKQ9Y1hfgHmbnBcBUFZbvh1/JAYK52kqdA6yl5WrlzOql32xNr4DNpktQy2uejE66n+S2p5lFngZ0BfoIDrxso/dcqbEi0Yrz7vyj3y09F/CmbILys89ab7gzfkoAAMaAP7TSp4VC2B3aaUExZDp5LV0zBkaa87URuna1rtRKPHXALTX8QJZpp7g0X6taHCPZ2+/oR0TUU9XrJqfqp+w3v3KMPg3IWVUjEGdc9DZ9tjYXNqXXtiwX35EjZw5iZB2fUSjN7uxcFm7NhUfMDi5nhHB8VFjQrohecQbAix/E+KtC+HJcglvkOOq1mNnwN/K4knL4Wh6JGFnOFv9nS5DtSIIvMLQYFyENboFTC5RW4MeX3r/GaEsPkEj+YCBBJPqj0R1cNs6H8qvWK1DevXWzBuRoL4PFgBtePjKwzVNL6LSU5ktjgRy+HVzmxbgtwL0eppZDudwJQZJ+Q+QiMeIydqetxc9nfLiaMC/ulGRxxfn3/+NKeJLR3yAjxiMa4AmXNyGoI4DJNu+YDnWY5JnocxA2OwSK61zgmFJdEJF14HqMZki8zrgkuQLLzTCwANAQlNu714rjo+4YdQCU/NcEFPBjavAGredcFy+uUTd/9hzrHjjoIbowEKJ6eUSTvqIHtUyN8+ZVaDYJLZqJ73HDtRMeGvoRvp/a4ycq4gAbUIN3JvKwSxI0bPFB+n/YXfHP7eriv7s4+eyyzzl7gJyHSDMBhhkNU2OHdEOOz18uDqOCdmc3X1j9JgIK9r71TT9AJro6q533gWw5WZTR3OhvOexa2FqXMvbHyLNJ/zDDpmtkt6GDdfKXOFMakoS6tgpTEtgHnjFAGaGqIsdlZWd1f61Wn6qH86NINABYvG65Is7AZqKmcvm3o5MYSmMZtwuvKpW5ib+DfxApPNP1BlvkTNjTIZ3kW7f2o7UFaeN8tuhDLsNlR1NIXtvrM5CBu6sZmqricWd9qQRqUD9LcNwMOUgKgaHR7zBQVniNv22vQL1z9meXs5VagPLOHcQg+7Iuoh6VyZMt78J5dMT2b7nFVkvcLe6P2OMNe5Zqk/ow8WxbM2KlFnGiXQdt0RwxmsWLE/JHlXdPRxiJuLR804qTnMXAKgr94FkcAII4Mnui9U6LnRKDxxNvQRmOqjNYV+3fYdRAHn3QFJyv4rhw6nfr+mKDjZ5qniULNmKyliW4DxTL2weCVjfgJYnsjbFmvdno6HwgQpNNbKADY7GQ3CBwuLpDl//mP2/hpdfBfeXWQzkh9Y5vpt+4d2xXApU4e3t51hMlOhRuWTadM2UHjDIXCVellnyF306qnF4iPxC9b8ak2BO+RxU3ggxy1Q+iWcjHTlInKHKHKDd1p7fttB43G5Ie8zf7Gzoi0tUmjMMZ5Q2oZE4o80vM4UFkh8GucrR2x+nuYDZgxI/rBFQ9jNBD6U4ZugGpHa7b05EXF+f163sW7seSQB8ipHRGwsHkeYznuZKHRY2XcOhy9GEhOfBHqOadYX73Ydkq/SSxnVlkuj/v/64iPnjSePmYmDxVindDZ0w0BIgR0GCK/aD1qTn4NynLO4hXUro0iC4+UosJdR9ivutmFmoHN1g0bpMjXtzf8+VHF4/szxy0gHBGyWGDzbtYJ/7vk2LO5FqfpVWAAAAA==");background-position:center,right center;background-size:100% 100%,cover;background-repeat:no-repeat}
+  #bankPremiumHub .bp-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 240px 160px at 69% 15%,#d7edff17,transparent),linear-gradient(90deg,#09294825,transparent 70%);pointer-events:none}
+  #bankPremiumHub .bp-hero-label{display:block;font-size:11px;letter-spacing:1.45px;color:#cee1fb;font-weight:750}
+  #bankPremiumHub .bp-hero-number{display:block;font-size:clamp(32px,4.4vw,57px);font-weight:840;letter-spacing:-1.4px;line-height:1.23;margin:20px 0 8px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;text-shadow:0 3px 9px #091f3620}
+  #bankPremiumHub .bp-hero-note{color:#d5e6fa;font-size:12px;display:block;max-width:410px}
+  #bankPremiumHub .bp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:10px}
+  #bankPremiumHub .bp-stat{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #dce6f0;border-radius:12px;padding:16px 13px;box-shadow:0 6px 16px #1a48790a;min-width:0}
+  #bankPremiumHub .bp-stat-icon{width:40px;height:40px;flex-shrink:0;display:grid;place-items:center;border-radius:50%;background:#e9f3ff;color:#2671cf;font-size:20px}
+  #bankPremiumHub .bp-stat:nth-child(2) .bp-stat-icon{color:#209b76;background:#e5f8ef}
+  #bankPremiumHub .bp-stat:nth-child(3) .bp-stat-icon{color:#bb7918;background:#fff2dc}
+  #bankPremiumHub .bp-stat:nth-child(4) .bp-stat-icon{color:#795aca;background:#f1edff}
+  #bankPremiumHub .bp-stat-text{min-width:0}
+  #bankPremiumHub .bp-stat-label{display:block;font-size:9.6px;color:#7e91a8;font-weight:800;letter-spacing:.3px;line-height:1.35}
+  #bankPremiumHub .bp-stat-value{display:block;font-size:clamp(14px,1.35vw,20px);font-weight:810;color:#153b67;margin-top:4px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+  #bankPremiumHub .bp-policy{padding:8px 12px;border-left:3px solid #2d75bc;border-radius:6px;background:#eef5fc;color:#436582;font-size:11px;line-height:1.5}
+  /* Original forms and computation remain. Hide duplicate result surfaces only. */
+  body.bank-premium-active #plusMain .plus-topline{display:none!important}
+  body.bank-premium-active #thtMain .tht-head{display:none!important}
+  body.bank-premium-active #thtMain .tht-metrics{display:none!important}
+  body.bank-premium-active #uxWorkspace{display:none!important}
+  body.bank-premium-active #plusMain,body.bank-premium-active #thtMain{padding-top:8px!important}
+}
+@media screen and (max-width:1080px){
+  #bankPremiumHub .bp-intro{display:block}
+  #bankPremiumHub .bp-tabs{margin-top:14px;max-width:100%;width:100%}
+  #bankPremiumHub .bp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media screen and (max-width:650px){
+  #bankPremiumHub{padding:10px 11px 7px}
+  #bankPremiumHub .bp-hero{min-height:163px;padding:23px 21px;margin-top:10px}
+  #bankPremiumHub .bp-hero::after{width:70%;opacity:.42}
+  #bankPremiumHub .bp-hero-number{font-size:clamp(27px,8vw,39px);letter-spacing:-.7px;margin:14px 0 8px}
+  #bankPremiumHub .bp-hero-note{font-size:10.7px}
+  #bankPremiumHub .bp-tabs{gap:5px}
+  #bankPremiumHub .bp-tab{padding:9px 7px;min-height:75px;gap:5px;align-items:flex-start;flex-direction:column}
+  #bankPremiumHub .bp-tab-ico{display:none}
+  #bankPremiumHub .bp-tab-copy b{font-size:11px}
+  #bankPremiumHub .bp-tab-copy small{font-size:9.2px}
+  #bankPremiumHub .bp-stats{gap:8px}
+  #bankPremiumHub .bp-stat{padding:12px 10px;gap:8px}
+  #bankPremiumHub .bp-stat-icon{width:29px;height:29px;font-size:14px}
+  #bankPremiumHub .bp-stat-label{font-size:9px}
+  #bankPremiumHub .bp-stat-value{font-size:14px}
+}
+@media print{ #bankPremiumHub{display:none!important} }
+</style>
+
+
+<style id="bankSimpleOnePagePrint2026">
+.bank-simple-print{font-family:Arial,"Segoe UI",sans-serif;color:#183b63;background:#fff;width:100%;max-width:810px;margin:auto;padding:22px;line-height:1.35;box-sizing:border-box}
+.bank-simple-print *{box-sizing:border-box}
+.bank-simple-print .bs-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:2px solid #c6d8e9;padding-bottom:13px;margin-bottom:12px}
+.bank-simple-print .bs-brand{display:flex;gap:12px;align-items:center}
+.bank-simple-print .bs-mark{background:#194776;color:#fff;border-radius:9px;padding:8px 12px;font-size:21px;font-weight:800}
+.bank-simple-print .bs-head h1{font-size:20px;margin:0;letter-spacing:-.3px;color:#153a65}
+.bank-simple-print .bs-head p{font-size:10px;color:#71859c;margin:4px 0 0}
+.bank-simple-print .bs-date{font-size:10px;color:#637f9a;text-align:right;white-space:nowrap}
+.bank-simple-print .bs-section{margin-top:13px}
+.bank-simple-print .bs-section-title{background:#eaf3fc;border-radius:5px;padding:7px 10px;color:#1b4b7e;font-size:11px;letter-spacing:.5px;font-weight:800}
+.bank-simple-print .bs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
+.bank-simple-print .bs-item{display:flex;justify-content:space-between;gap:10px;align-items:baseline;border-bottom:1px solid #e7eef6;padding:7px 2px;font-size:11px;min-width:0}
+.bank-simple-print .bs-item .bs-k{color:#687f95;max-width:55%}
+.bank-simple-print .bs-item .bs-v{color:#1d426b;font-weight:700;text-align:right;overflow-wrap:anywhere;max-width:60%;font-variant-numeric:tabular-nums}
+.bank-simple-print .bs-highlight{background:linear-gradient(110deg,#14365f,#2565aa);border-radius:8px;padding:13px 18px;margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:18px;color:#fff}
+.bank-simple-print .bs-highlight small{font-size:9px;letter-spacing:.8px;color:#d1e5f8;font-weight:700}
+.bank-simple-print .bs-highlight strong{display:block;font-size:21px;margin-top:6px;font-variant-numeric:tabular-nums}
+.bank-simple-print .bs-total{display:flex;justify-content:space-between;gap:16px;background:#eaf3fc;color:#134977;font-size:13px;font-weight:800;border-radius:5px;padding:8px 11px;margin-top:8px}
+.bank-simple-print .bs-foot{border-top:1px solid #bad0e4;padding-top:8px;font-size:9px;color:#768b9f;margin-top:18px;display:flex;justify-content:space-between;gap:20px}
+.bank-simple-print .bs-foot b{color:#234a70}
+@media (max-width:650px){.bank-simple-print{padding:12px}.bank-simple-print .bs-grid{grid-template-columns:1fr}.bank-simple-print .bs-highlight strong{font-size:15px}.bank-simple-print .bs-head h1{font-size:16px}}
+@media print{
+  body.plus-document-preview .bank-simple-print{display:block!important;max-width:none!important;width:100%!important;padding:0!important;margin:0!important;font-family:Arial,sans-serif!important;font-size:9pt!important;line-height:1.16!important;break-inside:avoid!important;page-break-inside:avoid!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.plus-document-preview .bank-simple-print .bs-head{padding-bottom:2.5mm;margin-bottom:1.8mm}
+  body.plus-document-preview .bank-simple-print .bs-head h1{font-size:15pt!important}
+  body.plus-document-preview .bank-simple-print .bs-section{margin-top:2.7mm!important}
+  body.plus-document-preview .bank-simple-print .bs-section-title{padding:1.5mm 2mm!important;font-size:8pt!important}
+  body.plus-document-preview .bank-simple-print .bs-item{padding:1.35mm .5mm!important;font-size:8pt!important}
+  body.plus-document-preview .bank-simple-print .bs-highlight{padding:2.5mm 3mm!important;margin-top:2mm!important}
+  body.plus-document-preview .bank-simple-print .bs-highlight strong{font-size:14pt!important;margin-top:1mm!important}
+  body.plus-document-preview .bank-simple-print .bs-total{padding:1.6mm 2mm!important;margin-top:2mm!important;font-size:9pt!important}
+  body.plus-document-preview .bank-simple-print .bs-foot{margin-top:2.5mm!important;padding-top:1.5mm!important;font-size:7pt!important}
+  body.plus-document-preview .bank-simple-print .bs-mark{padding:1.5mm 2.5mm!important;font-size:13pt!important}
+  body.plus-document-preview .bank-simple-print .bs-head p,body.plus-document-preview .bank-simple-print .bs-date{font-size:7pt!important}
+}
+</style>
+
+
+<style id="premiumPrintIsolation2026">
+@media screen {body.bank-premium-active #globalProductNav .gpn-caption{display:none!important}}
+@media print {
+ body.plus-document-preview > :not(#plusDocument):not(script):not(style){display:none!important}
+ body.plus-document-preview #plusDocument{display:block!important;position:static!important;width:100%!important;max-width:none!important;padding:0!important;margin:0!important;background:#fff!important}
+ body.plus-document-preview #plusPreviewToolbar{display:none!important}
+ body.plus-document-preview #plusPrintBody{display:block!important;max-width:none!important;margin:0!important;padding:0!important;background:#fff!important}
+ body.plus-document-preview .bank-simple-print{break-inside:avoid!important}
+}
+</style>
+
+
+<!-- Pemulihan print awal CPNS/ASN, Pensiun, Usaha; tanpa pengaruh pada Pegawai Plus / THT. -->
+<style id="restoreInitialPrint3Products2026">
+@media print {
+  /* Hanya ringkasan kalkulator reguler yang boleh tampil pada halaman A4.
+     Cetak jadwal, validasi terblokir, Metode 1/2 dan THT tidak terpengaruh. */
+  body:not(.plus-active):not(.printing-schedule):not(.print-blocked) > :not(#coreMain):not(script):not(style) {
+    display:none!important;
+  }
+  body:not(.plus-active):not(.printing-schedule):not(.print-blocked) #coreMain {
+    display:block!important;
+    width:100%!important;max-width:none!important;
+    margin:0!important;padding:0!important;
+    overflow:visible!important;
+    background:#fff!important;
+  }
+  body:not(.plus-active):not(.printing-schedule):not(.print-blocked) #coreMain > :not(.layout):not(script):not(style) {
+    display:none!important;
+  }
+  body:not(.plus-active):not(.printing-schedule):not(.print-blocked) #coreMain .layout {
+    display:block!important;
+    margin:0!important;padding:0!important;
+    width:100%!important;max-width:none!important;
+    overflow:visible!important;
+  }
+  body:not(.plus-active):not(.printing-schedule):not(.print-blocked) #coreMain .layout > :not(#results) {
+    display:none!important;
+  }
+  body:not(.plus-active):not(.printing-schedule):not(.print-blocked) #coreMain #results {
+    display:block!important;
+    margin:0!important;padding:0!important;
+    max-width:none!important;width:100%!important;
+    overflow:visible!important;
+    background:#fff!important;
+  }
+}
+</style>
+
+</head>
+<body class="monitor-locked">
+<aside id="printActionFeedback" role="alert" aria-live="assertive" hidden>
+  <button type="button" id="printFeedbackClose" aria-label="Tutup pemberitahuan">×</button>
+  <b>Belum bisa mencetak — periksa data berikut:</b>
+  <ol id="printFeedbackItems"></ol>
+</aside>
+<section id="monitorAccess" aria-label="Login petugas Simulasi Kredit">
+  <div class="monitor-login-card">
+    <div class="monitor-mark" aria-hidden="true">K</div>
+    <h1>Simulasi Kredit</h1>
+    <p>Login Petugas &amp; Monitoring • Akses khusus akun terdaftar</p>
+    <form id="monitorLoginForm">
+      <label for="monitorEmail">Email petugas</label>
+      <input id="monitorEmail" type="email" required autocomplete="username" placeholder="email@contoh.com">
+      <label for="monitorPassword">Password</label>
+      <input id="monitorPassword" type="password" required autocomplete="current-password" placeholder="Masukkan password">
+      <button id="monitorLoginSubmit" class="monitor-primary" type="submit" style="width:100%;margin-top:20px">Masuk ke aplikasi</button>
+    </form>
+    <div id="monitorLoginStatus" role="status">Menghubungkan Firebase… Pastikan internet tersedia.</div>
+    <div class="monitor-muted">Data simulasi kredit dapat dikirim ke database sesuai kebijakan organisasi. Jangan gunakan data nasabah riil tanpa persetujuan dan ketentuan perlindungan data yang berlaku. Login membutuhkan internet.</div>
+  </div>
+</section>
+<div id="monitorAppControls" hidden>
+  <span id="monitorWho">Memeriksa identitas…</span>
+  <button class="monitor-small-btn" id="monitorAdminButton" type="button" hidden>Dashboard Admin</button>
+  <button class="monitor-small-btn" id="monitorLogout" type="button">Keluar</button>
+</div>
+
+<section id="globalProductNav" aria-label="Pilih produk kredit" hidden>
+  <div class="gpn-inner"><div class="gpn-caption"><b>SIMULASI KREDIT • 6 PRODUK</b><span>Pilih produk untuk perhitungan dan cetak dokumen</span></div>
+  <label for="globalProductSelect">PRODUK KREDIT</label>
+  <select id="globalProductSelect">
+    <option value="asn">Kredit CPNS/ASN</option><option value="pension">Kredit Pensiun</option>
+    <option value="business">Kredit Usaha</option><option value="method2">Kredit Pegawai Plus — Metode 2 (3G) · Rekomendasi</option>
+    <option value="method1">Kredit Pegawai Plus — Metode 1 (3F) · Alternatif</option>
+    <option value="method3">Kredit KPEG Plus — Skema-3 (THT)</option>
+  </select><span id="gpnStatus">Simulasi satu fase</span>
+  </div>
+</section>
+<section id="monitorAdmin" hidden aria-label="Dashboard monitoring administrator">
+ <div class="monitor-admin-inner">
+  <div class="monitor-admin-title"><div><small>KHUSUS ADMINISTRATOR</small><h1>Monitoring Pengguna &amp; Simulasi Kredit</h1></div>
+   <div class="monitor-admin-actions"><button id="monitorRefresh" class="monitor-primary" type="button">Perbarui data</button><button id="monitorCloseAdmin" class="monitor-small-btn" type="button">Kembali ke simulasi</button></div></div>
+  <p class="monitor-muted">Riwayat menyimpan nama debitur, THP, plafon, angsuran, dan dana bersih. Aktivitas cetak adalah permintaan cetak, bukan bukti dokumen tercetak. Ringkasan menggunakan maksimal 300 catatan terakhir; bukan keseluruhan riwayat.</p>
+  <div class="monitor-admin-toolbar"><input id="monitorFilter" type="search" placeholder="Cari AO, cabang, debitur, referensi, atau produk"><span id="monitorDashStatus" class="monitor-muted" role="status">Belum memuat aktivitas.</span></div>
+  <div class="monitor-metrics">
+   <div class="monitor-kpi"><span>Pengguna Terdaftar</span><strong id="monitorMetricUser">—</strong></div>
+   <div class="monitor-kpi"><span>Akses Aplikasi (maks. 300 aktivitas)</span><strong id="monitorMetricAccess">—</strong></div>
+   <div class="monitor-kpi"><span>Referensi Disimpan</span><strong id="monitorMetricSaved">—</strong></div>
+   <div class="monitor-kpi"><span>Total Plafon Catatan Disimpan*</span><strong id="monitorMetricPrincipal">—</strong></div>
+  </div>
+  <div class="monitor-table-wrap"><table class="monitor-table" aria-label="Aktivitas penggunaan aplikasi">
+   <thead><tr><th>Waktu</th><th>Nama Petugas</th><th>Cabang</th><th>Aktivitas</th><th>No. Referensi</th><th>Nama Debitur</th><th>Produk</th><th>Gaji/THP</th><th>Plafon</th><th>Angsuran</th><th>Dana Bersih</th></tr></thead><tbody id="monitorHistory"></tbody>
+  </table></div>
+  <p class="monitor-muted">*Total hanya memperhitungkan satu catatan terbaru per petugas dan referensi dari maksimal 300 aktivitas yang diambil. Bukan laporan seluruh periode. Verifikasi sebelum digunakan untuk laporan resmi.</p>
+ </div>
+</section>
+<header><a class="brand" href="#"><span class="logo">K</span> Kredit<span class="brand-light"> / Simulasi</span></a><div aria-label="Pilihan dokumen cetak" class="top-print-actions">
 <button class="top-print-button summary-print-action" id="print" title="Cetak ringkasan 1 halaman A4" type="button"><span aria-hidden="true" class="action-icon">▣</span><span><b>Cetak Ringkasan</b><small>1 halaman A4</small></span></button>
 <button class="top-print-button schedule-print-action" id="printScheduleTop" title="Cetak seluruh jadwal angsuran" type="button"><span aria-hidden="true" class="action-icon">▤</span><span><b>Lihat / Cetak Jadwal</b><small>Seluruh bulan • A4</small></span></button>
 </div></header>
-<main><div class="intro"><div><div class="eyebrow">KALKULATOR KREDIT</div><h1>Rencanakan pinjaman Anda.</h1><p>Hitung angsuran, lihat dana yang diterima, dan telusuri setiap pembayaran.</p></div><span class="method">● Metode anuitas</span></div>
+<main id="coreMain"><div class="intro"><div><div class="eyebrow">KALKULATOR KREDIT</div><h1>Rencanakan pinjaman Anda.</h1><p>Hitung angsuran, lihat dana yang diterima, dan telusuri setiap pembayaran.</p></div><span class="method">● Metode anuitas</span></div>
 <!-- Navigasi cepat otomatis untuk HP dan tablet; disembunyikan saat cetak. -->
 <nav class="mobile-quick-nav" aria-label="Navigasi simulasi kredit">
   <a href="#form" aria-label="Ke parameter input kredit"><span aria-hidden="true">▤</span> Input</a>
@@ -691,7 +1382,7 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 <p class="hint doc-note">Nomor referensi dibuat otomatis saat aplikasi dibuka atau simulasi di-Reset; nomor tetap sama selama simulasi berlangsung. Ini bukan nomor registrasi resmi bank.</p>
 </section><section aria-labelledby="groupDebitur" class="input-group">
 <div class="input-group-title" id="groupDebitur"><span class="input-group-index">01</span><div>DATA DEBITUR &amp; KEMAMPUAN BAYAR<small>Identitas, penghasilan, dan batas angsuran</small></div></div>
-<div class="input-field-block"><label for="product">Pilihan produk</label><select id="product"><option value="asn">KREDIT CPNS/ASN</option><option value="pension">KREDIT PENSIUN</option><option value="business">KREDIT USAHA</option></select></div><div id="positionField"><label for="position">Jenis jabatan</label><select id="position"><option value="structural">Struktural</option><option value="functional">Fungsional/Guru</option></select></div><div class="input-field-block"><label for="birth">Tanggal lahir tertanggung</label><input aria-describedby="policyRule insuranceMessage" id="birth" type="date"/></div><div class="input-field-block"><label for="start">Tanggal awal kredit</label><input id="start" required="" type="date" value="2026-10-10"/></div><div class="input-field-block"><label for="salary">Gaji bersih / THP (Rp)</label><input id="salary" max="1000000000000" min="0" required="" type="number" value="4494000"/></div><div class="input-field-block"><label for="idir">Batas potongan gaji / IDIR (%)</label><input id="idir" max="100" min="0" required="" step="0.01" type="number" value="93.31"/><p class="field-note" id="idirManualHint">Masukkan batas IDIR sesuai analisis; tidak boleh melebihi ketentuan produk.</p></div><div class="input-policy"><p class="hint" id="policyRule"></p><div class="policy-notice" hidden="" id="policyNotice" role="alert"></div></div></section><section aria-labelledby="groupFasilitas" class="input-group">
+<div class="input-field-block" id="coreInternalProductField" hidden><label for="product">Pilihan produk</label><select id="product"><option value="asn">KREDIT CPNS/ASN</option><option value="pension">KREDIT PENSIUN</option><option value="business">KREDIT USAHA</option><option value="method1">KREDIT PEGAWAI PLUS - METODE 1 (3F)</option><option value="method2">KREDIT PEGAWAI PLUS - METODE 2 (3G)</option></select></div><div id="positionField"><label for="position">Jenis jabatan</label><select id="position"><option value="structural">Struktural</option><option value="functional">Fungsional/Guru</option></select></div><div class="input-field-block"><label for="birth">Tanggal lahir tertanggung</label><input aria-describedby="policyRule insuranceMessage" id="birth" type="date"/></div><div class="input-field-block"><label for="start">Tanggal awal kredit</label><input id="start" required="" type="date" value="2026-10-10"/></div><div class="input-field-block"><label for="salary">Gaji bersih / THP (Rp)</label><input id="salary" max="1000000000000" min="0" required="" type="number" value="4494000"/></div><div class="input-field-block"><label for="idir">Batas potongan gaji / IDIR (%)</label><input id="idir" max="100" min="0" required="" step="0.01" type="number" value="93.31"/><p class="field-note" id="idirManualHint">Masukkan batas IDIR sesuai analisis; tidak boleh melebihi ketentuan produk.</p></div><div class="input-policy"><p class="hint" id="policyRule"></p><div class="policy-notice" hidden="" id="policyNotice" role="alert"></div></div></section><section aria-labelledby="groupFasilitas" class="input-group">
 <div class="input-group-title" id="groupFasilitas"><span class="input-group-index">02</span><div>PARAMETER FASILITAS KREDIT<small>Tenor, bunga, kapasitas, dan plafon pengajuan</small></div></div>
 <div class="input-field-block"><label for="months">Tenor pinjaman <output id="years"></output></label><div class="field"><input id="months" max="600" min="1" required="" step="1" type="number" value="84"/><span>bulan</span></div><input aria-label="Geser tenor pinjaman" id="tenorRange" max="360" min="1" type="range" value="84"/><div class="range-labels"><span>1 bulan</span><span>30 tahun</span></div></div><div class="input-field-block"><label for="mode">Jenis bunga</label><select id="mode"><option value="flat">Flat per bulan</option><option value="eir">EIR per tahun</option></select></div><div class="input-field-block"><label for="interest">Suku bunga <span id="rateUnit">per bulan</span></label><div class="field"><input id="interest" max="100" min="0" required="" step="0.001" type="number" value="0.6"/><span>%</span></div></div><div aria-label="Perhitungan kapasitas kredit otomatis" class="capacity-input-panel" role="group">
 <div class="capacity-input-heading"><span class="capacity-dot">↗</span> KAPASITAS OTOMATIS <span class="automatic-pill">OTOMATIS</span></div>
@@ -740,7 +1431,12 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 <p class="hint">Isi berdasarkan penawaran/polis; tidak dihitung otomatis.</p>
 </div>
 <div class="computed-row"><span>Premi Kebakaran</span><output id="firePremiumDisplay">Rp 0</output></div>
-</div><div class="insurance-box total-premium-box"><div class="computed-row total-premium-row"><span>Total Premi Asuransi</span><output id="totalInsuranceDisplay">—</output></div></div></div><label for="payoff">Pelunasan kredit lama (Rp)</label><input id="payoff" min="0" required="" type="number" value="0"/></details></section><div aria-live="polite" class="print-gate-notice" id="printGateNotice" role="status"><strong id="printGateTitle">Memeriksa kelayakan cetak...</strong><div id="printGateReasons"></div></div><p id="error" role="alert"></p></form><p class="hint">Hasil diperbarui otomatis saat parameter berubah.</p></aside>
+</div><div class="insurance-box total-premium-box"><div class="computed-row total-premium-row"><span>Total Premi Asuransi</span><output id="totalInsuranceDisplay">—</output></div></div></div><label for="payoff">Pelunasan kredit lama (Rp)</label><input id="payoff" min="0" required="" type="number" value="0"/></details></section><div aria-live="polite" class="print-gate-notice" id="printGateNotice" role="status"><strong id="printGateTitle">Memeriksa kelayakan cetak...</strong><div id="printGateReasons"></div></div><p id="error" role="alert"></p></form><p class="hint">Hasil diperbarui otomatis saat parameter berubah.</p><div class="monitor-save-card">
+  <h3>Simpan ke Monitoring Kredit</h3>
+  <p>Setelah diperiksa, simpan nama debitur, THP, plafon, angsuran, dan dana bersih ke Firestore. Hanya administrator berwenang yang dapat membaca riwayat.</p>
+  <button class="monitor-primary" id="monitorSave" type="button">Simpan Simulasi ke Database</button>
+  <p id="monitorSaveStatus" role="status"></p>
+</div></aside>
 <section aria-live="polite" class="results" id="results"><div class="print-heading"><div class="print-heading-title"><span class="print-mark">K</span><div><div class="print-eyebrow">SIMULASI KREDIT · INTERNAL</div><h1>RINGKASAN SIMULASI KREDIT</h1><p>Ringkasan pembiayaan dan kemampuan bayar</p></div></div><div class="print-heading-meta"><span>DOKUMEN INTERNAL</span><small>NO: <b id="docNoPrint">—</b></small><small>TANGGAL SIMULASI: <b id="docDatePrint">—</b></small><small id="printDate"></small></div></div>
 <div class="doc-report-identity" aria-label="Identitas dokumen simulasi"><div><span>CALON DEBITUR</span><b id="docDebtorPrint">—</b></div><div><span>CABANG / UNIT KERJA</span><b id="docUnitPrint">—</b></div><div><span>PETUGAS / AO</span><b id="docOfficerPrint">—</b></div></div><div class="product-summary"><strong id="productSummary"></strong><p class="hint" id="policySummary"></p></div><div class="print-facility">
 <div class="section-kicker"><span>01</span> INFORMASI FASILITAS KREDIT</div>
@@ -769,7 +1465,104 @@ header{height:76px;border-bottom:1px solid #e1e7f0;box-shadow:0 1px 5px #142b490
 <div class="overview"><div class="card composition"><h2>Komposisi pembayaran</h2><div class="composition-inner"><div class="donut" id="donut"><div><strong id="principalPercent"></strong><span>pokok</span></div></div><div class="legend"><p><i></i>Pokok pinjaman<strong id="principalLabel"></strong></p><p><i class="mint"></i>Total bunga<strong id="interestLabel"></strong></p></div></div></div><div class="card capacity"><div class="section-kicker print-section capacity-kicker"><span>03</span> ANALISIS KEMAMPUAN BAYAR</div><h2>Ringkasan kemampuan</h2><div class="idir-display"><div><span>RASIO ANGSURAN / THP</span><strong id="usedIdir"></strong></div><span class="risk-note">INDIKATOR IDIR</span></div><div class="idir-track"><div id="idirFill"></div></div><div class="detail-row"><span>Plafon sesuai IDIR</span><b id="maxPrincipal"></b></div><div class="detail-row"><span>Akhir pembayaran</span><b id="end"></b></div><div class="detail-row" hidden="" id="ageRow"><span>Usia akhir kredit</span><b id="age"></b></div><p class="status" id="status"></p></div></div>
 <div class="card disbursement"><div class="section-title"><div><div class="section-kicker print-section"><span>04</span> RINCIAN PENCAIRAN</div><h2>Rincian potongan &amp; dana cair</h2></div><span class="method" id="costInsuranceTag">AJK CHUBB</span></div><div class="cost-grid"><div><div class="detail-row"><span id="provisionLabel">Provisi</span><b id="costProvision"></b></div><div class="detail-row"><span id="costAdminLabel">Administrasi</span><b id="costAdmin"></b></div><div class="detail-row" id="costInsuranceRow"><span id="costInsuranceLabel">Premi AJK</span><b id="costInsurance"></b></div><div class="detail-row" hidden="" id="costFireRow"><span>Premi Asuransi Kebakaran</span><b id="costFire"></b></div><div class="detail-row" hidden="" id="costNotaryRow"><span id="costNotaryLabel">Biaya Notaris</span><b id="costNotary"></b></div><div class="detail-row" hidden="" id="costAppraisalRow"><span id="costAppraisalLabel">Biaya Appraisal</span><b id="costAppraisal"></b></div><div class="detail-row" hidden="" id="costStampRow"><span id="costStampLabel">Biaya Meterai</span><b id="costStamp"></b></div><div class="detail-row" hidden="" id="costOtherRow"><span id="costOtherLabel">Biaya Lainnya</span><b id="costOther"></b></div><div class="detail-row"><span>Pelunasan kredit lama</span><b id="costPayoff"></b></div></div><div class="cost-summary"><div class="detail-row"><span>Total potongan pencairan</span><b id="totalDeductions"></b></div><div class="detail-row" hidden id="costSeparateRow"><span>Biaya dibayar terpisah (di luar potongan)</span><b id="costSeparate"></b></div><div class="detail-row net-row"><span>Dana bersih diterima</span><b id="costNet"></b></div><p class="hint" id="insuranceDetail"></p></div></div><p class="hint rate-source" id="rateSource">Tarif referensi CHUBB: tabel berlabel 1 November 2017 pada file yang diberikan. Premi = plafon × rate (‰) ÷ 1.000.</p></div><div class="card schedule" id="schedule"><div class="section-title"><div><h2>Jadwal angsuran</h2><p class="hint">Rincian pokok, bunga, dan sisa pinjaman setiap bulan.</p></div><div class="schedule-actions"><button class="print-schedule-button" id="printSchedule" type="button">▣ Lihat / Cetak Jadwal Angsuran</button><button class="outline" id="csv" type="button">↓ Unduh CSV</button></div></div><p class="mobile-table-hint" aria-hidden="true">Geser tabel ke samping untuk melihat kolom lainnya <span>→</span></p>
 <div class="table-scroll"><table><thead><tr><th>Bulan</th><th>Tanggal</th><th>Angsuran</th><th>Pokok</th><th>Bunga</th><th>Baki debet</th></tr></thead><tbody id="rows"></tbody><tfoot id="totals"></tfoot></table></div><div class="pagination"><span id="pageInfo"></span><div><button aria-label="Halaman sebelumnya" class="outline" id="prev">←</button><button aria-label="Halaman berikutnya" class="outline" id="next">→</button></div></div></div>
-<details class="notes"><summary>Tentang perhitungan</summary><p>Ketentuan produk mengikuti konfigurasi internal: CPNS/ASN Struktural sampai ulang tahun ke-58, Fungsional/Guru sampai ulang tahun ke-60, serta Kredit Pensiun dan Kredit Usaha sampai ulang tahun ke-75. Jatuh tempo tepat pada tanggal batas masih diperbolehkan; setelahnya muncul notifikasi. Batas IDIR dari THP adalah 95% untuk Kredit CPNS/ASN, 85% untuk Kredit Pensiun, dan 80% untuk Kredit Usaha. Batas usia akhir Kredit Usaha ditetapkan pada ulang tahun ke-75. Pemeriksaan produk dan ketersediaan tarif AJK ditampilkan terpisah.</p><p>Bunga flat dikonversi menjadi EIR bulanan dengan metode RATE setelah angsuran flat dibulatkan ke rupiah. EIR tahunan = EIR bulanan × 12. Angsuran bulanan menggunakan nominal tetap, termasuk bulan terakhir. Nilai tetap tersebut ditentukan dengan pembulatan internal per Rp100. Tingkat bunga anuitas ekuivalen disesuaikan secara matematis ke angsuran tetap setelah pembulatan; komposisi pokok dan bunga bulan terakhir menutup baki debet persis Rp0. Jadwal menggunakan bunga yang dibulatkan ke rupiah.</p><p>Jadwal mengikuti EDATE bulanan berurutan. Plafon berdasarkan IDIR dibulatkan turun ke Rp10.000. Biaya pencairan tidak dimasukkan dalam EIR. Nilai awal plafon, tenor, bunga, gaji, dan IDIR mengikuti contoh Excel. Provisi awal 1% dari plafon dan dapat diubah; administrasi serta pelunasan kredit lama dimulai dari nol. Hasil merupakan simulasi, bukan persetujuan kredit.</p><p>Jika Asuransi AJK dipilih, premi dihitung otomatis dari tanggal lahir, tanggal awal kredit, tenor, dan plafon. Usia asuransi dibulatkan naik ketika sisa usia mencapai 6 bulan. Tenor tarif dibulatkan naik ke tahun penuh mengikuti rumus utama Premi Chubb!M12. Premi dan provisi dibulatkan ke rupiah terdekat. AJK Lain menggunakan nominal premi manual sesuai penawaran resmi. Premi AJK dan Asuransi Kebakaran dapat dihitung bersamaan, tetapi ditampilkan sebagai dua komponen yang terpisah.</p><p>Sumber tarif: RATE PREMI ASURANSI CHUBB.xlsx, sheet Tabel ass Chubb, B7:V63 (usia 18–74 tahun, tenor 1–20 tahun). Nilai tarif sumber dipertahankan. Tarif nol atau di luar tabel memerlukan konfirmasi; tidak dianggap sebagai asuransi gratis. Jika jenis asuransi dipilih tetapi premi belum tersedia, dana bersih belum dapat dihitung. Asuransi Kebakaran dan AJK Lain memakai premi manual dari penawaran polis. Opsi Tanpa Asuransi menghasilkan premi Rp0, bukan pernyataan bahwa kredit tidak memerlukan perlindungan. Biaya Notaris, Appraisal, Meterai, dan Biaya Lainnya hanya berlaku untuk Kredit Usaha, dicatat per komponen. Biaya dibayar terpisah tidak mengurangi dana pencairan. Biaya Lainnya harus diberi keterangan jika lebih dari Rp0. Komponen biaya yang diperhitungkan menyesuaikan produk yang dipilih.</p><p>Alur input aplikasi: Produk Kredit → Tanggal Lahir dan Awal Kredit → Penghasilan Bersih/THP → Batas IDIR (input manual) → Tenor → Suku Bunga → Kapasitas Angsuran dan Plafon Maksimal (otomatis) → Plafon Pengajuan → Biaya dan Asuransi → Hasil Simulasi. Perkiraan plafon dibuat berdasarkan IDIR, tenor, bunga dan angsuran yang dibulatkan; keputusan kredit tetap membutuhkan analisis kelayakan yang terpisah.</p></details><div class="author-credit">Design &amp; Development © 2026 Luther Parinding, S.Si.</div><div class="report-disclaimer">Hasil simulasi bersifat indikatif dan bukan merupakan persetujuan kredit final.</div></section></div><footer>SIMULASI KREDIT <span>Perhitungan dilakukan di perangkat Anda.</span></footer></main><section aria-label="Dokumen cetak jadwal angsuran" class="schedule-print-sheet" id="schedulePrint">
+<details class="notes"><summary>Tentang perhitungan</summary><p>Ketentuan produk mengikuti konfigurasi internal: CPNS/ASN Struktural sampai ulang tahun ke-58, Fungsional/Guru sampai ulang tahun ke-60, serta Kredit Pensiun dan Kredit Usaha sampai ulang tahun ke-75. Jatuh tempo tepat pada tanggal batas masih diperbolehkan; setelahnya muncul notifikasi. Batas IDIR dari THP adalah 95% untuk Kredit CPNS/ASN, 85% untuk Kredit Pensiun, dan 80% untuk Kredit Usaha. Batas usia akhir Kredit Usaha ditetapkan pada ulang tahun ke-75. Pemeriksaan produk dan ketersediaan tarif AJK ditampilkan terpisah.</p><p>Bunga flat dikonversi menjadi EIR bulanan dengan metode RATE setelah angsuran flat dibulatkan ke rupiah. EIR tahunan = EIR bulanan × 12. Angsuran bulanan menggunakan nominal tetap, termasuk bulan terakhir. Nilai tetap tersebut ditentukan dengan pembulatan internal per Rp100. Tingkat bunga anuitas ekuivalen disesuaikan secara matematis ke angsuran tetap setelah pembulatan; komposisi pokok dan bunga bulan terakhir menutup baki debet persis Rp0. Jadwal menggunakan bunga yang dibulatkan ke rupiah.</p><p>Jadwal mengikuti EDATE bulanan berurutan. Plafon berdasarkan IDIR dibulatkan turun ke Rp10.000. Biaya pencairan tidak dimasukkan dalam EIR. Nilai awal plafon, tenor, bunga, gaji, dan IDIR mengikuti contoh Excel. Provisi awal 1% dari plafon dan dapat diubah; administrasi serta pelunasan kredit lama dimulai dari nol. Hasil merupakan simulasi, bukan persetujuan kredit.</p><p>Jika Asuransi AJK dipilih, premi dihitung otomatis dari tanggal lahir, tanggal awal kredit, tenor, dan plafon. Usia asuransi dibulatkan naik ketika sisa usia mencapai 6 bulan. Tenor tarif dibulatkan naik ke tahun penuh mengikuti rumus utama Premi Chubb!M12. Premi dan provisi dibulatkan ke rupiah terdekat. AJK Lain menggunakan nominal premi manual sesuai penawaran resmi. Premi AJK dan Asuransi Kebakaran dapat dihitung bersamaan, tetapi ditampilkan sebagai dua komponen yang terpisah.</p><p>Sumber tarif: RATE PREMI ASURANSI CHUBB.xlsx, sheet Tabel ass Chubb, B7:V63 (usia 18–74 tahun, tenor 1–20 tahun). Nilai tarif sumber dipertahankan. Tarif nol atau di luar tabel memerlukan konfirmasi; tidak dianggap sebagai asuransi gratis. Jika jenis asuransi dipilih tetapi premi belum tersedia, dana bersih belum dapat dihitung. Asuransi Kebakaran dan AJK Lain memakai premi manual dari penawaran polis. Opsi Tanpa Asuransi menghasilkan premi Rp0, bukan pernyataan bahwa kredit tidak memerlukan perlindungan. Biaya Notaris, Appraisal, Meterai, dan Biaya Lainnya hanya berlaku untuk Kredit Usaha, dicatat per komponen. Biaya dibayar terpisah tidak mengurangi dana pencairan. Biaya Lainnya harus diberi keterangan jika lebih dari Rp0. Komponen biaya yang diperhitungkan menyesuaikan produk yang dipilih.</p><p>Alur input aplikasi: Produk Kredit → Tanggal Lahir dan Awal Kredit → Penghasilan Bersih/THP → Batas IDIR (input manual) → Tenor → Suku Bunga → Kapasitas Angsuran dan Plafon Maksimal (otomatis) → Plafon Pengajuan → Biaya dan Asuransi → Hasil Simulasi. Perkiraan plafon dibuat berdasarkan IDIR, tenor, bunga dan angsuran yang dibulatkan; keputusan kredit tetap membutuhkan analisis kelayakan yang terpisah.</p></details><div class="author-credit">Design &amp; Development © 2026 Luther Parinding, S.Si.</div><div class="report-disclaimer">Hasil simulasi bersifat indikatif dan bukan merupakan persetujuan kredit final.</div></section></div><footer>SIMULASI KREDIT <span>Perhitungan dilakukan di perangkat Anda.</span></footer></main>
+<main id="plusMain" hidden>
+  <div class="plus-topline"><div><b id="plusTopTitle">KREDIT PEGAWAI PLUS • METODE 1</b><span>Dua fase angsuran · aktif dan pensiun · retensi sesuai produk</span></div>
+  <div class="plus-actions"><button type="button" id="plusSave" class="monitor-primary">Simpan Simulasi</button></div></div>
+  <div id="plusIdentitySlot" aria-label="Identitas dokumen Kredit Pegawai Plus"></div>
+  <div id="plusSaveStatus" role="status"></div>
+  <iframe id="plusFrame" title="Simulasi Kredit Pegawai Plus" loading="lazy" referrerpolicy="same-origin" allow="clipboard-write" src="./pegawai-plus.html?method=method1"></iframe>
+</main>
+<style id="thtStyles">
+body.plus-document-preview>#thtMain,body.monitor-locked>#thtMain,body.monitor-admin-open>#thtMain{display:none!important}
+#thtMain[hidden]{display:none!important}#thtMain{max-width:1440px;padding:24px 4%;margin:auto;color:#233c59}
+#thtMain .tht-head{background:linear-gradient(110deg,#133e72,#24619b);color:#fff;border-radius:14px;padding:22px 25px;margin-bottom:17px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+#thtMain .tht-head h2{font-size:21px;margin:0 0 5px;color:#fff}#thtMain .tht-head p{margin:0;color:#d8e8fc;font-size:12px}
+#thtMain .tht-head button{background:#fff;border:0;border-radius:9px;padding:12px 18px;color:#174376;font-weight:700}
+#thtMain .tht-grid{display:grid;grid-template-columns:minmax(300px,.89fr) minmax(360px,1.11fr);gap:18px;align-items:start}
+#thtMain .tht-box{background:#fff;border:1px solid #dce6f2;border-radius:12px;padding:20px 22px;margin:0 0 15px;box-shadow:0 2px 10px rgba(16,49,90,.03)}
+#thtMain .tht-box h3{font-size:14px;color:#1b4778;margin:0 0 14px;padding-bottom:11px;border-bottom:1px solid #e2ebf5}
+#thtMain .tht-fieldgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#thtMain .tht-field{min-width:0}#thtMain .tht-field.wide{grid-column:1/-1}
+#thtMain .tht-field label{display:block;font-size:11px;font-weight:700;color:#426080;margin-bottom:5px}
+#thtMain .tht-field input,#thtMain .tht-field select{width:100%;border:1px solid #cddcec;border-radius:8px;padding:10px 11px;min-height:41px;font-size:13px;color:#203f62;background:#f8fbff}
+#thtMain .tht-field small{display:block;font-size:10px;color:#70859b;margin-top:4px;line-height:1.4}
+#thtMain .tht-info{background:#edf5fe;border-left:4px solid #2d74b6;border-radius:8px;padding:12px 15px;margin:13px 0;font-size:12px;line-height:1.65;color:#305b88}
+#thtMain .tht-status{font-size:12px;line-height:1.6;border-radius:9px;padding:12px;background:#e9f6ef;color:#13684f;margin-top:10px}
+#thtMain .tht-status.warn{background:#fff3eb;color:#974b27}
+#thtMain .tht-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#thtMain .tht-metric{background:#f5f9fe;border:1px solid #e0eaf4;border-radius:10px;padding:16px;min-width:0}
+#thtMain .tht-metric.primary{background:#164a7c;color:white}#thtMain .tht-metric.positive{background:#eaf8f1;border-color:#c6e3d3}
+#thtMain .tht-metric span{display:block;font-size:10px;font-weight:700;letter-spacing:.2px;opacity:.8}
+#thtMain .tht-metric strong{display:block;font-size:clamp(18px,1.6vw,23px);margin-top:8px;white-space:nowrap;font-variant-numeric:tabular-nums}
+#thtMain .tht-detail{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #edf1f5;padding:10px 0;font-size:12px}
+#thtMain .tht-detail b{text-align:right;font-variant-numeric:tabular-nums;color:#24456c}
+#thtMain .tht-detail span{color:#5a738e}
+#thtMain .tht-table-wrap{overflow-x:auto;max-height:450px}
+#thtMain table{width:100%;border-collapse:collapse;font-size:11px;white-space:nowrap;font-variant-numeric:tabular-nums}
+#thtMain th{background:#184c83;color:white;padding:10px 8px;text-align:right}
+#thtMain td{padding:10px 8px;border-bottom:1px solid #e9eef5;text-align:right}
+#thtMain th:first-child,#thtMain td:first-child{text-align:left}#thtMain tbody tr:last-child{background:#eaf3fe;font-weight:700}
+#thtMain .tht-ajk-result{padding:9px 13px;border:1px solid #dbe5f1;border-radius:9px;background:#f4f8fe}#thtMain .tht-ajk-result .tht-detail{border:0;padding:6px 0}#thtMain .tht-ajk-result b{color:#17604f;font-size:15px}#thtMain .tht-note{font-size:11px;color:#6c8199;line-height:1.6}
+@media(max-width:850px){#thtMain{padding:14px}#thtMain .tht-grid{grid-template-columns:1fr}#thtMain .tht-box{padding:15px}#thtMain .tht-metric strong{font-size:19px}}
+@media(max-width:420px){#thtMain .tht-fieldgrid{grid-template-columns:1fr}#thtMain .tht-metrics{grid-template-columns:1fr}}
+@media print{#thtMain{display:none!important}}
+</style>
+<main id="thtMain" hidden>
+  <div class="tht-head"><div><h2>Kredit Pegawai Plus — Skema-3 (THT)</h2><p>Skema bunga diblokir di muka • Pokok dilunasi saat manfaat THT diterima</p></div><button type="button" id="thtSave">Simpan Simulasi</button></div>
+  <div id="thtIdentitySlot" aria-label="Identitas Dokumen Skema-3 THT"></div>
+  <div id="thtSaveStatus" class="tht-info">Isi parameter fasilitas dan biaya kredit untuk menghitung simulasi Skema-3 (THT).</div>
+  <div class="tht-grid">
+    <div>
+      <section class="tht-box"><h3>01 · Dasar THT dan Fasilitas</h3><div class="tht-fieldgrid">
+<div class="tht-field"><label for="thtStartDate">Tanggal akad kredit</label><input type="date" id="thtStartDate" value="2025-07-15"></div>
+        <div class="tht-field"><label for="thtRetireDate">TMT pensiun / pencairan THT</label><input type="date" id="thtRetireDate" value="2027-07-15"></div>
+        <div class="tht-field"><label for="thtBenefit">Estimasi manfaat THT (Rp)</label><input type="number" id="thtBenefit" value="69000000" min="0" step="1000"></div>
+        <div class="tht-field"><label for="thtCoverage">Maksimum kredit atas THT (%)</label><input type="number" id="thtCoverage" value="80" min="1" max="100" step="0.01"></div>
+        <div class="tht-field"><label for="thtPrincipal">Plafon yang diajukan (Rp)</label><input type="number" id="thtPrincipal" value="55200000" min="0" step="1000"></div>
+        <div class="tht-field"><label for="thtTenor">Tenor (bulan)</label><input type="number" id="thtTenor" value="24" min="1" max="180" step="1"></div>
+        <div class="tht-field"><label for="thtRate">Bunga efektif tahunan (%)</label><input type="number" id="thtRate" value="16" min="0" max="100" step="0.01"></div>
+        <div class="tht-field"><label for="thtSalary">Gaji / THP (opsional, Rp)</label><input type="number" id="thtSalary" value="0" min="0" step="1000"><small>Tidak memengaruhi plafon atau bunga Skema-3 dalam Excel.</small></div>
+      </div></section>
+      <section class="tht-box"><h3>02 · Biaya Kredit dan Potongan</h3><div class="tht-fieldgrid">
+        <div class="tht-field"><label for="thtProvision">Provisi (%)</label><input id="thtProvision" type="number" min="0" max="100" step="0.01" value="1"></div>
+        <div class="tht-field"><label for="thtAdmin">Administrasi (%)</label><input id="thtAdmin" type="number" min="0" max="100" step="0.01" value="0.5"></div>
+        <div class="tht-field wide"><label for="thtInsuranceType">Pilihan Asuransi Jiwa Kredit (AJK)</label>
+          <select id="thtInsuranceType">
+            <option value="ajk">1. AJK CHUBB — premi otomatis</option>
+            <option value="ajk_other">2. AJK LAIN — premi manual</option>
+            <option selected value="none">3. TANPA ASURANSI AJK</option>
+          </select><small>Opsi sama seperti Kredit CPNS/ASN. Untuk Skema-3, pastikan produk dan tarif telah diterima oleh perusahaan asuransi.</small></div>
+        <div class="tht-field wide" id="thtAjkBirthField" hidden><label for="thtBirth">Tanggal lahir tertanggung (untuk premi otomatis)</label><input type="date" id="thtBirth"><small>Premi CHUBB ditentukan oleh usia asuransi, tenor dan plafon. Usia dibulatkan naik jika sisa bulan ≥ 6.</small></div>
+        <div class="tht-field wide" id="thtAjkOtherFields" hidden>
+          <label for="thtAjkOtherCompany">Nama perusahaan AJK Lain</label><input id="thtAjkOtherCompany" type="text" maxlength="80" placeholder="Nama perusahaan asuransi">
+          <label for="thtAjkOtherPremium" style="margin-top:11px">Premi AJK Lain (Rp)</label><input id="thtAjkOtherPremium" type="number" min="0" step="1" value="0"><small>Masukkan premi sesuai penawaran asuransi yang telah diverifikasi.</small>
+        </div>
+        <div class="tht-field wide tht-ajk-result">
+          <div class="tht-detail" id="thtAjkRateRow" hidden><span>Rate premi AJK CHUBB</span><b id="thtAjkRate">—</b></div>
+          <div class="tht-detail"><span>Premi AJK</span><b id="thtAjkPremium">Rp0</b></div>
+          <p id="thtAjkNote" class="tht-note" role="status">Tanpa AJK — premi Rp0, sesuai contoh Excel.</p>
+        </div>
+      </div><p class="tht-info">Bunga selama tenor <strong>dipotong/diblokir di muka</strong>. Oleh karena itu, angsuran bunga dalam jadwal adalah alokasi kewajiban yang sudah dibiayai saat pencairan, bukan tagihan tunai bulanan kedua.</p></section>
+    </div>
+    <div>
+      <section class="tht-box"><h3>03 · Hasil Simulasi Kredit</h3>
+        <div class="tht-metrics"><div class="tht-metric primary"><span>PLAFON KREDIT</span><strong id="thtValPrincipal">—</strong></div><div class="tht-metric"><span>BUNGA PER BULAN (ALOKASI)</span><strong id="thtValMonthly">—</strong></div><div class="tht-metric positive"><span>DANA BERSIH SAAT PENCAIRAN</span><strong id="thtValNet">—</strong></div><div class="tht-metric"><span>SISA MANFAAT THT</span><strong id="thtValBenefitRemaining">—</strong></div></div>
+        <div id="thtDetails"></div><div id="thtValidation" class="tht-status"></div>
+      </section>
+      <section class="tht-box"><h3>04 · Jadwal Bunga dan Pelunasan Pokok</h3>
+        <div class="tht-table-wrap"><table><thead><tr><th>Ke</th><th>Jatuh Tempo</th><th>Alokasi Bunga</th><th>Pelunasan Pokok</th><th>Total Akuntansi</th><th>Potong THT</th><th>Baki Debet</th></tr></thead><tbody id="thtTableBody"></tbody></table></div>
+        <p class="tht-note">Baki debet tetap sampai pembayaran pokok terakhir. Jumlah bunga sudah dipotong di awal pencairan (tidak dihitung kembali sebagai setoran tunai). Potong THT hanya memuat pelunasan pokok; penyesuaian pembulatan bunga bulanan dialokasikan pada periode akhir.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div id="plusDocument" hidden aria-live="polite">
+  <div id="plusPreviewToolbar"><div><b id="plusPreviewTitle">Pratinjau Dokumen</b><small>Format A4 • Dokumen simulasi</small></div><div class="plus-actions"><button type="button" id="plusPrintBack">← Kembali</button><button type="button" id="plusPrintNow">Cetak / Simpan PDF</button></div></div>
+  <div id="plusPrintBody"></div>
+</div>
+<section aria-label="Dokumen cetak jadwal angsuran" class="schedule-print-sheet" id="schedulePrint">
 <div class="schedule-print-toolbar" id="schedulePrintToolbar">
   <div><strong>Pratinjau Jadwal Angsuran</strong><br/>Dokumen ini hanya berisi jadwal angsuran. Pilih Cetak / PDF untuk melanjutkan.</div>
   <div class="sp-tools"><button type="button" id="scheduleBack">← Kembali</button><button type="button" class="sp-go-print" id="schedulePrintNow">▣ Cetak / Simpan PDF</button></div>
@@ -1065,8 +1858,11 @@ function updatePrintGate(x, current, valid) {
   printReasons = printEligibility(x, current, valid);
   printAllowed = printReasons.length === 0;
   for (const id of ['print', 'printScheduleTop', 'printSchedule', 'csv']) {
-    $(id).disabled = !printAllowed;
-    $(id).title = printAllowed ? (id === 'print' ? 'Cetak ringkasan satu halaman A4' : 'Cetak seluruh jadwal angsuran') : 'Cetak dinonaktifkan: ' + printReasons.join(' ');
+    // Tombol utama tetap dapat diklik agar alasan penolakan dapat ditampilkan.
+    // Pemeriksaan kelayakan pada handler cetak tetap wajib dan tidak dilewati.
+    $(id).disabled = (id === 'print' || id === 'printScheduleTop') ? false : !printAllowed;
+    $(id).dataset.pendingValidation=String(!printAllowed);
+    $(id).title = printAllowed ? (id === 'print' ? 'Cetak ringkasan satu halaman A4' : 'Cetak seluruh jadwal angsuran') : 'Periksa ketentuan sebelum mencetak — klik untuk melihat alasannya.';
   }
   const box = $('printGateNotice');
   box.classList.toggle('blocked', !printAllowed);
@@ -1411,7 +2207,7 @@ $('print').onclick = () => {
 // Browsers control their own print dialogs, so invalid cases show only a block sheet,
 // never borrower details or the actual loan schedule.
 window.addEventListener('beforeprint', () => {
-  const ok = canPrintNow();
+  const ok = window.SIM_PLUS_ACTIVE ? Boolean(window.SIM_MONITOR_CAN_SAVE?.()) : canPrintNow();
   document.body.classList.toggle('print-blocked', !ok);
   if (!ok) document.body.classList.remove('printing-schedule');
 });
@@ -1421,7 +2217,7 @@ window.addEventListener('afterprint', () => {
   document.body.classList.remove('print-blocked');
 });
 document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p' && !canPrintNow()) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p' && !(window.SIM_PLUS_ACTIVE ? Boolean(window.SIM_MONITOR_CAN_SAVE?.()) : canPrintNow())) {
     e.preventDefault();
     e.stopPropagation();
   }
@@ -1431,6 +2227,23 @@ assignNewReference();
 setProductIdirLimit();
 updateDocumentIdentity();
 update();
+// Public read-only bridge for the separate Firebase module; no changes to formulas.
+window.SIM_MONITOR_GET_SNAPSHOT = function () {
+  const x = read();
+  return {
+    reference: $('docNo').value.trim(),
+    debtorName: $('docDebtor').value.trim(),
+    product: result?.policy?.productName || $('product').selectedOptions[0]?.textContent || '',
+    salary: x.salary, principal: x.principal,
+    netDisbursement: Number(result?.net || 0), payment: Number(result?.payment || 0)
+  };
+};
+window.SIM_MONITOR_CAN_SAVE = function () { return Boolean(result && $('form').checkValidity() && canPrintNow()); };
+window.SIM_MONITOR_UPDATE_IDENTITY = updateDocumentIdentity;
+window.SIM_MONITOR_RESET = function () {
+  $('docDate').value = todayLocalISO();
+  assignNewReference(); setProductIdirLimit(); updateDocumentIdentity(); update();
+};
 
 </script>
 <script>
@@ -1441,5 +2254,758 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<script id="unifiedProductsBridge">
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const isPlus = v => v==='method1'||v==='method2';
+  const isTht = v => v==='method3';
+  const isSpecial = v => isPlus(v)||isTht(v);
+  const money = n => 'Rp ' + Math.round(Number(n)||0).toLocaleString('id-ID');
+  const fmt = x => x ? new Date(x+'T12:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+  const asText = value => String(value??'—');
+  const nav=$('globalProductSelect'), frame=$('plusFrame');
+  let plusSnap=null, selected='asn', docMode=null;
+  const getCoreSnap=window.SIM_MONITOR_GET_SNAPSHOT;
+  const getCoreCanSave=window.SIM_MONITOR_CAN_SAVE;
+  const identityPanel=document.querySelector('#form > .input-group-document');
+  const originalForm=$('form');
+  const plusIdentitySlot=$('plusIdentitySlot');
+  // Same form controls, single reference, no duplicate fields to maintain.
+  function relocateIdentity(product){
+    const target=isTht(product)?$('thtIdentitySlot'):isPlus(product)?plusIdentitySlot:originalForm;
+    if(identityPanel.parentNode!==target){
+      if(target===originalForm)originalForm.insertBefore(identityPanel,originalForm.firstChild);
+      else target.appendChild(identityPanel);
+    }
+  }
+  function identity(){return {
+    reference:$('docNo').value.trim(),debtor:$('docDebtor').value.trim(),
+    date:$('docDate').value,branch:$('docUnit').value.trim(),ao:$('docOfficer').value.trim()
+  };}
+  function pushIdentity(){if(isPlus(selected)){const d=identity();post({event:'set-identity',reference:d.reference,debtor:d.debtor});}}
+  for(const key of ['docNo','docDebtor','docDate','docUnit','docOfficer']){
+    $(key).addEventListener('input',()=>{window.SIM_MONITOR_UPDATE_IDENTITY?.();pushIdentity();syncPrintButtons();});
+    $(key).addEventListener('change',()=>{window.SIM_MONITOR_UPDATE_IDENTITY?.();pushIdentity();syncPrintButtons();});
+  }
+  window.SIM_PLUS_ACTIVE=false;
+  window.SIM_MONITOR_GET_SNAPSHOT=()=>{
+    if(isTht(selected))return window.THT_PRODUCT?.snapshot(identity())||null;
+    if(!isPlus(selected)) return getCoreSnap?.();
+    if(!plusSnap) return null;
+    const d=identity();
+    return {reference:d.reference,debtorName:d.debtor,
+      product:plusSnap.product,salary:plusSnap.salary,principal:plusSnap.principal,
+      netDisbursement:plusSnap.netDisbursement,payment:plusSnap.payment};
+  };
+  window.SIM_MONITOR_CAN_SAVE=()=>{
+    const doc=identity(),complete=!!(doc.reference&&doc.debtor&&doc.date&&doc.branch&&doc.ao);
+    if(isTht(selected))return complete&&!!window.THT_PRODUCT?.get()?.valid;
+    if(isPlus(selected))return complete&&!!(plusSnap?.good&&plusSnap.balance<=1);
+    return !!getCoreCanSave?.();
+  };
+  // Satu pasang tombol cetak global untuk enam produk.
+  // Sesuaikan status dengan validasi produk yang dipilih.
+  function syncPrintButtons(){
+    const allowed=!!window.SIM_MONITOR_CAN_SAVE();
+    for(const id of ['print','printScheduleTop']){
+      const button=$(id);
+      if(!button)continue;
+      // Jangan gunakan atribut disabled: tombol perlu menjelaskan alasan penolakan.
+      button.disabled=false;
+      button.dataset.pendingValidation=String(!allowed);
+      button.title=allowed
+        ? (id==='print'?'Cetak ringkasan 1 halaman A4':'Lihat / cetak jadwal angsuran A4')
+        : 'Klik untuk melihat data yang harus diperbaiki sebelum mencetak.';
+    }
+    if(allowed)hidePrintFeedback();
+  }
+  function hidePrintFeedback(){ $('printActionFeedback').hidden=true; }
+  $('printFeedbackClose').addEventListener('click',hidePrintFeedback);
+  function printBlockers(){
+    const data=identity(),reasons=[];
+    if(!data.debtor)reasons.push('Isi nama calon debitur pada Identitas Dokumen.');
+    if(!data.reference)reasons.push('Isi nomor referensi simulasi.');
+    if(!data.date)reasons.push('Isi tanggal simulasi.');
+    if(!data.branch)reasons.push('Isi cabang / unit kerja.');
+    if(!data.ao)reasons.push('Isi nama petugas / AO.');
+    if(isPlus(selected)){
+      if(!plusSnap)reasons.push('Tunggu perhitungan Pegawai Plus selesai atau periksa input yang belum valid.');
+      else if(!plusSnap.good || plusSnap.balance>1){
+        reasons.push(...(plusSnap.errors||[]),...(plusSnap.warnings||[]));
+        if(plusSnap.balance>1)reasons.push('Saldo akhir belum lunas sesuai tenor.');
+      }
+    }else if(isTht(selected)){
+      const s=window.THT_PRODUCT?.get();
+      if(!s)reasons.push('Perhitungan Skema-3 belum tersedia.');
+      else if(!s.valid)reasons.push(...(s.errors||[]));
+    }else{
+      if(!getCoreCanSave?.()){
+        const fieldList=[...document.querySelectorAll('#printGateReasons p')].map(e=>e.textContent.trim()).filter(Boolean);
+        reasons.push(...fieldList);
+        if(!fieldList.length)reasons.push('Periksa tanggal lahir, AJK, batas IDIR, dan kelengkapan input kredit.');
+      }
+    }
+    return [...new Set(reasons.filter(Boolean))].slice(0,8);
+  }
+  function showPrintFeedback(){
+    const list=$('printFeedbackItems');list.replaceChildren();
+    const reasons=printBlockers();
+    for(const reason of reasons.length?reasons:['Lengkapi dan periksa kembali data simulasi.']){
+      const item=document.createElement('li');item.textContent=reason;list.appendChild(item);
+    }
+    $('printActionFeedback').hidden=false;
+  }
+  const post=message=>frame.contentWindow?.postMessage({channel:'SIM_PLUS_PARENT',...message},location.origin);
+  function selectProduct(value){
+    if(!['asn','pension','business','method1','method2','method3'].includes(value))return;
+    selected=value; nav.value=value;window.SIM_PLUS_ACTIVE=isSpecial(value);
+    document.body.classList.toggle('plus-active',isSpecial(value));
+    $('coreMain').hidden=isSpecial(value); $('plusMain').hidden=!isPlus(value);$('thtMain').hidden=!isTht(value);
+    relocateIdentity(value);
+    $('gpnStatus').textContent=isTht(value)?'Bunga diblokir + pokok pelunasan THT':isPlus(value)?'Simulasi anuitas dua fase':'Simulasi reguler';
+    if(isPlus(value)) {
+      $('plusTopTitle').textContent='KREDIT PEGAWAI PLUS — '+(value==='method1'?'METODE 1 (3F)':'METODE 2 (3G)');
+      plusSnap=null;
+      post({event:'set-method',method:value});
+      pushIdentity();
+      post({event:'request-snapshot'});
+      frame.style.height='2050px';
+    } else if(isTht(value)){
+      $('thtSaveStatus').textContent='Lengkapi identitas dan periksa data THT sebelum menyimpan atau mencetak.';
+      window.THT_PRODUCT?.refresh();
+    } else {
+      if($('product').value!==value){$('product').value=value; $('product').dispatchEvent(new Event('change',{bubbles:true}));}
+    }
+    syncPrintButtons();
+  }
+  nav.addEventListener('change',e=>selectProduct(e.target.value));
+  $('product').addEventListener('change',e=>{if(e.target.value!==selected) selectProduct(e.target.value);});
+  window.addEventListener('message',event=>{
+    if(event.origin!==location.origin || event.source!==frame.contentWindow || event.data?.channel!=='SIM_PLUS') return;
+    const msg=event.data;
+    if(msg.event==='switch-product'){selectProduct(msg.value);return;}
+    if(msg.event==='snapshot' && msg.payload && isPlus(selected)){
+      // Avoid child reference/name drifting away from document identity after Reset/Preset.
+      const d=identity();
+      if(msg.payload.reference!==d.reference || msg.payload.debtorName!==d.debtor){pushIdentity();return;}
+      // Only consume iframe's validated calculation output; Firestore uses authenticated UID separately.
+      plusSnap=msg.payload;
+      const complete=!!(identity().reference && identity().debtor && identity().date && identity().branch && identity().ao);
+      $('plusSaveStatus').textContent=!complete?'Lengkapi Identitas Dokumen di atas sebelum menyimpan atau mencetak hasil simulasi.':
+        (plusSnap.good?'Simulasi dalam batas model. Pilih Simpan Simulasi untuk mencatatnya di monitoring.':
+        'Perlu review. Cetak dan penyimpanan diblokir sampai validasi hasil terpenuhi.');
+      $('plusSave').disabled=!window.SIM_MONITOR_CAN_SAVE();
+      syncPrintButtons();
+    }
+    if(msg.event==='invalid'&&isPlus(selected)){plusSnap=null;$('plusSave').disabled=true;$('plusSaveStatus').textContent='Input belum valid.';syncPrintButtons();}
+    if(msg.event==='print'&&isPlus(selected))showPrint(msg.mode);
+  });
+  frame.addEventListener('load',()=>{
+    if(isPlus(selected)){
+      post({event:'set-method',method:selected});
+      pushIdentity();
+    }
+  });
+  // Frame height adjustable using same-origin DOM. Do not retain borrower data in localStorage.
+  let lastHeight=0;
+  setInterval(()=>{
+    if(!isPlus(selected) || document.body.classList.contains('monitor-locked'))return;
+    try{
+      const d=frame.contentDocument;
+      if(d){const h=Math.max(d.documentElement.scrollHeight,d.body.scrollHeight)+10;
+        if(Math.abs(h-lastHeight)>8){frame.style.height=Math.max(650,h)+'px';lastHeight=h;}}
+    }catch(e){}
+  },1000);
+  window.addEventListener('tht-updated',()=>{if(isTht(selected))syncPrintButtons();});
+  $('plusSave').addEventListener('click',()=>{
+    if(!window.SIM_MONITOR_CAN_SAVE()){alert('Simulasi belum memenuhi validasi.');return;}
+    $('monitorSave').click(); // shared Firebase save flow
+  });
+  // Tombol cetak Pegawai Plus menggunakan dua tombol utama di bagian atas.
+  $('plusPrintBack').addEventListener('click',()=>{
+    $('plusDocument').hidden=true; document.body.classList.remove('plus-document-preview');
+    docMode=null;window.scrollTo(0,0);
+  });
+  $('plusPrintNow').addEventListener('click',()=>{
+    if(!window.SIM_MONITOR_CAN_SAVE()) {alert('Cetak ditolak: data tidak valid.');return;}
+    if(!docMode)return;
+    window.SIM_MONITOR_AUDIT?.(docMode==='summary'?'print_summary':'print_schedule')?.catch(console.warn);
+    window.print();
+  });
+  // Security of print on browser Ctrl+P: only allow valid source snapshot.
+  window.addEventListener('beforeprint',()=>{
+    if(!isSpecial(selected))return;
+    if(!window.SIM_MONITOR_CAN_SAVE()){
+      $('plusPrintBody').replaceChildren();
+      const title=document.createElement('div'); title.className='pd-alert';
+      title.textContent='DOKUMEN TIDAK DAPAT DICETAK: simulasi belum memenuhi ketentuan coverage atau pelunasan.';
+      $('plusPrintBody').appendChild(title);
+    } else if(!docMode)showPrint('summary');
+    $('plusDocument').hidden=false;
+    document.body.classList.add('plus-document-preview');
+  });
+  function el(name,cl,txt){const n=document.createElement(name);if(cl)n.className=cl;if(txt!==undefined)n.textContent=asText(txt);return n;}
+  function field(label,value){const e=el('div','pd-datum');e.append(el('span','',label),el('strong','',value));return e;}
+  function heading(parent,title,sub){const head=el('div','pd-head');const left=el('div');left.append(el('h1','',title),el('small','',sub));
+    const meta=el('div','pd-head-meta');meta.append(el('div','',identity().reference),el('div','',fmt(identity().date)));
+    head.append(left,meta);parent.appendChild(head);}
+  function grid(parent,pairs){const g=el('div','pd-grid');for(const p of pairs)g.appendChild(field(p[0],p[1]));parent.appendChild(g);}
+  // Satu standar desain dokumen untuk seluruh produk kredit. Data dua fase tetap dipertahankan.
+  function summary(){
+    const s=plusSnap, wrap=el('article','pd-summary ps-unified');
+    const add=(parent,tag,cls,value)=>{const node=el(tag,cls,value);parent.appendChild(node);return node;};
+    const pair=(label,value)=>{const cell=el('div','ps-field');add(cell,'span','',label);add(cell,'strong','',value);return cell;};
+    const section=(number,title)=>{const h=el('div','ps-section-kicker');add(h,'em','',number);add(h,'b','',title);wrap.appendChild(h);};
+    const panel=(parent,cls,pairs)=>{const grid=el('div',cls);for(const [k,v] of pairs)grid.appendChild(pair(k,v));parent.appendChild(grid);return grid;};
+    const ratio=(payment,salary)=>Number(salary)>0?(Number(payment)/Number(salary)*100).toLocaleString('id-ID',{maximumFractionDigits:2})+'%':'—';
+    const officer=$('docOfficer')?.value?.trim()||'—';
+    const unit=$('docUnit')?.value?.trim()||'—';
+    const documentDate=$('docDate')?.value||'';
+    // Identitas dokumen memakai header, warna dan hierarki yang sama dengan ringkasan ASN/Pensiun/Usaha.
+    const header=el('div','ps-report-header'),headLeft=el('div','ps-heading-left'),mark=el('div','ps-logo','K'),titles=el('div','ps-title-block');
+    add(titles,'span','ps-eyebrow','SIMULASI KREDIT · INTERNAL');
+    add(titles,'h1','', 'RINGKASAN SIMULASI KREDIT');
+    add(titles,'p','', 'Ringkasan pembiayaan dan kemampuan bayar');
+    headLeft.append(mark,titles);
+    const meta=el('div','ps-header-meta');
+    add(meta,'span','ps-meta-badge','DOKUMEN INTERNAL');
+    add(meta,'small','', 'NO: '+asText(s.reference));
+    add(meta,'small','', 'TANGGAL SIMULASI: '+fmt(documentDate));
+    add(meta,'small','', 'TANGGAL CETAK: '+new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}));
+    header.append(headLeft,meta);wrap.appendChild(header);
+    panel(wrap,'ps-document-identity', [['CALON DEBITUR',s.debtorName||'—'],['CABANG / UNIT KERJA',unit],['PETUGAS / AO',officer]]);
+    const productNote=el('div','ps-product-note');
+    add(productNote,'strong','',s.product.toUpperCase()+' · '+(s.method==='method1'?'3F':'3G'));
+    add(productNote,'p','','Skema dua fase: '+s.activeMonths+' bulan masa aktif dan '+s.pensionMonths+' bulan masa pensiun. Retensi aktif '+(s.method==='method1'?'tidak diterapkan (Metode 1)':'dihitung otomatis (Metode 2)')+'.');
+    wrap.appendChild(productNote);
+    section('01','INFORMASI FASILITAS KREDIT');
+    panel(wrap,'ps-facility-grid',[
+      ['PRODUK KREDIT',s.product],['PLAFON KREDIT',money(s.principal)],['TENOR PINJAMAN',s.tenor+' bulan'],
+      ['AWAL KREDIT',fmt(s.startDate)],['TANGGAL LAHIR',fmt(s.birthDate)],['BUNGA EFEKTIF',s.annualInterest+'% per tahun']
+    ]);
+    const hero=el('div','ps-hero');
+    const heroTop=el('div','ps-hero-top');add(heroTop,'span','','ESTIMASI ANGSURAN BULANAN');add(heroTop,'span','ps-pill',s.tenor+' bulan');
+    const phases=el('div','ps-two-payments');
+    for(const [name,amount,n] of [['ANGSURAN MASA AKTIF',s.activePayment,s.activeMonths],['ANGSURAN MASA PENSIUN',s.pensionPayment,s.pensionMonths]]){
+      const c=el('div','ps-phase');add(c,'small','',name);add(c,'strong','',money(amount));add(c,'span','',n+' bulan');phases.appendChild(c);
+    }
+    hero.append(heroTop,phases);wrap.appendChild(hero);
+    const salary=el('div','ps-salary');
+    add(salary,'div','ps-salary-heading','SISA GAJI SETELAH ANGSURAN');
+    const salaryGrid=el('div','ps-salary-grid');
+    const salaryPairs=[['MASA AKTIF',s.salary,s.activePayment,s.activeCap],['MASA PENSIUN',s.pensionSalary,s.pensionPayment,s.pensionCap]];
+    for(const [name,gaji,payment,coverage] of salaryPairs){
+      const c=el('div','ps-salary-cell');add(c,'span','',name);add(c,'strong','',money(Number(gaji)-Number(payment)));add(c,'small','',`Gaji ${money(gaji)} · IDIR ${ratio(payment,gaji)} / batas ${coverage}%`);salaryGrid.appendChild(c);
+    }
+    salary.appendChild(salaryGrid);add(salary,'p','ps-salary-note','Sisa penghasilan setelah angsuran, belum memperhitungkan kebutuhan hidup dan kewajiban lain.');wrap.appendChild(salary);
+    section('02','RINGKASAN PEMBIAYAAN');
+    panel(wrap,'ps-financing-metrics',[
+      ['TOTAL BUNGA',money(s.totalInterest)],['TOTAL PEMBAYARAN',money(s.totalPayment)],['DANA BERSIH DITERIMA',money(s.netDisbursement)]
+    ]);
+    section('03','ANALISIS KEMAMPUAN BAYAR');
+    const capacity=el('div','ps-capacity');
+    const capgrid=el('div','ps-capacity-grid');
+    for(const [name,pay,salary,cap] of salaryPairs.map(a=>[a[0],a[2],a[1],a[3]])){
+      const c=el('div','ps-capacity-item');add(c,'span','',name+' · RASIO ANGSURAN / GAJI');
+      const row=el('div','ps-capacity-row');add(row,'b','',ratio(pay,salary));add(row,'small','','Batas '+cap+'%');c.appendChild(row);capgrid.appendChild(c);
+    }
+    capacity.appendChild(capgrid);
+    const notes=el('div','ps-capacity-bottom');add(notes,'span','','Baki debet akhir');add(notes,'strong','',money(s.balance));capacity.appendChild(notes);
+    add(capacity,'p','ps-capacity-note',s.good&&s.balance<=1?'Perhitungan berada dalam batas simulasi; tetap memerlukan verifikasi kebijakan kredit.':'Simulasi perlu ditinjau kembali sebelum digunakan.');wrap.appendChild(capacity);
+    section('04','RINCIAN PENCAIRAN');
+    const fees=el('div','ps-fees');
+    const feeLeft=el('div','ps-fee-left');
+    const feeList=[['Provisi',s.fees.provision],['Administrasi ('+(s.adminPercent||0)+'% plafon)',s.fees.admin],['Premi AJK · '+(s.ajkProvider||'Pilihan AJK'),s.fees.insurance]];
+    if(s.method==='method2')feeList.push(['Retensi masa aktif ('+s.activeMonths+' bulan)',s.fees.adp]);
+    feeList.push(['Retensi masa pensiun',s.fees.pensionRetention],['Pelunasan kredit lama / lainnya',s.fees.oldLoan]);
+    for(const [name,val]of feeList){const r=el('div','ps-fee-row');add(r,'span','',name);add(r,'b','',money(val));feeLeft.appendChild(r);}
+    const feeRight=el('div','ps-cost-summary');
+    const total=el('div','ps-fee-row');add(total,'span','','Total potongan pencairan');add(total,'b','',money(s.totalFees));feeRight.appendChild(total);
+    const net=el('div','ps-net');add(net,'span','','DANA BERSIH DITERIMA');add(net,'strong','',money(s.netDisbursement));feeRight.appendChild(net);
+    fees.append(feeLeft,feeRight);wrap.appendChild(fees);
+    const foot=el('div','ps-report-footer');
+    add(foot,'strong','', 'Design & Development © 2026 Luther Parinding, S.Si.');
+    add(foot,'small','', 'Hasil simulasi bersifat indikatif, bukan persetujuan kredit. Verifikasi akhir mengikuti ketentuan bank dan core banking.');
+    wrap.appendChild(foot);
+    return wrap;
+  }
+  function schedule(){const s=plusSnap,wrap=el('div');const max=34;
+    for(let i=0;i<s.rows.length;i+=max){const page=el('article','pd-schedule-page');const batch=s.rows.slice(i,i+max);
+      heading(page,'Jadwal Angsuran Kredit',`${s.product} · Halaman ${Math.floor(i/max)+1}/${Math.ceil(s.rows.length/max)}`);
+      grid(page,[['Nama Debitur',identity().debtor],['Cabang / Unit Kerja',identity().branch],['Petugas / AO',identity().ao],
+        ['Plafon',money(s.principal)],['Angsuran Aktif / Pensiun',money(s.activePayment)+' / '+money(s.pensionPayment)]]);
+      page.appendChild(el('div','pd-section-title',`RINCIAN BULAN ${i+1}—${i+batch.length} / ${s.tenor}`));
+      const table=el('table','pd-schedule-table'),thead=el('thead'),headrow=el('tr');
+      for(const txt of ['Ke','Jatuh Tempo','Fase','Angsuran','Pokok','Bunga','Baki Debet'])headrow.appendChild(el('th','',txt));
+      thead.appendChild(headrow);table.appendChild(thead);const tbody=el('tbody');
+      for(const r of batch){const tr=el('tr');for(const txt of [r.month,fmt(r.date),r.phase==='PEGAWAI'?'Aktif':'Pensiun',money(r.payment),money(r.principalPaid),money(r.interest),money(r.ending)])tr.appendChild(el('td','',txt));tbody.appendChild(tr);}
+      table.appendChild(tbody);page.appendChild(table);
+      page.appendChild(el('div','pd-foot',`Nomor Referensi: ${identity().reference} · Jadwal simulasi, bukan bukti pembayaran · Design & Development © 2026 Luther Parinding, S.Si.`));
+      wrap.appendChild(page);
+    }return wrap;
+  }
+
+  function bankSimpleSummary(){
+    const d=identity(), tht=isTht(selected), s=tht?window.THT_PRODUCT?.get():plusSnap;
+    const w=el('article','pd-summary bank-simple-print');
+    const make=(tag,cls,content)=>{const n=el(tag,cls);if(content!==undefined)n.textContent=String(content);return n;};
+    const head=make('div','bs-head'),brand=make('div','bs-brand'),mark=make('div','bs-mark','K'),main=make('div',''),tit=make('h1','','RINGKASAN SIMULASI KREDIT'),sub=make('p','','Dokumen simulasi internal · '+(tht?'KPEG Plus Skema-3 (THT)':s.product));
+    main.append(tit,sub);brand.append(mark,main);head.append(brand,make('div','bs-date',new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})));w.append(head);
+    const section=(number,title,pairs)=>{
+      const part=make('section','bs-section'),head=make('div','bs-section-title',number+'  '+title),grid=make('div','bs-grid');
+      for(const [key,value] of pairs){const item=make('div','bs-item');item.append(make('span','bs-k',key),make('strong','bs-v',value===undefined?'—':value));grid.append(item);}
+      part.append(head,grid);w.append(part);
+    };
+    section('01','IDENTITAS DOKUMEN',[
+      ['Nama Calon Debitur',d.debtor],['Nomor Referensi',d.reference],['Tanggal Simulasi',fmt(d.date)],['Cabang / Unit Kerja',d.branch],['Nama Petugas / AO',d.ao]
+    ]);
+    if(tht){
+      section('02','FASILITAS KREDIT',[
+        ['Produk Kredit','KPEG Plus Skema-3 (THT)'],['Plafon Kredit',money(s.principal)],['Jangka Waktu',s.tenor+' bulan'],['Bunga Efektif',s.rate+'% per tahun'],['Estimasi THT',money(s.benefit)],['Maksimum Plafon ('+s.coverage+'%)',money(s.maxLoan)]
+      ]);
+      const a=make('div','bs-highlight');for(const [k,v]of [['BUNGA PER BULAN (DIBLOKIR)',money(s.rawMonthly)],['DANA BERSIH PENCAIRAN',money(s.net)]]){const c=make('div');c.append(make('small','',k),make('strong','',v));a.append(c);}w.append(a);
+      section('03','BIAYA & PELUNASAN',[
+        ['Total Bunga Diblokir',money(s.totalInterest)],['Provisi',money(s.feeProvision)],['Administrasi',money(s.feeAdmin)],['Premi AJK',money(s.feeInsurance)],['Total Potongan',money(s.totalDeductions)],['Pelunasan Pokok saat THT',money(s.principal)],['Sisa Manfaat THT',money(s.benefitRemaining)],['Tanggal Jatuh Tempo',fmt(s.maturity)]
+      ]);
+      const total=make('div','bs-total');total.append(make('span','','DANA BERSIH DITERIMA'),make('strong','',money(s.net)));w.append(total);
+    }else{
+      section('02','FASILITAS KREDIT',[
+        ['Produk Kredit',s.product],['Plafon Kredit',money(s.principal)],['Jangka Waktu',s.tenor+' bulan'],['Suku Bunga Efektif',s.annualInterest+'% per tahun'],['Masa Aktif',s.activeMonths+' bulan'],['Masa Pensiun',s.pensionMonths+' bulan']
+      ]);
+      const a=make('div','bs-highlight');for(const [k,v] of [['ANGSURAN MASA AKTIF',money(s.activePayment)],['ANGSURAN MASA PENSIUN',money(s.pensionPayment)]]){const c=make('div');c.append(make('small','',k),make('strong','',v));a.append(c);}w.append(a);
+      section('03','KEMAMPUAN BAYAR',[
+        ['Gaji Aktif',money(s.salary)],['Sisa Gaji Aktif',money(Number(s.salary)-Number(s.activePayment))],
+        ['Gaji Pensiun',money(s.pensionSalary)],['Sisa Gaji Pensiun',money(Number(s.pensionSalary)-Number(s.pensionPayment))]
+      ]);
+      const fees=[['Premi AJK',money(s.fees.insurance)],['Provisi',money(s.fees.provision)],['Administrasi ('+(s.adminPercent||0)+'% plafon)',money(s.fees.admin)]];
+      if(s.method==='method2')fees.push(['Retensi Masa Aktif ('+s.activeMonths+' bulan)',money(s.fees.adp)]);
+      fees.push(['Retensi Masa Pensiun',money(s.fees.pensionRetention)],['Pelunasan Kredit Lama',money(s.fees.oldLoan)],['Total Potongan',money(s.totalFees)]);
+      section('04','BIAYA & PENCAIRAN',fees);
+      const total=make('div','bs-total');total.append(make('span','','DANA BERSIH DITERIMA'),make('strong','',money(s.netDisbursement)));w.append(total);
+    }
+    const foot=make('div','bs-foot');foot.append(make('span','','Hasil simulasi bersifat indikatif, bukan persetujuan kredit. Validasi akhir mengikuti ketentuan bank dan core banking.'),make('b','','Design & Development © 2026 Luther Parinding, S.Si.'));w.append(foot);
+    return w;
+  }
+
+  function showPrint(mode){
+    if(!isSpecial(selected)||!window.SIM_MONITOR_CAN_SAVE()){alert('Cetak tidak tersedia: data atau batas coverage belum memenuhi validasi.');return;}
+    if(mode==='card')mode='schedule'; // Jadwal mengikuti format cetak standar dan sudah mencakup kartu angsuran.
+    docMode=mode==='schedule'?'schedule':'summary';
+    const area=$('plusPrintBody');area.replaceChildren();
+    area.appendChild(docMode==='summary'?bankSimpleSummary():(isTht(selected)?window.THT_PRODUCT.printSchedule(identity()):schedule()));
+    $('plusPreviewTitle').textContent=docMode==='schedule'?'Pratinjau Jadwal Angsuran':'Pratinjau Ringkasan Kredit • 1 Halaman';
+    $('plusDocument').hidden=false;document.body.classList.add('plus-document-preview');window.scrollTo(0,0);
+  }
+  // Validasi cetak secara konsisten untuk keenam produk; alasan kegagalan harus terlihat.
+  for(const id of ['print','printScheduleTop']){
+    $(id)?.addEventListener('click',e=>{
+      const valid=Boolean(window.SIM_MONITOR_CAN_SAVE?.());
+      if(!valid){
+        e.stopImmediatePropagation();e.preventDefault();showPrintFeedback();return;
+      }
+      hidePrintFeedback();
+      if(isSpecial(selected)){
+        e.stopImmediatePropagation();e.preventDefault();
+        showPrint(id==='print'?'summary':'schedule');
+      }
+    },true);
+  }
+  window.addEventListener('sim-monitor-identity',e=>{
+    $('globalProductNav').hidden=false;
+    if(e.detail?.signedIn===false){$('globalProductNav').hidden=true; selectProduct('asn');}
+  });
+  // Defaults after the master calculator JS initializes; no mutation of core formulas.
+  nav.value=$('product').value;
+})();
+</script>
+<script id="thtCalculator">
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const rup=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
+  const toISO=date=>`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  const dateLabel=iso=>iso?new Date(`${iso}T12:00:00`).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'—';
+  const ids=['thtStartDate','thtRetireDate','thtBenefit','thtCoverage','thtPrincipal','thtTenor','thtRate','thtSalary','thtProvision','thtAdmin','thtInsuranceType','thtBirth','thtAjkOtherCompany','thtAjkOtherPremium'];
+  const number=id=>Number($(id).value);
+  const rounded=n=>Math.round((n+Number.EPSILON)*1e4)/1e4;
+  let last=null;
+  function dueDate(base,months){let d=new Date(base+'T12:00:00');const day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+months);const y=d.getFullYear(),m=d.getMonth();const lastDay=new Date(y,m+1,0).getDate();d.setDate(Math.min(day,lastDay));return toISO(d);}
+  function resolveThtAJK(principal,tenor,start){
+    const type=$('thtInsuranceType').value;
+    if(type==='none')return {available:true,premium:0,provider:'Tanpa AJK',type,rate:null,age:null,years:null,message:'Tanpa AJK: premi Rp0 (sesuai data contoh workbook).'};
+    if(type==='ajk_other'){
+      const company=$('thtAjkOtherCompany').value.trim();
+      const value=Number($('thtAjkOtherPremium').value);
+      const available=!!company&&Number.isFinite(value)&&value>0;
+      return {available,premium:available?Math.round(value):null,provider:company||'AJK Lain',type,rate:null,age:null,years:null,
+        message:available?'Premi manual '+company+' sesuai penawaran/polis; konfirmasi cakupan Skema-3.':'Isi nama perusahaan dan premi AJK Lain lebih besar dari Rp0.'};
+    }
+    if(type==='ajk'){
+      const quote=calculateInsurance({principal,months:tenor,birth:$('thtBirth').value,start});
+      return {available:quote.available,premium:quote.premium,provider:'CHUBB',type,rate:quote.rate,age:quote.age,years:quote.years,
+        message:quote.available?'Tarif CHUBB dari tabel AJK yang dipakai CPNS/ASN; usia '+quote.age+' tahun, tenor tarif '+quote.years+' tahun. Wajib validasi keberlakuan untuk Skema-3 (THT).':quote.message};
+    }
+    return {available:false,premium:null,provider:'Tidak dikenal',type,rate:null,age:null,years:null,message:'Pilihan AJK tidak dikenal.'};
+  }
+  function compute(){
+    const benefit=number('thtBenefit'),coverage=number('thtCoverage'),principal=number('thtPrincipal'),tenor=number('thtTenor');
+    const rate=number('thtRate'),provisionRate=number('thtProvision'),adminRate=number('thtAdmin');
+    const ajk=resolveThtAJK(principal,tenor,$('thtStartDate').value);
+    const start=$('thtStartDate').value,retirement=$('thtRetireDate').value;
+    const errors=[];const warnings=[];
+    if(!start||!retirement)errors.push('Isi tanggal akad dan TMT pensiun.');
+    if(!(benefit>0&&Number.isFinite(benefit)))errors.push('Estimasi THT harus lebih besar dari Rp0.');
+    if(!(principal>0&&Number.isFinite(principal)))errors.push('Plafon harus lebih besar dari Rp0.');
+    if(!Number.isInteger(tenor)||tenor<1||tenor>180)errors.push('Tenor harus 1–180 bulan.');
+    if(!Number.isFinite(rate)||rate<0||rate>100)errors.push('Bunga harus antara 0% dan 100% per tahun.');
+    if(!Number.isFinite(coverage)||coverage<=0||coverage>100)errors.push('Persentase maksimum THT harus lebih dari 0% sampai 100%.');
+    for(const [id,name] of [['thtProvision','Provisi'],['thtAdmin','Administrasi']]){const v=number(id);if(!Number.isFinite(v)||v<0||v>100)errors.push(name+' harus antara 0% sampai 100%.');}
+    if(!ajk.available)errors.push('AJK: '+ajk.message);
+    if(number('thtSalary')<0)errors.push('Gaji/THP tidak boleh negatif.');
+    const maxLoan=benefit*coverage/100;
+    if(principal>maxLoan+0.5)errors.push('Plafon melebihi '+coverage+'% estimasi THT ('+rup(maxLoan)+').');
+    const rawMonthly=principal*rate/1200;
+    const totalInterest=Math.round(principal*rate*tenor/1200);
+    const feeProvision=Math.round(principal*provisionRate/100),feeAdmin=Math.round(principal*adminRate/100),feeInsurance=ajk.available?ajk.premium:null;
+    const other=feeInsurance===null?null:feeProvision+feeAdmin+feeInsurance,totalDeductions=other===null?null:totalInterest+other,net=totalDeductions===null?null:Math.round(principal-totalDeductions),benefitRemaining=Math.round(benefit-principal);
+    if(net!==null&&net<0)errors.push('Bunga diblokir dan biaya melampaui plafon sehingga dana bersih negatif.');
+    if(start&&retirement&&start>retirement)errors.push('Tanggal akad tidak boleh melewati tanggal TMT pensiun.');
+    let maturity=start&&Number.isInteger(tenor)&&tenor>=1?dueDate(start,tenor):'';
+    if(maturity&&retirement&&maturity!==retirement)warnings.push('Jatuh tempo ke-'+tenor+' ('+dateLabel(maturity)+') berbeda dari TMT yang diisi ('+dateLabel(retirement)+'). Pastikan jadwal pelunasan pokok sesuai kepastian pembayaran THT.');
+    const rows=[];if(errors.length===0){let sum=0;for(let i=1;i<=tenor;i++){
+      const interest=i===tenor?totalInterest-sum:Math.round(rawMonthly);
+      sum+=interest;
+      rows.push({month:i,date:dueDate(start,i),interest,principalPaid:i===tenor?principal:0,payment:interest+(i===tenor?principal:0),ending:i===tenor?0:principal});
+    }}
+    return {valid:errors.length===0,errors,warnings,benefit,coverage,maxLoan,principal,tenor,rate,rawMonthly,totalInterest,feeProvision,feeAdmin,feeInsurance,other,totalDeductions,net,benefitRemaining,ajk,rows,start,retirement,maturity,salary:number('thtSalary'),agency:''};
+  }
+  function render(){
+    last=compute();const s=last;
+    $('thtAjkBirthField').hidden=s.ajk.type!=='ajk';
+    $('thtAjkOtherFields').hidden=s.ajk.type!=='ajk_other';
+    $('thtAjkRateRow').hidden=s.ajk.type!=='ajk';
+    $('thtAjkRate').textContent=s.ajk.available&&Number.isFinite(s.ajk.rate)?s.ajk.rate.toLocaleString('id-ID')+'‰':'—';
+    $('thtAjkPremium').textContent=s.ajk.available?rup(s.ajk.premium):'—';
+    $('thtAjkNote').textContent=s.ajk.message;
+    $('thtAjkNote').style.color=s.ajk.available?'#52788b':'#aa3542';
+    for(const [id,val]of [['thtValPrincipal',s.principal],['thtValMonthly',s.rawMonthly],['thtValNet',s.net],['thtValBenefitRemaining',s.benefitRemaining]])$(id).textContent=Number.isFinite(val)?rup(val):'—';
+    const list=[['Estimasi manfaat THT',s.benefit],['Maksimum plafon ('+s.coverage+'%)',s.maxLoan],['Bunga diblokir untuk '+s.tenor+' bulan',s.totalInterest],['Provisi',s.feeProvision],['Administrasi',s.feeAdmin],['Premi AJK · '+s.ajk.provider,s.feeInsurance],['Total biaya selain bunga',s.other],['Total seluruh potongan',s.totalDeductions],['Tanggal jatuh tempo akhir',dateLabel(s.maturity)]];
+    $('thtDetails').replaceChildren(...list.map(([name,amount])=>{let d=document.createElement('div');d.className='tht-detail';let a=document.createElement('span'),b=document.createElement('b');a.textContent=name;b.textContent=amount===null?'—':typeof amount==='number'?rup(amount):amount;d.append(a,b);return d;}));
+    $('thtTableBody').replaceChildren(...s.rows.map(r=>{const tr=document.createElement('tr');for(const v of [r.month,dateLabel(r.date),rup(r.interest),rup(r.principalPaid),rup(r.payment),rup(r.principalPaid),rup(r.ending)]){const td=document.createElement('td');td.textContent=v;tr.appendChild(td);}return tr;}));
+    const errors=s.errors.map(v=>'• '+v),warnings=s.warnings.map(v=>'• '+v);
+    $('thtValidation').classList.toggle('warn',!s.valid||warnings.length>0);
+    $('thtValidation').textContent=[s.valid?'Perhitungan sesuai rumus contoh Excel. Validasi bank dan kepastian THT tetap diperlukan.':'Simulasi belum valid.',...errors,...warnings].join('\n');
+    $('thtValidation').style.whiteSpace='pre-line';
+    $('thtSave').disabled=!s.valid;
+    $('thtSaveStatus').textContent=s.valid?'Perhitungan tersedia. Simpan atau cetak setelah melengkapi Identitas Dokumen.':'Perbaiki parameter yang ditandai pada validasi sebelum mencetak.';
+    window.dispatchEvent(new CustomEvent('tht-updated'));
+  }
+  for(const id of ids)for(const event of ['input','change'])$(id).addEventListener(event,render);
+  $('thtSave').addEventListener('click',()=>{
+    if(!last.valid)return;
+    if(!window.SIM_MONITOR_CAN_SAVE?.()){$('thtSaveStatus').textContent='Lengkapi Identitas Dokumen sebelum menyimpan.';return;}
+    const target=$('monitorSave');
+    if(target.disabled){$('thtSaveStatus').textContent='Mode uji offline: penyimpanan ke Firebase tidak tersedia. Periksa dan cetak dahulu.';return;}
+    $('thtSaveStatus').textContent='Mengirim simulasi ke Firebase…';target.click();
+  });
+  const saveStatus=$('monitorSaveStatus');
+  if(saveStatus && typeof MutationObserver!=='undefined'){
+    new MutationObserver(()=>{if(!$('thtMain').hidden && saveStatus.textContent.trim())$('thtSaveStatus').textContent=saveStatus.textContent;}).observe(saveStatus,{childList:true,subtree:true,characterData:true});
+  }
+  const make=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=String(txt);return e;};
+  function boxRows(parent,cls,data){const grid=make('div',cls);for(const [label,val]of data){const d=make('div','ps-field');d.append(make('span','',label),make('strong','',val));grid.appendChild(d);}parent.appendChild(grid);}
+  function section(parent,n,label){const e=make('div','ps-section-kicker');e.append(make('em','',n),make('b','',label));parent.appendChild(e);}
+  function header(parent,identity,title,sub){
+    const h=make('div','ps-report-header'),left=make('div','ps-heading-left'),mark=make('div','ps-logo','K'),titles=make('div','ps-title-block');
+    titles.append(make('span','ps-eyebrow','SIMULASI KREDIT · INTERNAL'),make('h1','',title),make('p','',sub));left.append(mark,titles);
+    const meta=make('div','ps-header-meta');meta.append(make('span','ps-meta-badge','DOKUMEN INTERNAL'),make('small','','NO: '+identity.reference),make('small','','TANGGAL SIMULASI: '+dateLabel(identity.date)),make('small','','TANGGAL CETAK: '+new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})));
+    h.append(left,meta);parent.appendChild(h);
+  }
+  function printSummary(identity){
+    const s=last,w=make('article','pd-summary ps-unified');
+    header(w,identity,'RINGKASAN SIMULASI KREDIT','Ringkasan pembiayaan THT dan pelunasan pokok');
+    boxRows(w,'ps-document-identity', [['CALON DEBITUR',identity.debtor],['CABANG / UNIT KERJA',identity.branch],['PETUGAS / AO',identity.ao]]);
+    const note=make('div','ps-product-note');note.append(make('strong','','KREDIT KPEG PLUS SKEMA-3 (THT)'),make('p','','Bunga '+s.tenor+' bulan diblokir/dipotong saat pencairan. Pokok kredit dilunasi sekaligus melalui manfaat THT pada akhir tenor.'));w.appendChild(note);
+    section(w,'01','INFORMASI FASILITAS KREDIT');
+    boxRows(w,'ps-facility-grid', [['PRODUK KREDIT','KPEG Plus Skema-3 (THT)'],['PLAFON KREDIT',rup(s.principal)],['TENOR PINJAMAN',s.tenor+' bulan'],['AWAL KREDIT',dateLabel(s.start)],['TMT PENSIUN',dateLabel(s.retirement)],['BUNGA EFEKTIF',s.rate+'% per tahun']]);
+    const hero=make('div','ps-hero'),heroTop=make('div','ps-hero-top');heroTop.append(make('span','','ALOKASI BUNGA DAN PELUNASAN POKOK'),make('span','ps-pill',s.tenor+' bulan'));
+    const phases=make('div','ps-two-payments');
+    for(const [name,val,desc]of [['BUNGA PER BULAN',rup(s.rawMonthly),'Telah dipotong/blokir di muka'],['POKOK PELUNASAN THT',rup(s.principal),'Dibayar pada akhir tenor']]){
+      let cell=make('div','ps-phase');cell.append(make('small','',name),make('strong','',val),make('span','',desc));phases.appendChild(cell);
+    }hero.append(heroTop,phases);w.appendChild(hero);
+    const salary=make('div','ps-salary');salary.appendChild(make('div','ps-salary-heading','PERHITUNGAN MANFAAT THT DAN PENCAIRAN'));
+    const grid=make('div','ps-salary-grid');
+    for(const [name,amount,note]of [['DANA BERSIH SAAT PENCAIRAN',s.net,'Plafon setelah bunga diblokir dan biaya'],['SISA THT SETELAH PELUNASAN POKOK',s.benefitRemaining,'Estimasi THT dikurangi pokok saat jatuh tempo']]){
+      const c=make('div','ps-salary-cell');c.append(make('span','',name),make('strong','',rup(amount)),make('small','',note));grid.appendChild(c);
+    }salary.append(grid,make('p','ps-salary-note','Dua angka tersebut terjadi pada waktu berbeda dan tidak boleh dijumlahkan sebagai dana pencairan.'));w.appendChild(salary);
+    section(w,'02','RINGKASAN PEMBIAYAAN');
+    boxRows(w,'ps-financing-metrics',[['ESTIMASI THT',rup(s.benefit)],['TOTAL BUNGA DIBLOKIR',rup(s.totalInterest)],['DANA BERSIH DITERIMA',rup(s.net)]]);
+    section(w,'03','STRUKTUR PELUNASAN');
+    const status=make('div','ps-capacity');const rows=make('div','ps-capacity-grid');
+    for(const [name,value,desc]of [['MAKSIMUM PLAFON ATAS THT',rup(s.maxLoan),s.coverage+'% dari manfaat THT'],['JATUH TEMPO / SISA BAKI',dateLabel(s.maturity),'Baki debet akhir: Rp 0']]){
+      const cell=make('div','ps-capacity-item');cell.append(make('span','',name));const row=make('div','ps-capacity-row');row.append(make('b','',value),make('small','',desc));cell.append(row);rows.append(cell);
+    }status.append(rows,make('p','ps-capacity-note','Bunga pada jadwal merupakan alokasi yang sudah dipotong saat pencairan. Verifikasi bukti THT, jatuh tempo, dan ketentuan produk sebelum pencairan.'));w.appendChild(status);
+    section(w,'04','RINCIAN POTONGAN DAN PENCAIRAN');
+    const feeGrid=make('div','ps-fees'),feeLeft=make('div','ps-fee-left');
+    for(const [label,value]of [['Bunga diblokir '+s.tenor+' bulan',s.totalInterest],['Provisi',s.feeProvision],['Administrasi',s.feeAdmin],['Premi AJK · '+s.ajk.provider,s.feeInsurance]]){
+      const row=make('div','ps-fee-row');row.append(make('span','',label),make('b','',rup(value)));feeLeft.append(row);
+    }const right=make('div','ps-cost-summary'),total=make('div','ps-fee-row');total.append(make('span','','Total potongan pencairan'),make('b','',rup(s.totalDeductions)));right.append(total);
+    const net=make('div','ps-net');net.append(make('span','','DANA BERSIH DITERIMA'),make('strong','',rup(s.net)));right.append(net);feeGrid.append(feeLeft,right);w.appendChild(feeGrid);
+    const foot=make('div','ps-report-footer');foot.append(make('strong','','Design & Development © 2026 Luther Parinding, S.Si.'),make('small','','Simulasi indikatif mengikuti formula Excel KPEG Plus Skema-3 (THT); bukan keputusan kredit. Validasi akhir mengikuti ketentuan bank.'));w.appendChild(foot);
+    return w;
+  }
+  function printSchedule(identity){
+    const w=make('div');for(let i=0;i<last.rows.length;i+=32){const rows=last.rows.slice(i,i+32),p=make('article','pd-schedule-page');
+      const h=make('div','pd-head'),left=make('div');left.append(make('h1','','JADWAL ANGSURAN SKEMA-3 (THT)'),make('small','','Kredit Pegawai Plus • Jadwal bunga dan pelunasan pokok'));
+      const meta=make('div','pd-head-meta');meta.append(make('div','',identity.reference),make('div','',`Halaman ${1+Math.floor(i/32)} / ${Math.ceil(last.rows.length/32)}`));h.append(left,meta);p.appendChild(h);
+      const g=make('div','pd-grid');for(const [label,val]of [['Nama Debitur',identity.debtor],['Cabang',identity.branch],['Petugas / AO',identity.ao],['Plafon Kredit',rup(last.principal)],['Dana Bersih',rup(last.net)],['Bunga Bulanan',rup(last.rawMonthly)]]){
+        const v=make('div','pd-datum');v.append(make('span','',label),make('strong','',val));g.appendChild(v);
+      }p.append(g,make('div','pd-section-title',`BULAN ${i+1} – ${i+rows.length} DARI ${last.tenor}`));
+      const t=make('table','pd-schedule-table'),thead=make('thead'),headerRow=make('tr');for(const v of ['Ke','Jatuh Tempo','Bunga (alokasi)','Pokok','Total Akuntansi','Potong THT','Baki Debet'])headerRow.appendChild(make('th','',v));thead.append(headerRow);t.appendChild(thead);
+      const tbody=make('tbody');for(const r of rows){const tr=make('tr');for(const v of [r.month,dateLabel(r.date),rup(r.interest),rup(r.principalPaid),rup(r.payment),rup(r.principalPaid),rup(r.ending)])tr.appendChild(make('td','',v));tbody.appendChild(tr);}t.appendChild(tbody);p.append(t);
+      p.append(make('div','pd-foot','Bunga di tabel telah dipotong/diblokir di muka saat pencairan; bukan tagihan tunai ulang. Pokok dilunasi pada bulan terakhir. • '+identity.reference));w.appendChild(p);
+    }return w;
+  }
+
+  window.THT_PRODUCT={refresh:render,get:()=>last,printSummary,printSchedule,snapshot:identity=>{
+    if(!last?.valid)return null;
+    return {reference:identity.reference,debtorName:identity.debtor,product:'Kredit KPEG Plus Skema-3 (THT)',salary:last.salary,principal:last.principal,netDisbursement:last.net,payment:Math.round(last.rawMonthly)};
+  }};
+  render();
+})();
+</script>
+
+<script type="module" src="./firebase-monitor.js"></script>
+<script id="professionalExperienceV2">
+/* Design enhancements; does not modify loan calculations. */
+(()=>{
+'use strict';
+const boot=()=>{
+ const nav=document.getElementById('globalProductSelect'), global=document.getElementById('globalProductNav');
+ if(!nav||!global||document.getElementById('uxWorkspace'))return;
+ const pnames={asn:'Kredit CPNS / ASN',pension:'Kredit Pensiun',business:'Kredit Usaha',method1:'Kredit Pegawai Plus — Metode 1',method2:'Kredit Pegawai Plus — Metode 2',method3:'Kredit KPEG Plus — Skema-3 (THT)'};
+ const workspace=document.createElement('section');workspace.id='uxWorkspace';workspace.className='ux-workspace';workspace.setAttribute('aria-label','Navigasi dan ringkasan simulasi');
+ workspace.innerHTML=`<div class="ux-welcome"><div><span class="ux-eyebrow">Credit workspace · Simulasi kredit</span><h2 id="uxProductName">Kredit CPNS / ASN</h2><p>Input terstruktur, hasil yang transparan, dan dokumen konsisten untuk seluruh produk kredit.</p></div><span class="ux-method" id="uxMethod">SIMULASI KREDIT</span></div>
+ <nav class="ux-steps" aria-label="Tahapan kerja simulasi"><button type="button" class="ux-step is-active" data-step="0"><span>01</span>Identitas</button><button type="button" class="ux-step" data-step="1"><span>02</span>Parameter & biaya</button><button type="button" class="ux-step" data-step="2"><span>03</span>Hasil</button><button type="button" class="ux-step" data-step="3"><span>04</span>Dokumen</button></nav>
+ <div class="ux-cards" role="status" aria-live="off"><div class="ux-stat primary"><small id="uxLabel1">Plafon kredit</small><strong id="uxValue1">—</strong><em id="uxHint1">Fasilitas bruto</em></div><div class="ux-stat"><small id="uxLabel2">Angsuran bulanan</small><strong id="uxValue2">—</strong><em id="uxHint2">Berdasarkan produk</em></div><div class="ux-stat good"><small id="uxLabel3">Dana bersih diterima</small><strong id="uxValue3">—</strong><em>Setelah potongan biaya</em></div><div class="ux-stat warn"><small id="uxLabel4">Skema pembayaran</small><strong id="uxValue4">—</strong><em id="uxHint4">Lihat perincian</em></div></div>
+ <div class="ux-disclosure" id="uxInfo"><strong>Petunjuk:</strong> Gunakan tahap 01–04 untuk menuju bagian yang dibutuhkan; hasil perhitungan tetap mengikuti ketentuan produk.</div>`;
+ global.insertAdjacentElement('afterend',workspace);
+ const el=id=>document.getElementById(id), val=id=>el(id)?.textContent.trim()||'—';
+ const isPlus=p=>p==='method1'||p==='method2';
+ const visible=elem=>!!elem && getComputedStyle(elem).display!=='none';
+ function go(step){
+  const p=nav.value;let target;
+  if(step===0)target=document.querySelector('.input-group-document');
+  if(step===1)target=p==='method3'?el('thtMain')?.querySelector('.tht-box'):isPlus(p)?el('plusFrame'):el('groupDebitur');
+  if(step===2)target=p==='method3'?el('thtValPrincipal'):isPlus(p)?el('plusFrame'):el('results');
+  if(step===3)target=el('print')||el('printScheduleTop');
+  if(target){let y=window.scrollY+target.getBoundingClientRect().top - 90;
+   if(isPlus(p)&&(step===1||step===2)){
+    const f=el('plusFrame');try{const d=f.contentDocument;const t=step===2?d?.querySelector('.result-section'):d?.querySelector('.panel');if(t)y+=t.getBoundingClientRect().top;}catch(e){}
+   }
+   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
+  }
+  workspace.querySelectorAll('.ux-step').forEach(b=>b.classList.toggle('is-active',Number(b.dataset.step)===step));
+ }
+ workspace.querySelectorAll('.ux-step').forEach(b=>b.addEventListener('click',()=>go(Number(b.dataset.step))));
+ let last='';
+ function update(){
+  if(global.hidden||document.body.classList.contains('monitor-locked')){workspace.hidden=true;return;}
+  workspace.hidden=false;
+  const p=nav.value||'asn';el('uxProductName').textContent=pnames[p]||p;
+  el('uxMethod').textContent=p==='method1'?'3F · TANPA RETENSI AKTIF':p==='method2'?'3G · RETENSI AKTIF OTOMATIS':p==='method3'?'THT · PELUNASAN POKOK AKHIR':'SIMULASI REGULER';
+  const set=(id,s)=>{s=String(s||'—');if(el(id).textContent!==s)el(id).textContent=s;};
+  let a='—',b='—',c='—',d='—',note='';
+  if(isPlus(p)){
+   const f=el('plusFrame');try{const fd=f.contentDocument;
+    const get=k=>fd?.getElementById(k)?.textContent.trim()||'—';
+    a=get('kpiPrincipal');b=get('kpiActive');c=get('kpiNet');d=get('kpiPension');
+    set('uxLabel2','Angsuran masa aktif');set('uxLabel4','Angsuran masa pensiun');set('uxHint2','Fase pegawai aktif');set('uxHint4','Fase pensiun');
+    const ret=get('adpText');note=p==='method2'?`<strong>Metode 2 · Retensi Aktif:</strong> Biaya retensi aktif otomatis dari jumlah bulan aktif × angsuran aktif. Perhatikan rincian biaya sebelum menawarkan dana bersih. Retensi saat ini: <b>${ret.replace(/[<>]/g,'')}</b>.`:'<strong>Metode 1 · Tanpa retensi aktif:</strong> Tidak ada pemotongan retensi masa aktif. Retensi pensiun dan biaya lainnya tetap mengikuti input dan ketentuan produk.';
+   }catch(e){note='Menunggu perhitungan Pegawai Plus.'}
+  } else if(p==='method3'){
+    a=val('thtValPrincipal');b=val('thtValMonthly');c=val('thtValNet');d=val('thtValBenefitRemaining');
+    set('uxLabel2','Bunga per bulan');set('uxLabel4','Sisa manfaat THT');set('uxHint2','Bunga diblokir di muka');set('uxHint4','Setelah pelunasan pokok');
+    note='<strong>Skema-3 (THT):</strong> Bunga diblokir dari pencairan, pokok kredit dilunasi saat THT cair. Pastikan nilai manfaat THT dan jadwal pelunasan sudah diverifikasi.';
+  } else {
+    a=val('facPrincipal');b=val('payment');c=val('net');d=val('remaining');
+    set('uxLabel2','Angsuran per bulan');set('uxLabel4','Sisa gaji / THP');set('uxHint2','Sesuai tenor dan bunga');set('uxHint4','Setelah angsuran');
+    note='<strong>Transparansi pembiayaan:</strong> Periksa plafon, angsuran, biaya AJK, sisa penghasilan, dan dana bersih sebelum menyampaikan penawaran.';
+  }
+  set('uxValue1',a);set('uxValue2',b);set('uxValue3',c);set('uxValue4',d);
+  const info=el('uxInfo');const cmp=`${p}|${note}`;if(last!==cmp){info.innerHTML=note;info.classList.toggle('ux-alert',p==='method2'||p==='method3');last=cmp;}
+ }
+ nav.addEventListener('change',()=>{last='';update();workspace.querySelectorAll('.ux-step').forEach((b,i)=>b.classList.toggle('is-active',i===0));});
+ document.addEventListener('input',()=>update(),{passive:true});
+ document.addEventListener('change',()=>update(),{passive:true});
+ window.addEventListener('message',e=>{if(e.source===el('plusFrame')?.contentWindow)update();});
+ window.addEventListener('tht-updated',update);
+ setInterval(update,1100);update();
+ // Add source-state notice beside insurance selections; never imply the tariffs are current/approved.
+ const addNotice=(id)=>{const x=el(id);if(!x||x.parentNode.querySelector('.ux-source-note'))return;const note=document.createElement('p');note.className='ux-source-note';note.textContent='Tarif CHUBB referensi yang digunakan aplikasi berlabel 1 November 2017. Pastikan tarif serta kelayakan produk telah diverifikasi dengan pihak asuransi sebelum penawaran resmi.';x.parentNode.appendChild(note);};
+ addNotice('thtInsuranceType');addNotice('insuranceType');
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+
+</script>
+<script id="bankCleanUiBehavior">
+/* Perapian hierarki layar, memindahkan tombol yang sama — tanpa mengganti handler cetak. */
+(function(){
+ function applyCleanLayout(){
+  const nav=document.getElementById('globalProductNav');
+  const bar=document.querySelector('body > header');
+  if(nav&&bar){
+   const actions=bar.querySelector('.top-print-actions');
+   const inner=nav.querySelector('.gpn-inner');
+   if(inner&&actions&&actions.parentElement!==inner)inner.appendChild(actions);
+   bar.classList.add('ui-legacy-header');
+   const caption=nav.querySelector('.gpn-caption b');if(caption)caption.textContent='Simulasi Kredit';
+   const sub=nav.querySelector('.gpn-caption span');if(sub)sub.textContent='';
+  }
+  const offline=document.querySelector('.offline-preview-banner');
+  if(offline)offline.textContent='Mode uji offline · Tanpa login atau penyimpanan Firebase';
+  // Informasi risiko hanya ditampilkan untuk produk yang memerlukan penjelasan khusus.
+  const info=document.getElementById('uxInfo'),sel=document.getElementById('globalProductSelect');
+  function syncDisclosure(){if(info&&sel)info.hidden=!['method1','method2','method3'].includes(sel.value);}
+  sel?.addEventListener('change',()=>{syncDisclosure();window.setTimeout(syncDisclosure,60)});
+  syncDisclosure();
+  const main=document.getElementById('plusMain'),save=document.getElementById('plusSave');
+  if(main&&save&&!document.getElementById('plusSaveClean')){
+   const wrap=document.createElement('div');wrap.className='plus-save-actions-clean';wrap.id='plusSaveClean';
+   wrap.appendChild(save);main.appendChild(wrap);
+  }
+  const frame=document.getElementById('plusFrame');
+  function tidyFrame(){
+   try{
+    const doc=frame?.contentDocument;
+    if(doc?.head&&!doc.getElementById('bank-clean-embedded-style')){
+     const style=doc.createElement('style');style.id='bank-clean-embedded-style';
+     style.textContent='@media screen {.topbar,.headline,.kpi-grid,#uxPlusRetention{display:none!important}.page{padding-top:0!important}.tabs{margin-top:0!important}}';
+     doc.head.appendChild(style);
+    }
+   }catch(_error){}
+  }
+  frame?.addEventListener('load',tidyFrame);tidyFrame();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applyCleanLayout);else applyCleanLayout();
+})();
+</script>
+<script id="bankHybridProductSwitch">/* Atur desain berdasarkan PRODUK, bukan berdasarkan rumus. */
+(function(){
+ 'use strict';
+ const ready=()=>{
+  const selector=document.getElementById('globalProductSelect');
+  const pro=document.getElementById('professionalDesignV2');
+  const clean=document.getElementById('bankCleanUi2026');
+  const global=document.getElementById('globalProductNav');
+  const globalInner=global?.querySelector('.gpn-inner');
+  const hdr=document.querySelector('body > header');
+  if(!selector || !pro || !clean || !hdr)return;
+  const actions=document.querySelector('.top-print-actions');
+  // Let Skema-3 use the same left input column structure as the original CPNS/ASN form.
+  const thtSlot=document.getElementById('thtIdentitySlot');
+  const thtLeft=document.querySelector('#thtMain .tht-grid > div:first-child');
+  if(thtSlot && thtLeft && thtSlot.parentElement!==thtLeft)thtLeft.insertBefore(thtSlot,thtLeft.firstChild);
+  const caption=global.querySelector('.gpn-caption b');
+  const subtitle=global.querySelector('.gpn-caption span');
+  const info=document.getElementById('uxWorkspace');
+  const originalHeaderTitle='SIMULASI KREDIT • 6 PRODUK';
+  let previous='';
+  function restore(){
+   const plus=false;
+   const key='awal';
+   if(key===previous)return;
+   previous=key;
+   document.body.classList.toggle('ui-kredit-awal',!plus);
+   document.body.classList.toggle('ui-pegawai-plus-clean',plus);
+   // The two design-system styles affect only screen presentation.
+   // Disable them for the four products that retain the original bank UI.
+   if(pro.sheet)pro.sheet.disabled=!plus;
+   if(clean.sheet)clean.sheet.disabled=!plus;
+   hdr.classList.toggle('ui-legacy-header',plus);
+   if(info)info.hidden=true;
+   if(caption)caption.textContent=originalHeaderTitle;
+   if(subtitle)subtitle.textContent='Pilih produk untuk perhitungan dan cetak dokumen';
+   if(actions){
+    if(plus){
+     if(globalInner && actions.parentElement!==globalInner)globalInner.appendChild(actions);
+    }else{
+     if(actions.parentElement!==hdr)hdr.appendChild(actions);
+    }
+   }
+  }
+  selector.addEventListener('change',()=>{restore();requestAnimationFrame(restore);});
+  // Navigasi programatik juga akan tersinkron.
+  const observer=new MutationObserver(()=>restore());
+  observer.observe(selector,{attributes:true,attributeFilter:['value']});
+  restore();
+  window.SIM_DESIGN_ACTIVE=()=>({product:selector.value,design:previous});
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
+})();</script>
+
+<script id="bankPremiumLogic2026">
+(function(){
+ 'use strict';
+ const nav=document.getElementById('globalProductSelect');
+ const anchor=document.getElementById('plusMain');
+ if(!nav||!anchor||document.getElementById('bankPremiumHub'))return;
+ const section=document.createElement('section');section.id='bankPremiumHub';section.setAttribute('aria-label','Ringkasan Kredit Pegawai Plus');
+ section.innerHTML=`
+  <div class="bp-intro"><div><span class="bp-kicker">KALKULATOR KREDIT</span><h2>Kredit Pegawai Plus</h2><p>Perhitungan fasilitas kredit, angsuran, dan dana bersih sesuai skema produk.</p></div>
+    <nav class="bp-tabs" aria-label="Pilihan skema Kredit Pegawai Plus">
+      <button type="button" class="bp-tab" data-product="method2"><span class="bp-tab-ico">▦</span><span class="bp-tab-copy"><b>Metode 2 (3G)</b><small>Rekomendasi</small></span></button>
+      <button type="button" class="bp-tab" data-product="method1"><span class="bp-tab-ico">▦</span><span class="bp-tab-copy"><b>Metode 1 (3F)</b><small>Alternatif</small></span></button>
+      <button type="button" class="bp-tab" data-product="method3"><span class="bp-tab-ico">◈</span><span class="bp-tab-copy"><b>Skema-3 (THT)</b><small>Berbasis manfaat THT</small></span></button>
+    </nav>
+  </div>
+  <div class="bp-hero"><span class="bp-hero-label">PLAFON KREDIT</span><strong class="bp-hero-number" id="bpPrincipal">—</strong><span class="bp-hero-note" id="bpHeroNote">Menunggu perhitungan simulasi</span></div>
+  <div class="bp-stats">
+    <div class="bp-stat"><div class="bp-stat-icon">▦</div><div class="bp-stat-text"><span class="bp-stat-label" id="bpLab1">ANGSURAN MASA AKTIF</span><strong class="bp-stat-value" id="bpVal1">—</strong></div></div>
+    <div class="bp-stat"><div class="bp-stat-icon">▤</div><div class="bp-stat-text"><span class="bp-stat-label" id="bpLab2">ANGSURAN MASA PENSIUN</span><strong class="bp-stat-value" id="bpVal2">—</strong></div></div>
+    <div class="bp-stat"><div class="bp-stat-icon">◈</div><div class="bp-stat-text"><span class="bp-stat-label" id="bpLab3">DANA BERSIH DITERIMA</span><strong class="bp-stat-value" id="bpVal3">—</strong></div></div>
+    <div class="bp-stat"><div class="bp-stat-icon">♢</div><div class="bp-stat-text"><span class="bp-stat-label" id="bpLab4">PREMI AJK</span><strong class="bp-stat-value" id="bpVal4">—</strong></div></div>
+  </div>
+  <p class="bp-policy" id="bpPolicy">Rekomendasi pada menu merupakan urutan produk yang dipilih untuk pemasaran, bukan hasil keputusan kredit.</p>`;
+ anchor.before(section);
+ const el=id=>document.getElementById(id);
+ const isSpecial=p=>['method1','method2','method3'].includes(p);
+ const rup=v=>Number.isFinite(Number(v))?'Rp '+Math.round(Number(v)).toLocaleString('id-ID'):'—';
+ let lastPlus=null;
+ const refresh=()=>{
+   const p=nav.value;
+   document.body.classList.toggle('bank-premium-active',isSpecial(p));
+   if(!isSpecial(p))return;
+   section.querySelectorAll('.bp-tab').forEach(b=>{const chosen=b.dataset.product===p;b.classList.toggle('active',chosen);b.setAttribute('aria-pressed',String(chosen));});
+   if(p==='method3'){
+     const s=window.THT_PRODUCT?.get();
+     const set=(i,t)=>el(i).textContent=t;
+     set('bpPrincipal',s?rup(s.principal):'—');set('bpHeroNote','Skema-3 THT · Plafon dibatasi persentase manfaat THT; pokok dilunasi di akhir tenor.');
+     for(const [i,t]of [['bpLab1','BUNGA PER BULAN (DIBLOKIR)'],['bpLab2','DANA BERSIH PENCAIRAN'],['bpLab3','SISA MANFAAT THT'],['bpLab4','PREMI AJK']])set(i,t);
+     set('bpVal1',s?rup(s.rawMonthly):'—');set('bpVal2',s&&s.net!==null?rup(s.net):'—');set('bpVal3',s?rup(s.benefitRemaining):'—');set('bpVal4',s&&s.feeInsurance!==null?rup(s.feeInsurance):'—');
+     set('bpPolicy','Bunga seluruh tenor dipotong di muka. Angka bunga bulanan merupakan alokasi, bukan kewajiban pembayaran ulang. Kesesuaian manfaat THT dan asuransi harus diverifikasi.');
+   } else {
+     const s=lastPlus&&lastPlus.method===p?lastPlus:null;
+     const set=(i,t)=>el(i).textContent=t;
+     set('bpPrincipal',s?rup(s.principal):'—');
+     set('bpHeroNote',p==='method2'?'Metode 2 (3G) · Plafon otomatis berdasarkan kemampuan bayar masa aktif dan pensiun.':'Metode 1 (3F) · Plafon otomatis berdasarkan kemampuan bayar masa aktif dan pensiun.');
+     for(const [i,t]of [['bpLab1','ANGSURAN MASA AKTIF'],['bpLab2','ANGSURAN MASA PENSIUN'],['bpLab3','DANA BERSIH DITERIMA'],['bpLab4','PREMI AJK']])set(i,t);
+     set('bpVal1',s?rup(s.activePayment):'—');set('bpVal2',s?rup(s.pensionPayment):'—');set('bpVal3',s?rup(s.netDisbursement):'—');set('bpVal4',s&&s.fees?rup(s.fees.insurance):'—');
+     set('bpPolicy',p==='method2'?'Metode 2 · Retensi masa aktif dihitung otomatis sebagai potongan dana pencairan. Pastikan calon debitur memahami selisih plafon dan dana bersih.':'Metode 1 · Tidak ada retensi masa aktif. Retensi masa pensiun dan biaya lainnya tetap diperhitungkan.');
+   }
+ };
+ section.querySelectorAll('.bp-tab').forEach(button=>button.addEventListener('click',()=>{if(nav.value===button.dataset.product)return;nav.value=button.dataset.product;nav.dispatchEvent(new Event('change',{bubbles:true}));refresh();}));
+ nav.addEventListener('change',()=>{lastPlus=null;refresh();window.setTimeout(refresh,130);});
+ window.addEventListener('message',evt=>{const frame=el('plusFrame');if(evt.source!==frame?.contentWindow||evt.data?.channel!=='SIM_PLUS')return;
+  if(evt.data.event==='snapshot'&&evt.data.payload){lastPlus=evt.data.payload;refresh();}
+  if(evt.data.event==='invalid'){lastPlus=null;refresh();}
+ });
+ window.addEventListener('tht-updated',refresh);
+ refresh();
+})();
+</script>
+
 </body>
 </html>

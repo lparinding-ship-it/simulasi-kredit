@@ -1,9 +1,9 @@
 /* Simulasi Kredit PWA — scoped to /simulasi-kredit/.
    Only public app files are cached. User-entered values are not stored here.
    Bump APP_CACHE_VERSION when updating the UI/logic. */
-const APP_CACHE_VERSION = 'simkredit-shell-2026-10-v1';
+const APP_CACHE_VERSION = 'simkredit-6produk-2026-10-v5-restore-3-print-layout';
 const APP_URL = new URL('./', self.registration.scope).href;
-const ASSET_PATHS = ['./', './index.html', './manifest.webmanifest',
+const ASSET_PATHS = ['./', './index.html', './manifest.webmanifest','./firebase-monitor.js', './pegawai-plus.html',
   './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', event => {
@@ -17,7 +17,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     for (const name of await caches.keys()) {
-      if (name.startsWith('simkredit-shell-') && name !== APP_CACHE_VERSION) {
+      if ((name.startsWith('simkredit-shell-') || name.startsWith('simkredit-monitor-') || name.startsWith('simkredit-5produk-') || name.startsWith('simkredit-6produk-')) && name !== APP_CACHE_VERSION) {
         await caches.delete(name);
       }
     }
