@@ -1,0 +1,32 @@
+SIMULASI KREDIT 6 PRODUK - PERBAIKAN CETAK JADWAL A4 (13 OKTOBER 2026)
+
+PERUBAHAN
+1. Cetak jadwal CPNS/ASN, Pensiun, Usaha: hanya dokumen jadwal (tanpa header aplikasi, banner offline, dashboard, menu/tabs).
+2. Susunan cetak menyesuaikan contoh CETAK JADWAL ANGS.pdf dari pengguna: kop, identitas, info fasilitas, tabel angsuran, total, catatan dan footer.
+3. Baris pokok/bunga/angsuran/baki debet serta rumus kredit tidak diubah.
+4. Cetak ringkasan A4 dan fitur ekspor Excel 1 sheet + CSV tetap dipertahankan.
+
+OFFLINE
+- Ekstrak ZIP ke folder biasa (jangan membuka file langsung dari dalam ZIP).
+- Klik dua kali BUKA_INI_UJI_OFFLINE_MONITORING_EXCEL_FIXED.html.
+- Versi offline ini tidak memerlukan login Firebase. Data pengujian fiktif.
+- Pilih CPNS/ASN, Pensiun, atau Usaha, isi nama debitur fiktif, tanggal lahir dan parameter valid.
+- Klik Lihat / Cetak Jadwal, kemudian Cetak / Simpan PDF.
+- Di dialog cetak pilih A4, skala 100%, aktifkan 'Cetak grafis latar belakang' bila ingin warna lengkap. Nonaktifkan header/footer browser jika muncul.
+
+ONLINE
+- Gunakan paket ONLINE hanya sesudah memeriksa offline.
+- Backup GitHub, ekstrak ZIP online, unggah file-file aplikasi ke root repo (bukan ZIP) dan commit.
+- Service worker diubah ke cache v8 agar perbaikan HTML diambil ulang.
+- Uji di Private Window dengan akun admin / AO uji dan data nasabah fiktif.
+
+HASIL PENGUJIAN OTOMATIS
+- CPNS/ASN: 84 periode = 3 halaman A4; total muncul.
+- Pensiun: 84 periode = 3 halaman A4; total muncul.
+- Usaha: 84 periode = 3 halaman A4; total muncul.
+- Ringkasan CPNS/ASN: tetap 1 halaman A4.
+- PDF dicetak dari halaman aplikasi yang sebenarnya menggunakan Chromium dan diverifikasi secara programatis.
+- Hasil print di Firefox Windows tetap perlu diverifikasi pengguna.
+
+KEAMANAN
+- Gunakan data fiktif untuk pengujian. Jangan unggah paket OFFLINE ke GitHub.

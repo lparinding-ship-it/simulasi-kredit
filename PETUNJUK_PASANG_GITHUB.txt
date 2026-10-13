@@ -1,0 +1,8 @@
+VERSI ONLINE - Firebase asli
+1. Backup repo sebelum upload.
+2. Ekstrak ZIP lalu unggah SEMUA file aplikasi ke root repository GitHub (termasuk report-export.js).
+3. Jangan unggah paket OFFLINE: berisi data demo dan tidak aman untuk layanan publik.
+4. Pastikan Firebase Rules dan authorized domains tetap benar.
+5. Refresh aplikasi melalui private window, login admin, uji Excel 1 Sheet dari data fiktif.
+
+PENTING: Ingat kebijakan retensi dan perlindungan data pribadi nasabah.

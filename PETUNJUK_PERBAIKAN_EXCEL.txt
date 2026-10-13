@@ -1,0 +1,10 @@
+REVISI TAMPILAN EXCEL MONITORING TERPADU
+
+1. Ekspor tetap SATU SHEET (MONITORING TERPADU).
+2. Judul/header sekarang warna solid, tinggi baris dan huruf jelas.
+3. Rekap AO, rekap cabang, detail, dan filter Excel dipertahankan.
+4. Tampilan awal 100%, kolom diberi lebar lebih lapang.
+5. Offline: ekstrak ZIP, buka index.html, klik Dashboard Admin > Ekspor Excel.
+6. Online: unggah semua file aplikasi ke root repository GitHub.
+7. Jangan unggah ZIP offline karena menggunakan data fiktif tanpa login.
+8. Semua data selama offline adalah FIKTIF.

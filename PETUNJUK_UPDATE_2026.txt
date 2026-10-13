@@ -1,0 +1,29 @@
+PANDUAN PEMBARUAN — SIMULASI KREDIT 6 PRODUK
+Fitur: Ekspor Excel satu sheet MONITORING TERPADU + ZIP CSV (Aktivitas, Rekap AO, Rekap Cabang, Keterangan), filter & rekap dashboard, cetak jadwal angsuran A4 yang seragam untuk CPNS/ASN, Pensiun, Kredit Usaha.
+
+STATUS: Paket siap diunggah, belum otomatis memperbarui situs GitHub.
+
+1. Pastikan cadangan repository GitHub sebelumnya tetap disimpan.
+2. Masuk https://github.com/lparinding-ship-it/simulasi-kredit pada branch main.
+3. Add file -> Upload files. Pilih SEMUA 9 file aplikasi dalam folder ini (jangan unggah berkas ZIP sebagai satu file dan jangan menghapus file lama di repo).
+4. Klik Commit changes dan tunggu GitHub Pages selesai deploy.
+5. Buka https://lparinding-ship-it.github.io/simulasi-kredit/ di Private Window Firefox, login admin, klik Dashboard Admin.
+6. Gunakan filter tanggal, cabang, AO, produk, aktivitas, dan pencarian; klik Perbarui data untuk mengambil ulang dari Firestore.
+7. Klik Ekspor Excel untuk berkas SATU sheet MONITORING TERPADU; klik Ekspor CSV + Rekap untuk mengunduh ZIP berisi empat file CSV berseparator titik koma.
+8. Uji Kredit CPNS/ASN, Kredit Pensiun, dan Kredit Usaha: pilih produk, isi data FIKTIF sesuai batas, lalu Lihat / Cetak Jadwal -> Cetak / Simpan PDF. Ringkasan A4 dan enam mesin hitung tetap dipertahankan.
+
+PENTING:
+- Fitur export Dashboard Admin memerlukan LOGIN + INTERNET; tidak bisa digunakan offline tanpa Firebase.
+- Gunakan akun administrator, karena Firestore Rules membatasi pembacaan activities dan users pada administrator.
+- Default periode adalah bulan berjalan; kosongkan filter tanggal melalui tombol Reset filter untuk memuat seluruh periode. Pengunduhan memakai seluruh aktivitas yang berhasil diambil pada periode, bukan hanya 300 baris yang ditampilkan pada tabel layar yang dipisah per halaman.
+- Ekspor memuat data debitur dan data keuangan; gunakan data fiktif sampai pemrosesan disetujui organisasi. Jangan kirim file laporan melalui saluran publik.
+- Total plafon simulasi BUKAN realisasi pencairan; satu catatan save_simulation terbaru per pasangan petugas + referensi digunakan untuk menghindari hitung ganda.
+- Pengujian saat penyusunan dilakukan pada data sintetis/browser mock; akses Firebase LIVE harus diverifikasi ulang setelah pemasangan. Jangan gunakan laporan sebagai buku besar bank.
+
+PEMBARUAN EKSPOR EXCEL SATU SHEET (13 OKTOBER 2026)
+- Dashboard Admin: Ekspor Excel menjadi 1 sheet MONITORING TERPADU, indikator, rekap AO, rekap cabang, detail aktivitas.
+- Filter periode/cabang/AO/produk/aktivitas, status data, hak admin, dan CSV ZIP tetap dipertahankan.
+- Diperbarui: report-export.js, firebase-monitor.js, index.html, sw.js. Unggah ketiganya ke root GitHub, jangan ZIP-nya.
+- Setelah commit GitHub, buka Private Window dan uji ekspor dengan data fiktif. File berisi data pribadi dan keuangan.
+
+DETAIL SATU SHEET: KPI A1:K8, rekap AO, rekap cabang, tabel detail dengan AutoFilter, total formula di tabel rekap, kolom Rupiah penuh.

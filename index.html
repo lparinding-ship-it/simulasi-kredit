@@ -712,6 +712,25 @@ body.monitor-admin-open>header,body.monitor-admin-open>main{display:none!importa
 .monitor-table th:nth-child(n+8){text-align:right}
 @media(max-width:760px){#monitorAppControls{gap:6px;padding:9px 12px}#monitorWho{width:100%}.monitor-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.monitor-kpi strong{font-size:17px}#monitorAdmin{padding:13px}.monitor-login-card{padding:23px}}
 @media print{#monitorAccess,#monitorAppControls,#monitorAdmin,.monitor-save-card{display:none!important}body.monitor-locked>header,body.monitor-locked>main{display:none!important}}
+
+.monitor-report-filters{display:grid;grid-template-columns:repeat(4,minmax(155px,1fr));gap:10px;background:white;padding:14px;border:1px solid #dce6f2;border-radius:11px;margin:15px 0}
+.monitor-report-filters label{display:flex;flex-direction:column;gap:5px;color:#365879;font-size:11px;font-weight:700;min-width:0}
+.monitor-report-filters input,.monitor-report-filters select{width:100%;max-width:none;height:39px;min-width:0;border:1px solid #cddced;border-radius:7px;padding:7px 9px;background:white;color:#173e67;font:12px Arial,sans-serif}
+.monitor-report-filters .monitor-search-label{grid-column:span 2}
+.monitor-report-filters button{align-self:end;height:39px}
+.monitor-export-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+.monitor-export-toolbar .monitor-small-btn{min-height:43px}
+.monitor-recaps{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.monitor-recaps h2{font-size:15px;color:#163e70;margin:0 0 8px}
+.monitor-recap-table{min-width:650px}
+.monitor-recaps .monitor-table td:nth-child(n+3),.monitor-recaps .monitor-table th:nth-child(n+3){text-align:right}
+@media(max-width:1000px){.monitor-report-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.monitor-recaps{grid-template-columns:1fr}}
+@media(max-width:550px){.monitor-report-filters{grid-template-columns:1fr}.monitor-report-filters .monitor-search-label{grid-column:auto}}
+
+.monitor-history-pager{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin:8px 0 14px}
+.monitor-history-pager label{display:flex;align-items:center;gap:6px;font-size:11px;color:#56718c}
+.monitor-history-pager select{border:1px solid #cfdfef;background:#fff;color:#163f70;border-radius:6px;padding:7px}
+.monitor-history-pager button:disabled{opacity:.45;cursor:not-allowed}
 </style>
 <style id="combinedProductStyles">
 #globalProductNav,#plusMain[hidden],#plusDocument[hidden]{display:none!important}
@@ -1303,6 +1322,60 @@ button{transition:background .12s ease, box-shadow .12s ease}button:focus-visibl
 }
 </style>
 
+
+<style id="professionalSchedulePrint2026">
+@media print{
+ body.printing-schedule .sp-payment-hero{display:flex!important;align-items:center;justify-content:space-between;gap:8mm;border-radius:2.5mm;background:linear-gradient(105deg,#123960,#225f9b)!important;color:#fff!important;padding:5mm 6mm;margin:2mm 0 4mm;break-inside:avoid;page-break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ body.printing-schedule .sp-payment-hero span{display:block;font-size:7pt;letter-spacing:1.2px;color:#d6e8fa}
+ body.printing-schedule .sp-payment-hero strong{display:block;font-size:22pt;margin-top:1.5mm;color:#fff;line-height:1.15}
+ body.printing-schedule .sp-payment-hero small{display:block;font-size:6.7pt;margin-top:2mm;max-width:100mm;color:#d5e8fa;line-height:1.4}
+ body.printing-schedule .sp-hero-term{text-align:right;min-width:23mm}
+ body.printing-schedule .sp-hero-term b{font-size:10pt;color:#fff}
+ body.printing-schedule .sp-header{border-bottom:1.5px solid #c0d6ed}
+ body.printing-schedule .sp-identity{border:1px solid #d6e5f4;border-radius:2mm;background:#f6f9fd;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ body.printing-schedule .sp-verify{padding:2mm 3mm;background:#eff5fb;border-left:2px solid #1e619c;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+@media screen{body.printing-schedule .sp-payment-hero{display:flex;background:linear-gradient(110deg,#153b67,#276aab);color:white;padding:20px;border-radius:10px;justify-content:space-between;gap:16px;margin:14px 0}body.printing-schedule .sp-payment-hero span,body.printing-schedule .sp-payment-hero small{display:block;color:#dbe9f7}body.printing-schedule .sp-payment-hero strong{font-size:28px;display:block;margin:8px 0}body.printing-schedule .sp-hero-term{text-align:right}}
+</style>
+
+<style id="schedulePrintStrictIsolation2026">
+/* Perbaikan final: navigasi/menu/dashboard berada di luar <main>,
+   sehingga harus disembunyikan juga saat jadwal dicetak. */
+@media print {
+  html,body{margin:0!important;padding:0!important;background:#fff!important;}
+  body.printing-schedule > :not(#schedulePrint){display:none!important;}
+  body.printing-schedule > #schedulePrint{
+    display:block!important;position:static!important;
+    width:100%!important;max-width:none!important;min-width:0!important;
+    margin:0!important;padding:0!important;border:0!important;
+    border-radius:0!important;box-shadow:none!important;
+    overflow:visible!important;background:#fff!important;
+  }
+  body.printing-schedule #schedulePrintToolbar{display:none!important;}
+  body.printing-schedule .sp-header,body.printing-schedule .sp-identity,
+  body.printing-schedule .sp-facility,body.printing-schedule .sp-payment-hero{
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+  body.printing-schedule .sp-table{width:100%!important;min-width:0!important;max-width:none!important;
+    border-collapse:collapse!important;table-layout:fixed!important;}
+  body.printing-schedule .sp-table thead{display:table-header-group!important;}
+  body.printing-schedule .sp-table tr{break-inside:avoid!important;page-break-inside:avoid!important;}
+  body.printing-schedule .sp-bottom{break-inside:avoid!important;}
+}
+</style>
+
+<style id="scheduleMatchReferenceA4_2026">
+/* Jadwal regular CPNS/ASN, Pensiun, Usaha mengacu PDF contoh pengguna:
+   cukup header, identitas, fasilitas, tabel amortisasi, total dan catatan.
+   Kartu biru khusus ringkasan simulasi, bukan tabel jadwal cetak. */
+body.printing-schedule .sp-payment-hero{display:none!important;}
+@media print{
+  body.printing-schedule .sp-header{margin-bottom:3mm!important;}
+  body.printing-schedule .sp-identity{margin-bottom:3mm!important;}
+  body.printing-schedule .sp-facility{margin-bottom:3mm!important;}
+  body.printing-schedule .sp-subtitle{margin:2mm 0 2mm!important;}
+}
+</style>
 </head>
 <body class="monitor-locked">
 <aside id="printActionFeedback" role="alert" aria-live="assertive" hidden>
@@ -1347,18 +1420,30 @@ button{transition:background .12s ease, box-shadow .12s ease}button:focus-visibl
  <div class="monitor-admin-inner">
   <div class="monitor-admin-title"><div><small>KHUSUS ADMINISTRATOR</small><h1>Monitoring Pengguna &amp; Simulasi Kredit</h1></div>
    <div class="monitor-admin-actions"><button id="monitorRefresh" class="monitor-primary" type="button">Perbarui data</button><button id="monitorCloseAdmin" class="monitor-small-btn" type="button">Kembali ke simulasi</button></div></div>
-  <p class="monitor-muted">Riwayat menyimpan nama debitur, THP, plafon, angsuran, dan dana bersih. Aktivitas cetak adalah permintaan cetak, bukan bukti dokumen tercetak. Ringkasan menggunakan maksimal 300 catatan terakhir; bukan keseluruhan riwayat.</p>
-  <div class="monitor-admin-toolbar"><input id="monitorFilter" type="search" placeholder="Cari AO, cabang, debitur, referensi, atau produk"><span id="monitorDashStatus" class="monitor-muted" role="status">Belum memuat aktivitas.</span></div>
+  <p class="monitor-muted">Monitoring internal: nominal merupakan simulasi tersimpan, <b>bukan realisasi kredit</b>. Permintaan cetak bukan bukti cetak selesai. Filter periode memuat seluruh aktivitas pada tanggal terpilih melalui pagination server; tabel dipisah per halaman agar mudah dibaca, sedangkan ekspor mencakup semua hasil filter. Excel menggunakan satu sheet Monitoring Terpadu (indikator, rekap AO, rekap cabang, detail).</p>
+  <div class="monitor-report-filters" aria-label="Filter laporan aktivitas">
+   <label>Mulai tanggal<input id="monitorFrom" type="date"></label>
+   <label>Sampai tanggal<input id="monitorTo" type="date"></label>
+   <label>Cabang<select id="monitorBranch"><option value="">Semua cabang</option></select></label>
+   <label>Petugas / AO<select id="monitorAO"><option value="">Semua petugas</option></select></label>
+   <label>Produk<select id="monitorProduct"><option value="">Semua produk</option></select></label>
+   <label>Aktivitas<select id="monitorAction"><option value="">Semua aktivitas</option><option value="open_app">Buka aplikasi</option><option value="save_simulation">Simpan simulasi</option><option value="print_summary">Cetak ringkasan</option><option value="print_schedule">Cetak jadwal</option><option value="download_csv">Unduh CSV</option></select></label>
+   <label class="monitor-search-label">Pencarian<input id="monitorFilter" type="search" placeholder="Cari nama AO, debitur, nomor referensi..." /></label>
+   <button id="monitorResetFilters" type="button" class="monitor-small-btn">Reset filter</button>
+  </div>
+  <div class="monitor-export-toolbar"><button id="monitorExportExcel" class="monitor-primary" type="button" disabled>↓ Ekspor Excel — 1 Sheet (.xlsx)</button><button id="monitorExportCSV" class="monitor-small-btn" type="button" disabled>↓ Ekspor CSV + Rekap (.zip)</button><span id="monitorDashStatus" class="monitor-muted" role="status">Belum memuat aktivitas.</span></div>
   <div class="monitor-metrics">
    <div class="monitor-kpi"><span>Pengguna Terdaftar</span><strong id="monitorMetricUser">—</strong></div>
-   <div class="monitor-kpi"><span>Akses Aplikasi (maks. 300 aktivitas)</span><strong id="monitorMetricAccess">—</strong></div>
+   <div class="monitor-kpi"><span>Akses aplikasi (sesuai filter)</span><strong id="monitorMetricAccess">—</strong></div>
    <div class="monitor-kpi"><span>Referensi Disimpan</span><strong id="monitorMetricSaved">—</strong></div>
    <div class="monitor-kpi"><span>Total Plafon Catatan Disimpan*</span><strong id="monitorMetricPrincipal">—</strong></div>
   </div>
   <div class="monitor-table-wrap"><table class="monitor-table" aria-label="Aktivitas penggunaan aplikasi">
    <thead><tr><th>Waktu</th><th>Nama Petugas</th><th>Cabang</th><th>Aktivitas</th><th>No. Referensi</th><th>Nama Debitur</th><th>Produk</th><th>Gaji/THP</th><th>Plafon</th><th>Angsuran</th><th>Dana Bersih</th></tr></thead><tbody id="monitorHistory"></tbody>
   </table></div>
-  <p class="monitor-muted">*Total hanya memperhitungkan satu catatan terbaru per petugas dan referensi dari maksimal 300 aktivitas yang diambil. Bukan laporan seluruh periode. Verifikasi sebelum digunakan untuk laporan resmi.</p>
+  <div class="monitor-history-pager"><label>Baris per halaman <select id="monitorPageSize"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option></select></label><span id="monitorPageInfo" class="monitor-muted">—</span><button class="monitor-small-btn" id="monitorPrevPage" type="button">← Sebelumnya</button><button class="monitor-small-btn" id="monitorNextPage" type="button">Berikutnya →</button></div>
+  <div class="monitor-recaps"><section><h2>Rekap per AO</h2><div class="monitor-table-wrap"><table class="monitor-table monitor-recap-table"><thead><tr><th>Nama AO</th><th>Cabang</th><th>Akses</th><th>Simulasi unik</th><th>Total plafon</th><th>Total dana bersih</th></tr></thead><tbody id="monitorRecapAO"></tbody></table></div></section><section><h2>Rekap per Cabang</h2><div class="monitor-table-wrap"><table class="monitor-table monitor-recap-table"><thead><tr><th>Cabang</th><th>AO aktif</th><th>Akses</th><th>Simulasi unik</th><th>Total plafon</th><th>Total dana bersih</th></tr></thead><tbody id="monitorRecapBranch"></tbody></table></div></section></div>
+  <p class="monitor-muted">*Total berdasarkan catatan <code>save_simulation</code> terbaru per kombinasi UID petugas dan nomor referensi dalam periode terpilih. Tanggal aktivitas adalah waktu pencatatan, bukan tanggal pencairan. Data keuangan sensitif: simpan dan bagikan laporan sesuai kebijakan bank.</p>
  </div>
 </section>
 <header><a class="brand" href="#"><span class="logo">K</span> Kredit<span class="brand-light"> / Simulasi</span></a><div aria-label="Pilihan dokumen cetak" class="top-print-actions">
@@ -1580,6 +1665,7 @@ body.plus-document-preview>#thtMain,body.monitor-locked>#thtMain,body.monitor-ad
 <div><span>TANGGAL AWAL KREDIT</span><b id="spStart"></b></div>
 <div><span>JATUH TEMPO TERAKHIR</span><b id="spEnd"></b></div>
 </div>
+<div class="sp-payment-hero"><div><span>ESTIMASI ANGSURAN BULANAN</span><strong id="spHeroPayment">—</strong><small>Nilai mengikuti tabel angsuran pada setiap periode, termasuk kemungkinan penyesuaian angsuran terakhir</small></div><div class="sp-hero-term"><small>TENOR KREDIT</small><b id="spHeroTerm">—</b></div></div>
 <div class="sp-subtitle"><strong>RINCIAN ANGSURAN PER BULAN</strong><span id="spPeriod"></span></div>
 <table aria-label="Jadwal angsuran lengkap" class="sp-table">
 <colgroup><col class="sp-col-no"/><col class="sp-col-date"/><col class="sp-col-money"/><col class="sp-col-money"/><col class="sp-col-money"/><col class="sp-col-money"/></colgroup>
@@ -1587,7 +1673,7 @@ body.plus-document-preview>#thtMain,body.monitor-locked>#thtMain,body.monitor-ad
 <tbody id="spRows"></tbody>
 <tfoot><tr><td colspan="2">TOTAL SELURUH TENOR</td><td id="spTotalPayment"></td><td id="spTotalPrincipal"></td><td id="spTotalInterest"></td><td id="spFinalBalance"></td></tr></tfoot>
 </table>
-<div class="sp-verify">Keterangan: angsuran bulanan tetap sampai jatuh tempo terakhir. Total pokok sama dengan plafon, dan baki debet akhir Rp0.</div>
+<div class="sp-verify">Keterangan: tabel merupakan proyeksi angsuran, bukan bukti pembayaran. Nilai angsuran dan baki debet akhir mengikuti perhitungan aktual, termasuk pembulatan angsuran terakhir.</div>
 <div class="sp-bottom"><div class="sp-credit">Design &amp; Development © 2026 Luther Parinding, S.Si.</div><div>Dokumen simulasi untuk keperluan internal. Bukan merupakan persetujuan kredit.</div></div>
 </section>
 <section aria-label="Dokumen gagal validasi cetak" class="print-blocked-sheet" id="printBlockedSheet">
@@ -2156,6 +2242,8 @@ function prepareSchedulePrint() {
   set('spPrincipal', money(x.principal));
   set('spTenor', `${x.months} bulan`);
   set('spPayment', money(result.payment));
+  set('spHeroPayment',money(result.payment));
+  set('spHeroTerm',`${x.months} bulan`);
   set('spStart', date(x.start));
   set('spEnd', date(result.rows.at(-1).date));
   set('spPrintDate', new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'}));
@@ -2776,6 +2864,7 @@ if ('serviceWorker' in navigator) {
 })();
 </script>
 
+<script src="./report-export.js" defer></script>
 <script type="module" src="./firebase-monitor.js"></script>
 <script id="professionalExperienceV2">
 /* Design enhancements; does not modify loan calculations. */
