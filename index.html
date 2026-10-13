@@ -708,8 +708,8 @@ body.monitor-admin-open>header,body.monitor-admin-open>main{display:none!importa
 .monitor-table{border-collapse:collapse;width:100%;min-width:1120px;white-space:nowrap;font-size:11px}
 .monitor-table th,.monitor-table td{padding:12px 9px;border-bottom:1px solid #e5ebf3;text-align:left;color:#344b67}
 .monitor-table th{position:sticky;top:0;background:#edf3fa;font-weight:750;color:#284d79}
-.monitor-table td:nth-child(n+8){text-align:right;font-variant-numeric:tabular-nums}
-.monitor-table th:nth-child(n+8){text-align:right}
+.monitor-activity-table td:nth-child(n+9){text-align:right;font-variant-numeric:tabular-nums}
+.monitor-activity-table th:nth-child(n+9){text-align:right}
 @media(max-width:760px){#monitorAppControls{gap:6px;padding:9px 12px}#monitorWho{width:100%}.monitor-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.monitor-kpi strong{font-size:17px}#monitorAdmin{padding:13px}.monitor-login-card{padding:23px}}
 @media print{#monitorAccess,#monitorAppControls,#monitorAdmin,.monitor-save-card{display:none!important}body.monitor-locked>header,body.monitor-locked>main{display:none!important}}
 
@@ -731,6 +731,35 @@ body.monitor-admin-open>header,body.monitor-admin-open>main{display:none!importa
 .monitor-history-pager label{display:flex;align-items:center;gap:6px;font-size:11px;color:#56718c}
 .monitor-history-pager select{border:1px solid #cfdfef;background:#fff;color:#163f70;border-radius:6px;padding:7px}
 .monitor-history-pager button:disabled{opacity:.45;cursor:not-allowed}
+
+/* Administrasi riwayat: penghapusan logis dengan jejak audit. */
+.monitor-delete-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:13px 0 8px}
+.monitor-delete-toolbar .monitor-muted{font-size:11px;line-height:1.45}
+.monitor-delete-btn{border:1px solid #e4b6ba;border-radius:7px;padding:7px 10px;background:#fff8f8;color:#a52c39;font-size:11px;font-weight:750;cursor:pointer;white-space:nowrap}
+.monitor-delete-btn:hover{background:#ffeef0;border-color:#cf8c95}
+.monitor-delete-btn:disabled{opacity:.45;cursor:not-allowed}
+.monitor-delete-bulk{padding:9px 14px;font-size:12px}
+.monitor-select-column{text-align:center!important;width:40px}
+.monitor-select-column input{width:17px;height:17px;cursor:pointer;accent-color:#225b96;vertical-align:middle}
+.monitor-action-column{text-align:center!important}
+.monitor-activity-table{min-width:1300px}
+.monitor-archive-audit{margin:19px 0 10px;background:#fff;border:1px solid #dce6f2;border-radius:11px;padding:14px}
+.monitor-archive-audit summary{cursor:pointer;font-size:13px;font-weight:750;color:#204d79}
+.monitor-archive-audit>p{font-size:11px;color:#60778e;line-height:1.6}
+.monitor-audit-table{min-width:900px}
+.monitor-delete-dialog{width:min(92vw,500px);max-height:88vh;padding:0;border:1px solid #cfdae7;border-radius:15px;box-shadow:0 25px 90px #0c2b5080;color:#1d3f62;background:#fff}
+.monitor-delete-dialog::backdrop{background:#0a193a9c}
+.monitor-delete-form{padding:24px}
+.monitor-delete-form h2{font-size:19px;color:#153c68;margin:0 0 10px}
+.monitor-delete-form p{font-size:12px;line-height:1.65;color:#506b88;margin:8px 0}
+.monitor-delete-form label{display:block;font-size:12px;font-weight:750;color:#244b76;margin:18px 0 7px}
+.monitor-delete-form textarea{width:100%;min-height:85px;resize:vertical;border:1px solid #c5d4e6;border-radius:8px;background:#fff;padding:11px;color:#263e56;font:13px Arial,sans-serif;box-sizing:border-box}
+.monitor-delete-form textarea:focus{outline:2px solid #92b7e2;outline-offset:1px}
+.monitor-delete-caution{padding:10px 12px;background:#f5f8fc;border-left:3px solid #3e73ad;border-radius:4px}
+.monitor-delete-form .monitor-delete-error{color:#b02434;min-height:16px;font-weight:650}
+.monitor-delete-form footer{display:flex;justify-content:flex-end;gap:9px;margin-top:15px;flex-wrap:wrap;background:none;padding:0}
+.monitor-delete-form footer button{font-size:12px;min-height:39px}
+@media print{.monitor-delete-dialog{display:none!important}}
 </style>
 <style id="combinedProductStyles">
 #globalProductNav,#plusMain[hidden],#plusDocument[hidden]{display:none!important}
@@ -1438,13 +1467,38 @@ body.printing-schedule .sp-payment-hero{display:none!important;}
    <div class="monitor-kpi"><span>Referensi Disimpan</span><strong id="monitorMetricSaved">—</strong></div>
    <div class="monitor-kpi"><span>Total Plafon Catatan Disimpan*</span><strong id="monitorMetricPrincipal">—</strong></div>
   </div>
-  <div class="monitor-table-wrap"><table class="monitor-table" aria-label="Aktivitas penggunaan aplikasi">
-   <thead><tr><th>Waktu</th><th>Nama Petugas</th><th>Cabang</th><th>Aktivitas</th><th>No. Referensi</th><th>Nama Debitur</th><th>Produk</th><th>Gaji/THP</th><th>Plafon</th><th>Angsuran</th><th>Dana Bersih</th></tr></thead><tbody id="monitorHistory"></tbody>
+  <div class="monitor-delete-toolbar" aria-label="Pengelolaan aktivitas administrator">
+    <button id="monitorDeleteSelected" class="monitor-delete-btn monitor-delete-bulk" type="button" disabled>Hapus aktivitas terpilih</button>
+    <span id="monitorSelectedCount" class="monitor-muted" role="status">0 aktivitas dipilih</span>
+    <span class="monitor-muted">Hanya Admin • Hapus dari laporan, data tetap tersedia untuk audit.</span>
+  </div>
+  <div class="monitor-table-wrap"><table class="monitor-table monitor-activity-table" aria-label="Aktivitas penggunaan aplikasi">
+   <thead><tr><th class="monitor-select-column"><input type="checkbox" id="monitorSelectPage" aria-label="Pilih semua aktivitas di halaman ini" title="Pilih semua aktivitas pada halaman" /></th><th>Waktu</th><th>Nama Petugas</th><th>Cabang</th><th>Aktivitas</th><th>No. Referensi</th><th>Nama Debitur</th><th>Produk</th><th>Gaji/THP</th><th>Plafon</th><th>Angsuran</th><th>Dana Bersih</th><th class="monitor-action-column">Aksi</th></tr></thead><tbody id="monitorHistory"></tbody>
   </table></div>
   <div class="monitor-history-pager"><label>Baris per halaman <select id="monitorPageSize"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option></select></label><span id="monitorPageInfo" class="monitor-muted">—</span><button class="monitor-small-btn" id="monitorPrevPage" type="button">← Sebelumnya</button><button class="monitor-small-btn" id="monitorNextPage" type="button">Berikutnya →</button></div>
   <div class="monitor-recaps"><section><h2>Rekap per AO</h2><div class="monitor-table-wrap"><table class="monitor-table monitor-recap-table"><thead><tr><th>Nama AO</th><th>Cabang</th><th>Akses</th><th>Simulasi unik</th><th>Total plafon</th><th>Total dana bersih</th></tr></thead><tbody id="monitorRecapAO"></tbody></table></div></section><section><h2>Rekap per Cabang</h2><div class="monitor-table-wrap"><table class="monitor-table monitor-recap-table"><thead><tr><th>Cabang</th><th>AO aktif</th><th>Akses</th><th>Simulasi unik</th><th>Total plafon</th><th>Total dana bersih</th></tr></thead><tbody id="monitorRecapBranch"></tbody></table></div></section></div>
+  <details class="monitor-archive-audit" id="monitorArchivedDetails">
+    <summary id="monitorArchivedTitle">Jejak penghapusan administratif (audit) · 0 aktivitas</summary>
+    <p>Aktivitas dihapus secara administratif, tidak dihitung dalam indikator, rekap AO/cabang, atau ekspor. Data asli dan informasi penghapusan tetap tersimpan di Firestore.</p>
+    <div class="monitor-table-wrap"><table class="monitor-table monitor-audit-table" aria-label="Audit penghapusan aktivitas"><thead><tr><th>Waktu aktivitas</th><th>Petugas / AO</th><th>Cabang</th><th>Aktivitas</th><th>Referensi</th><th>Dihapus oleh</th><th>Waktu dihapus</th><th>Alasan</th></tr></thead><tbody id="monitorArchivedHistory"></tbody></table></div>
+    <p id="monitorArchivedLimit" class="monitor-muted"></p>
+  </details>
   <p class="monitor-muted">*Total berdasarkan catatan <code>save_simulation</code> terbaru per kombinasi UID petugas dan nomor referensi dalam periode terpilih. Tanggal aktivitas adalah waktu pencatatan, bukan tanggal pencairan. Data keuangan sensitif: simpan dan bagikan laporan sesuai kebijakan bank.</p>
  </div>
+  <dialog id="monitorDeleteDialog" class="monitor-delete-dialog" aria-labelledby="monitorDeleteTitle">
+    <form id="monitorDeleteForm" class="monitor-delete-form">
+      <h2 id="monitorDeleteTitle">Konfirmasi Hapus Aktivitas</h2>
+      <p id="monitorDeleteDescription"></p>
+      <p class="monitor-delete-caution">Penghapusan administratif hanya menyembunyikan aktivitas dari laporan operasional. Identitas penghapus, alasan, dan waktu penghapusan akan dicatat untuk audit.</p>
+      <label for="monitorDeleteReason">Alasan penghapusan (wajib)</label>
+      <textarea id="monitorDeleteReason" required minlength="5" maxlength="160" placeholder="Contoh: Aktivitas tercatat ganda, berdasarkan pemeriksaan administrator."></textarea>
+      <p id="monitorDeleteError" class="monitor-delete-error" role="alert"></p>
+      <footer>
+        <button type="button" id="monitorDeleteCancel" class="monitor-small-btn">Batal</button>
+        <button type="submit" id="monitorDeleteConfirm" class="monitor-delete-btn monitor-delete-bulk">Ya, hapus aktivitas</button>
+      </footer>
+    </form>
+  </dialog>
 </section>
 <header><a class="brand" href="#"><span class="logo">K</span> Kredit<span class="brand-light"> / Simulasi</span></a><div aria-label="Pilihan dokumen cetak" class="top-print-actions">
 <button class="top-print-button summary-print-action" id="print" title="Cetak ringkasan 1 halaman A4" type="button"><span aria-hidden="true" class="action-icon">▣</span><span><b>Cetak Ringkasan</b><small>1 halaman A4</small></span></button>

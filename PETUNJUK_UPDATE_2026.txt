@@ -27,3 +27,17 @@ PEMBARUAN EKSPOR EXCEL SATU SHEET (13 OKTOBER 2026)
 - Setelah commit GitHub, buka Private Window dan uji ekspor dengan data fiktif. File berisi data pribadi dan keuangan.
 
 DETAIL SATU SHEET: KPI A1:K8, rekap AO, rekap cabang, tabel detail dengan AutoFilter, total formula di tabel rekap, kolom Rupiah penuh.
+
+
+PEMBARUAN 13 OKTOBER 2026 — HAPUS AKTIVITAS ADMIN (SOFT DELETE)
+- Dashboard Admin kini memiliki tombol Hapus per aktivitas, pilihan centang
+  beberapa baris (termasuk lintas halaman), dan konfirmasi alasan wajib.
+- Catatan asli tetap ada di Firestore (deleted=true) dengan deletedAt,
+  deletedByUid, deletedByName, deleteReason untuk audit.
+- Tabel, KPI, rekap AO/cabang, ekspor Excel satu sheet, dan ekspor CSV otomatis
+  mengabaikan aktivitas yang telah diarsipkan. Bagian Jejak Penghapusan
+  Administratif bisa dibuka di bagian bawah dashboard.
+- Ikuti PANDUAN_FIRESTORE_KEAMANAN_HAPUS.txt untuk memperbarui Firestore Rules.
+  Jangan mengganti seluruh rules tanpa review; jangan memberikan izin hapus
+  langsung kepada AO. Publikasi ulang GitHub saja TIDAK cukup.
+- Uji dengan data fiktif; uji live Firebase belum dilakukan dari lingkungan ini.

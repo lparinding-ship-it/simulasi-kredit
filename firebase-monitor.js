@@ -6,7 +6,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
 import {
   getFirestore, doc, getDocFromServer, getDocs, collection, query,
-  orderBy, limit, startAfter, where, Timestamp, addDoc, serverTimestamp
+  orderBy, limit, startAfter, where, Timestamp, addDoc, serverTimestamp, writeBatch
 } from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
 
 // Web configuration is a public project identifier, not an administrator credential.
@@ -28,6 +28,9 @@ let adminMode = false;
 let lastAccessUser = null;
 let lastList = [];
 let profileMap = new Map();
+let selectedActivityIds = new Set();
+let deleteTargetIds = [];
+let deletionInProgress = false;
 const rupiah = n => 'Rp' + Number(n || 0).toLocaleString('id-ID', {maximumFractionDigits: 0});
 const dateFmt = dt => dt?.toDate ? dt.toDate().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}) : '—';
 const display = (el, text, danger = false) => { el.textContent = text; el.classList.toggle('monitor-error', danger); };
@@ -38,6 +41,8 @@ const hidePrivate = () => {
   $('monitorAdmin').hidden = true;
   document.body.classList.remove('monitor-admin-open');
   currentUser = null; currentProfile = null; adminMode = false;
+  selectedActivityIds.clear();
+  if ($('monitorDeleteDialog').open) $('monitorDeleteDialog').close();
   window.dispatchEvent(new CustomEvent('sim-monitor-identity',{detail:{signedIn:false}}));
 };
 const showPrivate = () => {
@@ -159,13 +164,15 @@ $('monitorAdminButton').addEventListener('click', () => {
 $('monitorCloseAdmin').addEventListener('click', () => {
   $('monitorAdmin').hidden = true;
   document.body.classList.remove('monitor-admin-open');
+  selectedActivityIds.clear();
+  if ($('monitorDeleteDialog').open) $('monitorDeleteDialog').close();
 });
 $('monitorRefresh').addEventListener('click',loadDashboard);
-$('monitorFilter').addEventListener('input',()=>{monitorPage=0;renderDashboard();});
-for (const key of ['monitorBranch','monitorAO','monitorProduct','monitorAction']) $(key).addEventListener('change',()=>{monitorPage=0;renderDashboard();});
+$('monitorFilter').addEventListener('input',()=>{monitorPage=0;selectedActivityIds.clear();renderDashboard();});
+for (const key of ['monitorBranch','monitorAO','monitorProduct','monitorAction']) $(key).addEventListener('change',()=>{monitorPage=0;selectedActivityIds.clear();renderDashboard();});
 for (const key of ['monitorFrom','monitorTo']) $(key).addEventListener('change',loadDashboard);
 $('monitorResetFilters').addEventListener('click',()=>{
-  monitorPage=0;
+  monitorPage=0;selectedActivityIds.clear();
   $('monitorFilter').value='';
   for (const key of ['monitorBranch','monitorAO','monitorProduct','monitorAction']) $(key).value='';
   // Kosong berarti seluruh periode; tetap diambil bertahap dari server.
@@ -244,6 +251,7 @@ async function loadDashboard() {
   const from=$('monitorFrom').value,to=$('monitorTo').value;
   if(from&&to&&from>to){display($('monitorDashStatus'),'Tanggal mulai harus sebelum atau sama dengan tanggal akhir.',true);return;}
   const version=++dashboardVersion;
+  selectedActivityIds.clear();
   dashboardLoading=true;dashboardReady=false;
   for(const id of ['monitorRefresh','monitorExportExcel','monitorExportCSV'])$(id).disabled=true;
   display($('monitorDashStatus'),'Memuat seluruh aktivitas untuk periode pilihan…');
@@ -264,7 +272,7 @@ async function loadDashboard() {
       const batch=await getDocs(query(...args));
       if(version!==dashboardVersion)return;
       lastList.push(...batch.docs.map(d=>({id:d.id,...d.data()})));
-      display($('monitorDashStatus'),`Membaca periode pilihan… ${lastList.length.toLocaleString('id-ID')} aktivitas`);
+      display($('monitorDashStatus'),`Membaca periode pilihan… ${lastList.length.toLocaleString('id-ID')} catatan (termasuk arsip audit)`);
       afterDoc=batch.docs.length===500?batch.docs.at(-1):null;
       if(!afterDoc)break;
     }while(true);
@@ -280,19 +288,19 @@ async function loadDashboard() {
     $('monitorExportCSV').disabled=!dashboardReady;
   }
 }
-function dashboardFiltered(){
+function dashboardMatchesFilter(e){
   const text=$('monitorFilter').value.trim().toLocaleLowerCase('id');
   const branch=$('monitorBranch').value,ao=$('monitorAO').value,prod=$('monitorProduct').value,act=$('monitorAction').value;
-  return lastList.filter(e=>{
-    const p=getPerson(e);
-    if(branch && p.branch!==branch)return false;
-    if(ao && e.uid!==ao)return false;
-    if(prod && e.product!==prod)return false;
-    if(act && e.action!==act)return false;
-    if(!text)return true;
-    return [p.fullName,p.branch,e.reference,e.debtorName,e.product,e.action].some(v=>String(v||'').toLocaleLowerCase('id').includes(text));
-  });
+  const p=getPerson(e);
+  if(branch && p.branch!==branch)return false;
+  if(ao && e.uid!==ao)return false;
+  if(prod && e.product!==prod)return false;
+  if(act && e.action!==act)return false;
+  if(!text)return true;
+  return [p.fullName,p.branch,e.reference,e.debtorName,e.product,e.action].some(v=>String(v||'').toLocaleLowerCase('id').includes(text));
 }
+function dashboardFiltered(){return lastList.filter(e=>e.deleted!==true && dashboardMatchesFilter(e));}
+function dashboardArchived(){return lastList.filter(e=>e.deleted===true && dashboardMatchesFilter(e));}
 function summarize(rows){
   const saved=new Map();
   // Histori diurutkan terbaru dahulu; simpan terakhir per pasangan petugas + referensi.
@@ -344,15 +352,129 @@ function renderDashboard() {
   $('monitorPageInfo').textContent=data.length ? `${(from+1).toLocaleString('id-ID')}–${to.toLocaleString('id-ID')} dari ${data.length.toLocaleString('id-ID')} aktivitas`:'0 aktivitas';
   $('monitorPrevPage').disabled=monitorPage===0;
   $('monitorNextPage').disabled=monitorPage>=maxPage;
-  for(const e of data.slice(from,to)){
+  const visible=data.slice(from,to);
+  const headerCheck=$('monitorSelectPage');
+  const selectedVisible=visible.filter(e=>selectedActivityIds.has(e.id)).length;
+  headerCheck.checked=visible.length>0 && selectedVisible===visible.length;
+  headerCheck.indeterminate=selectedVisible>0 && selectedVisible<visible.length;
+  headerCheck.disabled=!dashboardReady || deletionInProgress || visible.length===0;
+  $('monitorSelectedCount').textContent=`${selectedActivityIds.size.toLocaleString('id-ID')} aktivitas dipilih`;
+  $('monitorDeleteSelected').disabled=!adminMode||!dashboardReady||dashboardLoading||deletionInProgress||selectedActivityIds.size===0;
+  for(const e of visible){
     const p=getPerson(e);
-    addTableRow(tbody,[dateFmt(e.createdAt),p.fullName||'—',p.branch||'—',e.action||'—',e.reference||'—',e.debtorName||'—',e.product||'—',rupiah(e.salary),rupiah(e.principal),rupiah(e.payment),rupiah(e.netDisbursement)]);
+    const tr=document.createElement('tr');
+    const selectTd=document.createElement('td');selectTd.className='monitor-select-column';
+    const check=document.createElement('input');check.type='checkbox';check.className='monitor-activity-check';check.dataset.docId=e.id;
+    check.checked=selectedActivityIds.has(e.id);check.disabled=deletionInProgress;
+    check.setAttribute('aria-label',`Pilih aktivitas ${e.action||''} dari ${p.fullName||'petugas'}`);
+    selectTd.appendChild(check);tr.appendChild(selectTd);
+    for(const val of [dateFmt(e.createdAt),p.fullName||'—',p.branch||'—',e.action||'—',e.reference||'—',e.debtorName||'—',e.product||'—',rupiah(e.salary),rupiah(e.principal),rupiah(e.payment),rupiah(e.netDisbursement)]){
+      const td=document.createElement('td');td.textContent=String(val);tr.appendChild(td);
+    }
+    const actionTd=document.createElement('td');actionTd.className='monitor-action-column';
+    const btn=document.createElement('button');btn.type='button';btn.className='monitor-delete-btn';btn.textContent='Hapus';btn.dataset.deleteActivity=e.id;
+    btn.disabled=deletionInProgress||!dashboardReady;
+    btn.setAttribute('aria-label',`Hapus aktivitas ${e.action||''} dari ${p.fullName||'petugas'}`);
+    actionTd.appendChild(btn);tr.appendChild(actionTd);tbody.appendChild(tr);
   }
-  if(!data.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=11;td.textContent='Tidak ada aktivitas sesuai filter.';tr.appendChild(td);tbody.appendChild(tr);}
+  if(!data.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=13;td.textContent='Tidak ada aktivitas sesuai filter.';tr.appendChild(td);tbody.appendChild(tr);}
+  renderArchivedAudit();
   fillRecap($('monitorRecapAO'),summary.ao,e=>[e.name,e.branch,e.access,e.count,rupiah(e.principal),rupiah(e.net)],6);
   fillRecap($('monitorRecapBranch'),summary.branch,e=>[e.name,e.people.size,e.access,e.count,rupiah(e.principal),rupiah(e.net)],6);
-  if(dashboardReady)display($('monitorDashStatus'),`${data.length.toLocaleString('id-ID')} aktivitas sesuai filter · ${lastList.length.toLocaleString('id-ID')} aktivitas dibaca dari periode · ${Math.min(data.length,pageSize)} baris per halaman. Ekspor mencakup semua hasil filter.`);
+  if(dashboardReady)display($('monitorDashStatus'),`${data.length.toLocaleString('id-ID')} aktivitas aktif sesuai filter · ${dashboardArchived().length.toLocaleString('id-ID')} arsip audit · ${Math.min(data.length,pageSize)} baris per halaman. Ekspor tanpa aktivitas yang dihapus.`);
 }
+// Hapus administratif: catatan Firestore tidak dihapus permanen. Batasi hak pada Firestore Rules.
+function renderArchivedAudit(){
+  const archived=dashboardArchived();
+  $('monitorArchivedTitle').textContent=`Jejak penghapusan administratif (audit) · ${archived.length.toLocaleString('id-ID')} aktivitas`;
+  const tbody=$('monitorArchivedHistory');tbody.replaceChildren();
+  for(const e of archived.slice(0,100)){
+    const p=getPerson(e);
+    addTableRow(tbody,[dateFmt(e.createdAt),p.fullName||'—',p.branch||'—',e.action||'—',e.reference||'—',e.deletedByName||e.deletedByUid||'—',dateFmt(e.deletedAt),e.deleteReason||'—']);
+  }
+  if(!archived.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=8;td.textContent='Belum ada aktivitas yang dihapus pada filter ini.';tr.appendChild(td);tbody.appendChild(tr);}
+  $('monitorArchivedLimit').textContent=archived.length>100?`Menampilkan 100 dari ${archived.length.toLocaleString('id-ID')} catatan arsip. Persempit filter untuk melihat catatan lain.`:'Catatan disimpan sesuai kebijakan retensi data organisasi.';
+}
+function openDeleteDialog(ids){
+  if(!adminMode||!currentUser||!dashboardReady||dashboardLoading||deletionInProgress)return;
+  const activeIds=new Set(dashboardFiltered().map(e=>e.id));
+  deleteTargetIds=[...new Set(ids)].filter(id=>activeIds.has(id));
+  if(!deleteTargetIds.length)return;
+  if(deleteTargetIds.length>400){
+    display($('monitorDashStatus'),'Penghapusan massal dibatasi 400 aktivitas sekali proses. Kurangi pilihan menggunakan filter atau checkbox.',true);
+    return;
+  }
+  const first=lastList.find(e=>e.id===deleteTargetIds[0]);
+  const officer=first?getPerson(first).fullName||'Petugas':'Petugas';
+  $('monitorDeleteDescription').textContent=deleteTargetIds.length===1?
+    `Anda akan menghapus 1 aktivitas ${first?.action||''} milik ${officer} (referensi ${first?.reference||'—'}) dari laporan operasional.`:
+    `Anda akan menghapus ${deleteTargetIds.length.toLocaleString('id-ID')} aktivitas terpilih dari laporan operasional.`;
+  $('monitorDeleteReason').value='';
+  display($('monitorDeleteError'),'');
+  $('monitorDeleteConfirm').disabled=false;
+  $('monitorDeleteCancel').disabled=false;
+  $('monitorDeleteDialog').showModal();
+  $('monitorDeleteReason').focus();
+}
+$('monitorHistory').addEventListener('click',e=>{
+  const button=e.target.closest('button[data-delete-activity]');
+  if(button)openDeleteDialog([button.dataset.deleteActivity]);
+});
+$('monitorHistory').addEventListener('change',e=>{
+  const el=e.target;
+  if(!el.matches('input.monitor-activity-check')||!dashboardReady||deletionInProgress)return;
+  if(el.checked)selectedActivityIds.add(el.dataset.docId);
+  else selectedActivityIds.delete(el.dataset.docId);
+  renderDashboard();
+});
+$('monitorSelectPage').addEventListener('change',e=>{
+  if(!dashboardReady||deletionInProgress)return;
+  const rows=dashboardFiltered();
+  const pageSize=Number($('monitorPageSize').value)||50;
+  for(const el of rows.slice(monitorPage*pageSize,(monitorPage+1)*pageSize)){
+    if(e.target.checked)selectedActivityIds.add(el.id);else selectedActivityIds.delete(el.id);
+  }
+  renderDashboard();
+});
+$('monitorDeleteSelected').addEventListener('click',()=>openDeleteDialog([...selectedActivityIds]));
+$('monitorDeleteCancel').addEventListener('click',()=>$('monitorDeleteDialog').close());
+$('monitorDeleteDialog').addEventListener('close',()=>{deleteTargetIds=[];});
+$('monitorDeleteForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!adminMode||!currentUser||!currentProfile||!dashboardReady||dashboardLoading||deletionInProgress)return;
+  const reason=$('monitorDeleteReason').value.trim();
+  if(reason.length<5 || reason.length>160){display($('monitorDeleteError'),'Alasan penghapusan wajib diisi minimal 5 dan maksimal 160 karakter.',true);return;}
+  const ids=[...deleteTargetIds];
+  const activeIds=new Set(dashboardFiltered().map(entry=>entry.id));
+  if(!ids.length||ids.some(id=>!activeIds.has(id))){display($('monitorDeleteError'),'Pilihan aktivitas telah berubah. Tutup jendela ini dan pilih ulang.',true);return;}
+  deletionInProgress=true;
+  $('monitorDeleteConfirm').disabled=true;
+  $('monitorDeleteCancel').disabled=true;
+  display($('monitorDeleteError'),'Mencatat penghapusan ke server…');
+  try{
+    // Maksimal 400 per proses. Semua update masuk dalam satu commit atomik.
+    const batch=writeBatch(db);
+    for(const id of ids){
+      batch.update(doc(db,'activities',id),{
+        deleted:true,deletedAt:serverTimestamp(),deletedByUid:currentUser.uid,
+        deletedByName:String(currentProfile.fullName||'Administrator').slice(0,75),deleteReason:reason
+      });
+    }
+    await batch.commit();
+    selectedActivityIds.clear();
+    $('monitorDeleteDialog').close();
+    await loadDashboard(); // Query ulang dari server agar rekap, jumlah dan ekspor sinkron.
+    if(dashboardReady)display($('monitorDashStatus'),`${ids.length.toLocaleString('id-ID')} aktivitas berhasil dihapus secara administratif. Jejak audit tetap tersimpan; indikator dan ekspor sudah diperbarui.`);
+  }catch(error){
+    display($('monitorDeleteError'),'Gagal menghapus: '+friendly(error)+'. Data belum diubah. Pastikan Firestore Rules untuk update aktivitas sudah dipasang.',true);
+  }finally{
+    deletionInProgress=false;
+    $('monitorDeleteConfirm').disabled=false;
+    $('monitorDeleteCancel').disabled=false;
+    renderDashboard();
+  }
+});
+
 function makeReportTables(){
   const data=savedState;
   const header=['Waktu','Nama Petugas','Cabang','Aktivitas','No. Referensi','Nama Debitur','Produk','Gaji / THP (Rp)','Plafon (Rp)','Angsuran (Rp)','Dana Bersih (Rp)'];
@@ -376,7 +498,8 @@ function makeReportTables(){
     ['Simulasi unik',data.saved.length],
     ['Metode total plafon','Catatan save_simulation terbaru per UID + referensi. BUKAN realisasi pencairan.'],
     ['Penting','Laporan memuat informasi pribadi dan keuangan, hanya untuk admin yang berwenang.'],
-    ['Batas dashboard','Tampilan tabel maksimal 300 baris; ekspor menggunakan seluruh data hasil filter.'],
+    ['Penghapusan administratif','Aktivitas yang ditandai deleted=true dikecualikan dari laporan dan perhitungan; jejak penghapusan tetap tersimpan di Firestore.'],
+    ['Cakupan dashboard','Tabel menggunakan pagination 25/50/100 baris; ekspor mencakup seluruh data aktif hasil filter.'],
     ['Aktivitas cetak','Permintaan cetak, bukan bukti PDF berhasil dicetak.'],
     ['Cakupan','Tanggal mengacu timestamp pencatatan aktivitas, bukan tanggal akad atau pencairan.']
   ];

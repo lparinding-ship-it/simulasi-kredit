@@ -1,0 +1,81 @@
+PANDUAN FIREBASE — HAPUS AKTIVITAS AO (ADMIN ONLY)
+=================================================
+
+1) BACKUP RULES TERLEBIH DAHULU
+   Buka Firebase Console → Firestore Database → Rules.
+   Salin aturan yang saat ini dipakai ke tempat aman. Jangan menimpa rules
+   produksi hanya dengan contoh ini tanpa mengecek izin lainnya.
+
+2) IZIN TAMBAHAN WAJIB PADA RULES /activities/{activityId}
+   Tambahkan ketentuan berikut DI DALAM match /activities/{activityId}
+   yang sudah ada. Syaratnya: fungsi isAdminUser() di bawah harus ditaruh
+   pada level match /databases/{database}/documents (di luar match activities).
+
+   function isAdminUser() {
+     return request.auth != null
+       && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+       && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.active == true;
+   }
+
+   // Dalam match /activities/{activityId}:
+   allow update: if isAdminUser()
+     && (!('deleted' in resource.data) || resource.data.deleted != true)
+     && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'deleted', 'deletedAt', 'deletedByUid', 'deletedByName', 'deleteReason'
+        ])
+     && request.resource.data.deleted == true
+     && request.resource.data.deletedByUid == request.auth.uid
+     && request.resource.data.deletedAt == request.time
+     && request.resource.data.deletedByName is string
+     && request.resource.data.deletedByName.size() > 0
+     && request.resource.data.deletedByName.size() <= 75
+     && request.resource.data.deleteReason is string
+     && request.resource.data.deleteReason.size() >= 5
+     && request.resource.data.deleteReason.size() <= 160;
+
+   allow delete: if false;
+
+   Pastikan tidak ada allow update/write/delete lain yang lebih longgar untuk
+   /activities atau aturan catch-all. Firestore menggabungkan izin dengan OR;
+   aturan yang terlalu longgar bisa meloloskan penghapusan tanpa audit.
+
+3) IZIN YANG HARUS TETAP ADA
+   - User harus bisa membaca dokumen users/{UID} miliknya.
+   - User harus bisa memeriksa admins/{UID} miliknya.
+   - AO & Admin bisa membuat (create) activities dengan uid miliknya.
+   - Hanya admin yang dapat membaca daftar lengkap users/activities.
+   - User biasa TIDAK diizinkan update dan delete aktivitas.
+   - Pembuatan & pengelolaan akun Admin harus dilakukan lewat jalur yang aman,
+     bukan izin create bebas dari browser.
+
+4) BAGAIMANA FITUR HAPUS BEKERJA
+   - Klik Dashboard Admin, pilih baris lalu Hapus atau pilih beberapa baris.
+   - Alasan penghapusan diwajibkan (5 s.d. 160 karakter).
+   - Firestore menambahkan: deleted=true, deletedAt=serverTimestamp(),
+     deletedByUid, deletedByName, deleteReason.
+   - Tidak ada deleteDoc atau hard delete.
+   - Baris yang ditandai deleted=true tidak ikut KPI, rekap, Excel, CSV.
+   - Jejaknya terlihat pada bagian "Jejak penghapusan administratif (audit)".
+   - Semua perubahan grup dilakukan dengan batch atomic.
+
+5) UJI SEBELUM PROD
+   - Gunakan aktivitas simulasi FIKTIF.
+   - Login admin -> klik Hapus -> isi alasan -> pastikan hasil hilang dari tabel
+     dan rekap, namun muncul pada Jejak Audit & di Firestore.
+   - Login AO biasa -> menu Dashboard Admin tidak boleh terlihat.
+   - Pakai Rules Playground / emulator untuk menguji bahwa AO tidak bisa
+     mengubah field deleted, bahkan lewat API langsung.
+   - Jangan lupa Publish Rules setelah review. Bila tombol Hapus gagal dengan
+     'permission-denied', aturan keamanan belum cocok atau belum terpublikasi.
+
+6) DEPLOY GITHUB PAGES
+   Unggah file aplikasi dari ZIP ke ROOT repositori GitHub Pages Anda.
+   GitHub Pages tidak otomatis memperbarui Firestore Security Rules; rules
+   tetap harus dipasang terpisah di Firebase Console.
+   File PANDUAN_FIRESTORE_KEAMANAN_HAPUS.txt ini adalah PANDUAN, bukan file web.
+
+CATATAN:
+   - Ini adalah soft delete, bukan pemusnahan data permanen.
+   - Nama debitur/simulasi merupakan data sensitif; hanya olah data sesuai
+     kebijakan privasi dan retensi data organisasi.
+   - Tidak ada koneksi ke Firebase produksi selama pembuatan paket ini.
