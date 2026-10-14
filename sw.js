@@ -1,10 +1,10 @@
 /* Simulasi Kredit PWA — scoped to /simulasi-kredit/.
    Only public app files are cached. User-entered values are not stored here.
    Bump APP_CACHE_VERSION when updating the UI/logic. */
-const APP_CACHE_VERSION = 'simkredit-6produk-2026-10-v11-skema3-pensiun-cpns-retensi-ui';
+const APP_CACHE_VERSION = 'simkredit-6produk-deposito-dashboard-online-v16-20261014';
 const APP_URL = new URL('./', self.registration.scope).href;
 const ASSET_PATHS = ['./', './index.html', './manifest.webmanifest','./firebase-monitor.js', './pegawai-plus.html',
-  './report-export.js', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+  './report-export.js','./online-funding-admin.js', './deposito.html', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -37,12 +37,20 @@ self.addEventListener('fetch', event => {
         const fresh = await fetch(req);
         if (fresh.ok) {
           const cache = await caches.open(APP_CACHE_VERSION);
-          cache.put(new URL('./index.html', APP_URL).href, fresh.clone());
+          // Cache each page under its own URL: never overwrite the loan homepage
+          // with the separately navigable Deposito ME page.
+          await cache.put(req, fresh.clone());
+          if (url.pathname === new URL('./', APP_URL).pathname ||
+              url.pathname === new URL('./index.html', APP_URL).pathname) {
+            await cache.put(new URL('./index.html', APP_URL).href, fresh.clone());
+          }
         }
         return fresh;
       } catch (_) {
         return (await caches.match(req)) ||
-          (await caches.match(new URL('./index.html', APP_URL).href)) ||
+          ((url.pathname === new URL('./', APP_URL).pathname ||
+            url.pathname === new URL('./index.html', APP_URL).pathname)
+           ? await caches.match(new URL('./index.html', APP_URL).href) : null) ||
           Response.error();
       }
     })());

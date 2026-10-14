@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><script>if(window.top===window&&location.protocol!=='file:')location.replace('./index.html');</script><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102d50"><title>DEPOSITO ME</title><meta name="description" content="Ruang kerja deposito: simulasi, prospek, dan penawaran dalam satu aplikasi."><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{--navy:#102d50;--blue:#1d5688;--gold:#e0b45c;--bg:#f3f6fa;--ink:#17283c;--muted:#6b7a8c;--line:#dfe6ee;--green:#18794e}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}header{background:linear-gradient(140deg,var(--navy),#1e5683);color:white;padding:22px 18px 24px;border-radius:0 0 24px 24px}header .brand{font-size:12px;letter-spacing:1.8px;opacity:.85;font-weight:700}header h1{font-size:23px;margin:7px 0 5px}header p{margin:0;font-size:13px;color:#d9e7f5}.wrap{max-width:760px;margin:auto;padding:14px 14px 95px}.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:-6px;margin-bottom:14px}.nav button{border:1px solid var(--line);border-radius:13px;background:white;padding:11px 4px;color:var(--muted);font-size:11px;font-weight:700}.nav button.active{background:var(--navy);color:white;border-color:var(--navy)}.nav .ico{display:block;font-size:18px;margin-bottom:4px}.panel{display:none}.panel.active{display:block}.card{background:white;border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:13px;box-shadow:0 3px 12px #152f4b08}.card h2{font-size:17px;margin:0 0 12px}.card h3{font-size:14px;margin:0 0 6px}.muted{color:var(--muted);font-size:12px;line-height:1.5}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f7f9fc;border-radius:12px;padding:12px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{display:block;font-size:18px;margin-top:5px}.btn{display:inline-flex;justify-content:center;align-items:center;gap:7px;border:0;border-radius:11px;background:var(--navy);color:white;font-weight:700;padding:12px 14px;font-size:13px;text-decoration:none;cursor:pointer}.btn.secondary{background:#edf3f8;color:var(--navy)}.btn.gold{background:var(--gold);color:#15283d}.btn.red{background:#fff0f0;color:#a52a2a}.btn.full{width:100%}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}label{font-size:12px;font-weight:700;display:block;margin:11px 0 6px}input,select,textarea{width:100%;border:1px solid #ccd7e2;background:white;border-radius:10px;padding:12px;font:inherit;font-size:14px;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1d568815}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.result{background:#eef5fb;border:1px solid #d8e7f5;border-radius:13px;padding:14px;margin-top:14px}.result .big{font-size:22px;font-weight:800;color:var(--navy);margin:5px 0}.pill{display:inline-block;border-radius:999px;background:#eef3f8;color:#405a72;font-size:10px;padding:5px 8px;font-weight:700}.lead{border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:9px}.leadtop{display:flex;justify-content:space-between;gap:10px;align-items:start}.leadname{font-size:14px;font-weight:800}.leadmeta{font-size:12px;color:var(--muted);line-height:1.6;margin-top:5px}.lead .actions .btn{padding:9px 10px;font-size:11px}.empty{text-align:center;color:var(--muted);padding:25px 8px;font-size:13px}.notice{background:#fff8e7;border:1px solid #f1dfb4;border-radius:12px;padding:11px;font-size:12px;line-height:1.5;color:#684d16}.divider{height:1px;background:var(--line);margin:14px 0}.hidden{display:none!important}footer{text-align:center;color:var(--muted);font-size:10px;padding:16px}
+@media(min-width:600px){.wrap{padding-top:20px}.nav button{font-size:12px}.stats{grid-template-columns:repeat(4,1fr)}}
+
+.offer-shell{display:grid;grid-template-columns:minmax(300px,0.88fr) minmax(520px,1.42fr);gap:24px;align-items:start;margin-top:18px}.offer-page{position:relative;padding:14px 0 10px}.offer-page:before,.offer-page:after{content:"";position:absolute;border-radius:50%;filter:blur(4px);pointer-events:none}.offer-page:before{width:260px;height:260px;right:-40px;top:30px;background:radial-gradient(circle at 30% 30%,rgba(81,162,242,.22),rgba(81,162,242,0) 70%)}.offer-page:after{width:300px;height:300px;left:-80px;bottom:40px;background:radial-gradient(circle at 40% 40%,rgba(226,186,100,.16),rgba(226,186,100,0) 70%)}.offer-shell:before{content:"";position:absolute;inset:18px -12px -16px -12px;background:linear-gradient(135deg,rgba(25,79,138,.07),rgba(255,255,255,0) 45%,rgba(226,186,100,.08));border-radius:28px;z-index:0;pointer-events:none}.offer-shell{position:relative}.offer-shell>*{position:relative;z-index:1}.offer-card:first-child{transform:translateY(2px)}.offer-card.offer-right{background:linear-gradient(180deg,rgba(255,255,255,.99) 0%,rgba(246,250,255,.99) 100%)}.offer-preview-frame:after{content:"";position:absolute;left:-40px;bottom:-50px;width:170px;height:170px;background:radial-gradient(circle at center,rgba(226,186,100,.18),rgba(226,186,100,0));border-radius:50%;pointer-events:none}.offer-toolbar h3{font-size:17px;font-weight:900}.offer-card h3{font-size:17px;font-weight:900}.offer-preview-title{font-size:15px}.offer-preview-body strong,.offer-preview-body b{color:#123f78}.offer-editor textarea{box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 8px 20px rgba(18,63,120,.06)}.offer-card{background:linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(248,251,255,.98) 100%);border:1px solid rgba(201,217,236,.95);border-radius:22px;padding:18px;box-shadow:0 24px 44px rgba(16,45,80,.12),0 8px 18px rgba(16,45,80,.05),inset 0 1px 0 rgba(255,255,255,.85);backdrop-filter:blur(6px)}.offer-card h3{margin:0 0 14px;font-size:17px;color:var(--navy)}.offer-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}.offer-form-grid>.full{grid-column:1/-1}.offer-field-group{position:relative}.offer-field-group .suffix,.offer-field-group .prefix{position:absolute;bottom:13px;color:#6f7e90;font-size:13px;font-weight:700}.offer-field-group .suffix{right:12px}.offer-field-group .prefix{left:12px}.offer-field-group input.has-suffix,.offer-field-group select.has-suffix{padding-right:52px}.offer-field-group input.has-prefix{padding-left:42px}.offer-right{position:sticky;top:18px;z-index:2}.offer-toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.offer-toolbar .btn{padding:10px 14px;font-size:13px}.offer-preview-frame{background:linear-gradient(180deg,#ffffff 0%,#f9fbff 100%);border:1px solid #dbe4ee;border-radius:18px;padding:16px 18px;box-shadow:0 10px 22px rgba(16,45,80,.06),inset 0 1px 0 rgba(255,255,255,.7);position:relative;overflow:hidden}.offer-preview-frame:before{content:"";position:absolute;inset:auto -60px -90px auto;width:240px;height:240px;background:radial-gradient(circle at center,rgba(64,146,217,.17),rgba(64,146,217,0));border-radius:50%;pointer-events:none}.offer-preview-title{font-size:14px;font-weight:900;letter-spacing:.2px;color:#132e53;margin:0 0 8px}.offer-preview-body{font-size:14px;line-height:1.5;color:#334864;position:relative;z-index:1}.offer-preview-body p{margin:0 0 10px}.offer-bullets{margin:0 0 10px 18px;padding:0}.offer-bullets li{margin-bottom:3px}.offer-highlight{display:block;background:linear-gradient(135deg,#e7fbff 0%,#d4f0ff 48%,#d7f5ef 100%);border-left:4px solid #3ca6bf;border-radius:12px;padding:10px 12px;margin:10px 0 12px;font-weight:900;color:#0f4765;box-shadow:0 10px 20px rgba(60,166,191,.12)}.offer-preview-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:14px}.offer-preview-actions .btn{min-width:180px;padding:12px 16px;border-radius:12px}.offer-preview-actions .btn.whatsapp{background:linear-gradient(180deg,#28dc6b 0%,#1fb65a 100%);color:#fff;box-shadow:0 14px 26px rgba(37,211,102,.24)}.offer-preview-actions .btn.secondary{background:linear-gradient(180deg,#ffffff 0%,#f4f8ff 100%);color:#255cb5;border:1px solid #b9cdee;box-shadow:0 8px 18px rgba(37,92,181,.10)}.offer-help{display:flex;align-items:center;justify-content:center;gap:8px;color:#6f7f93;font-size:12px;margin-top:10px}.offer-help:before{content:"ℹ️"}.offer-editor{margin-top:14px}.offer-editor textarea{min-height:170px;border-radius:14px;background:#f7faff}.offer-hero-strip{background:linear-gradient(120deg,#0f3767 0%,#1f5da0 48%,#2a78c4 100%);border-radius:20px;box-shadow:0 28px 50px rgba(16,45,80,.22), inset 0 1px 0 rgba(255,255,255,.14);padding:14px 18px 0;position:relative;overflow:hidden;margin-bottom:18px}.offer-hero-strip:after{content:"";position:absolute;right:-40px;top:-30px;width:180px;height:180px;background:radial-gradient(circle at center,rgba(255,255,255,.16),rgba(255,255,255,0));border-radius:50%}.offer-hero-strip .mini-tabs{display:flex;gap:18px;color:#e6f0fb;font-size:12px;font-weight:700;opacity:.95;flex-wrap:wrap}.offer-hero-strip .mini-tabs span{padding-bottom:12px}.offer-hero-strip .mini-tabs span.active{border-bottom:3px solid #e2ba64;color:#ffd67e}.offer-meta-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 10px}.offer-profile{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700}.offer-avatar{height:34px;width:34px;border-radius:50%;background:linear-gradient(180deg,#c8d2df,#7d8ca2);box-shadow:0 4px 12px rgba(0,0,0,.22)}@media(max-width:980px){.offer-shell{grid-template-columns:1fr}.offer-right{position:static}.offer-form-grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){.offer-form-grid{grid-template-columns:1fr}.offer-preview-actions .btn{width:100%;min-width:0}.offer-toolbar{flex-direction:column;align-items:stretch}.offer-meta-bar{display:none}}
+</style><style id="depositoAppStyles">:root{--navy:#102d50;--gold:#e4c58d;--bg:#f5f6f8;--muted:#788493;--line:#e4e8ed}body{font-size:14px}header{border-radius:0;background:#fff;color:var(--navy);padding:22px 5%;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:20px}.wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--navy);font-size:25px;letter-spacing:5px;font-weight:650}.brandmark{background:var(--navy);color:var(--gold);font:32px Georgia;padding:6px 14px;border-radius:10px;letter-spacing:0}.wordmark small{display:block;font-size:8px;letter-spacing:2.4px;margin-top:5px}.header-right{display:flex;gap:24px;align-items:center}.local-indicator{font-size:11px;color:#547363}.install-btn{padding:11px 17px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--navy);cursor:pointer;font-weight:600}.wrap{max-width:1250px;padding:0 32px 35px}.nav{margin:0 0 32px;display:flex;gap:30px;border-bottom:1px solid var(--line)}.nav button{border:0;border-radius:0;padding:22px 4px;background:transparent;font-size:13px;display:flex;gap:9px;align-items:center;border-bottom:2px solid transparent;cursor:pointer}.nav button.active{background:transparent;color:var(--navy);border-color:var(--navy)}.nav .ico{font-size:20px;margin:0}.page-heading{display:flex;justify-content:space-between;align-items:center;margin:32px 0}.eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;color:#8c754f}.page-heading h1{font-size:34px;letter-spacing:-1px;line-height:1.25;margin:12px 0}.page-heading h1 span{font-weight:400}.page-heading p{color:var(--muted);font-size:13px}.date-badge{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:12px;border-radius:8px}.hero{position:relative;overflow:hidden;background:linear-gradient(110deg,#0d2745,#1e466c);border-radius:18px;color:#fff;display:flex;justify-content:space-between;padding:36px 40px;margin-bottom:26px;min-height:270px}.hero .eyebrow{color:#e4c58d}.hero h2{font-size:27px;font-weight:500;letter-spacing:-.5px;line-height:1.35;margin:14px 0}.hero p{color:#bfd0e0;font-size:12px;line-height:1.8;margin-bottom:22px}.hero .btn{gap:35px}.hero-art{width:300px;position:relative;display:grid;place-items:center}.orbit{position:absolute;border:1px solid #d1b58440;border-radius:50%;width:230px;height:230px;transform:rotate(-30deg) scaleX(.8)}.orbit-two{width:280px;height:180px;transform:rotate(35deg)}.coin{height:130px;width:130px;display:grid;place-items:center;border-radius:50%;font:80px Georgia;color:#f2dfba;background:linear-gradient(140deg,#c4a773,#746244);box-shadow:7px 10px 0 #6b5d45,15px 28px 40px #0004;border:5px double #ddc28e}.art-caption{position:absolute;bottom:0;font-size:8px;letter-spacing:3px;color:#b7c5d2}.card{padding:25px;border-radius:14px;box-shadow:none;margin-bottom:22px}.card h2{font-size:18px;font-weight:600}.card>p{line-height:1.75;max-width:760px}.stats{gap:0;margin-top:22px}.stat{background:transparent;border-radius:0;padding:10px 18px;border-right:1px solid var(--line)}.stat:first-child{padding-left:0}.stat:last-child{border:0}.stat strong{font-size:24px;font-weight:550;letter-spacing:-.5px;margin-top:12px;overflow-wrap:anywhere}.stat small{font-size:11px}.actions .full{width:auto}.btn{font-weight:600;border-radius:8px;min-height:44px;transition:filter .15s}.btn:hover{filter:brightness(1.12)}.btn:focus-visible,button:focus-visible{outline:3px solid #b79b63;outline-offset:3px}.notice{background:#f0f3f7;border:0;color:#647184;padding:15px 18px;font-size:11px}.panel:not(#home){max-width:850px;margin:0 auto}.panel:not(#home)>.card{padding:30px}.formgrid{gap:0 20px}label{margin-top:20px;color:#4f6275}input,select,textarea{border-color:#dbe2e9;padding:13px;font-size:16px;border-radius:8px}textarea{line-height:1.6}.result{background:#f3f6fa;padding:24px}.result .big{font-size:28px}.lead{padding:20px;border-radius:10px}.leadname{font-size:16px}.leadmeta{line-height:1.9}.pill{margin-top:8px}.empty{padding:44px 10px;line-height:1.7}.muted{line-height:1.7}footer{line-height:2.2;padding:25px}dialog{border:1px solid var(--line);border-radius:20px;padding:32px;max-width:460px;width:90%;color:var(--navy);box-shadow:0 30px 100px #0004}dialog::backdrop{background:#071b36a8}dialog p{line-height:1.8}.dialog-close{float:right;font-size:22px}#toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);padding:14px 24px;background:#102d50;color:white;border-radius:10px;box-shadow:0 4px 20px #0003;display:none;z-index:20;width:max-content;max-width:90%}
+@media(min-width:900px){#home>.card .actions{margin-top:28px}#home>.card:nth-of-type(4){margin-top:25px}}@media(max-width:760px){header{padding:16px 20px}.local-indicator{display:none}.install-btn{font-size:11px;padding:10px}.wordmark{font-size:20px;letter-spacing:3px}.wordmark small{font-size:7px}.brandmark{font-size:27px}.wrap{padding:0 18px 100px}.nav{position:fixed;bottom:0;left:0;right:0;z-index:10;background:#fff;margin:0;justify-content:space-around;gap:0;padding-bottom:env(safe-area-inset-bottom);border-top:1px solid var(--line)}.nav button{flex-direction:column;gap:4px;font-size:10px;padding:13px 4px 10px;flex:1;border-bottom:0;border-top:2px solid transparent}.nav button.active{border-top-color:var(--navy)}.page-heading{margin:28px 0 23px}.page-heading h1{font-size:28px}.date-badge{display:none}.hero{padding:26px 24px;min-height:260px}.hero h2{font-size:23px}.hero-art{position:absolute;right:-75px;top:55px;opacity:.25;pointer-events:none;width:230px;height:200px}.hero>div:first-child{position:relative;z-index:1}.art-caption{display:none}.hero p br{display:none}.hero p{max-width:245px}.card,.panel:not(#home)>.card{padding:20px}.stats{grid-template-columns:1fr 1fr;gap:20px 0}.stat:nth-child(2){border:0}.stat:nth-child(3){padding-left:0}.stat strong{font-size:20px}.actions .full{width:100%}.formgrid{gap:0 12px}.card h2{font-size:17px}.result{padding:18px}.result .big{font-size:24px}.header-right{gap:0}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}@media print{header,.nav,.actions,.btn,footer,.notice{display:none!important}.wrap{padding:0}.panel.active{display:block}.card{break-inside:avoid}.hero{color:#102d50;background:white}}
+
+/* Brand sizing for narrow phones */
+.wordmark{letter-spacing:2px;white-space:nowrap}@media(max-width:480px){header{padding:14px 12px;gap:10px}.wordmark{font-size:16px;letter-spacing:1px;gap:8px}.brandmark{font-size:25px;padding:5px 11px}.install-btn{font-size:10px;padding:9px 8px}}
+
+.depo-sim-page{max-width:1220px;margin:0 auto}.depo-sim-heading{padding:12px 0 18px}.depo-sim-heading h2{margin:0 0 8px;font-size:clamp(34px,4vw,52px);line-height:1.06;letter-spacing:-1.4px;color:#0e2b55}.depo-sim-heading p{margin:0;color:#55687d;font-size:17px}.depo-sim-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(360px,.95fr);gap:24px;align-items:start}.depo-form-card,.depo-summary-card{background:#fff;border:1px solid #dbe5ef;border-radius:18px;padding:22px 22px 20px;box-shadow:0 10px 28px rgba(17,47,89,.07)}.depo-form-card h3,.depo-summary-card h3{margin:0 0 16px;font-size:18px;color:#102d50}.depo-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}.depo-form-card label{font-size:14px;font-weight:700;color:#233b58;margin-top:16px}.depo-form-card input,.depo-form-card select{min-height:50px;border-radius:12px;font-size:16px;padding:13px 14px;border-color:#cfdae6;background:#fff}.depo-form-card .btn{margin-top:26px;min-height:54px;border-radius:12px;font-size:17px;font-weight:800;background:linear-gradient(180deg,#123e71,#0f2f57)}.result-hero{border-radius:16px;padding:18px 22px;background:linear-gradient(135deg,#0e3767,#163f77 55%,#0f2f57);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}.result-hero .hero-kicker{font-size:15px;color:#dbe8f8;margin-bottom:10px}.result-hero .hero-net{font-size:clamp(34px,4vw,56px);font-weight:900;letter-spacing:-1.4px;line-height:1.02;margin:0 0 8px}.result-hero .hero-month{font-size:14px;color:#d6e3f4}.summary-list{margin:18px 0 12px;padding:0;list-style:none}.summary-row{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid #e3e9f0;font-size:16px;color:#334b67}.summary-row:last-child{border-bottom:0}.summary-row strong{color:#102d50;font-size:16px}.summary-total{padding:16px 14px 14px;margin-top:8px;background:linear-gradient(180deg,#eef8f2,#e4f3ea);border:1px solid #cfe5d6;border-radius:14px}.summary-total .value{font-size:22px;font-weight:900;color:#18794e}.summary-total b{color:#0f5f3b}.summary-sub{display:block;font-size:13px;color:#6c7d73;margin-top:4px}.summary-note{display:flex;align-items:center;gap:12px;background:#fcf5e8;border:1px solid #efd9a9;color:#865e12;border-radius:12px;padding:14px 16px;font-weight:700;margin:16px 0 14px}.summary-note .icon{height:28px;width:28px;display:grid;place-items:center;border-radius:50%;background:#d9b04f;color:#fff;font-size:16px;flex:none}.offer-btn-wide{width:100%;min-height:54px;border-radius:12px;font-size:17px;font-weight:800;background:linear-gradient(180deg,#e9c562,#d6a73a)!important;color:#0e2b55!important;justify-content:center;border:0}.offer-btn-wide span{margin-left:auto;font-size:24px;line-height:1}.depo-caption{text-align:center;color:#8693a1;font-size:12px;margin-top:14px}.depo-summary-card .muted{display:none}@media(max-width:960px){.depo-sim-layout{grid-template-columns:1fr}.depo-sim-heading p{font-size:15px}}@media(max-width:640px){.depo-form-grid{grid-template-columns:1fr}.depo-sim-heading h2{font-size:34px}.depo-form-card,.depo-summary-card{padding:18px}.result-hero .hero-net{font-size:42px}}
+</style><style id="simKreditDepositoEmbedded">
+/* Navigation remains discoverable inside the integrated frame on phone screens. */
+@media(max-width:760px){.nav{position:relative!important;bottom:auto!important;left:auto!important;right:auto!important;z-index:3!important;border-top:0!important;border-bottom:1px solid var(--line)!important;padding-bottom:0!important;box-shadow:none!important}.nav button{border-top:0!important;border-bottom:2px solid transparent!important}.nav button.active{border-bottom-color:var(--navy)!important}}
+/* The parent app provides the product navigation and its own installation control. */
+body.embedded-deposito .install-btn{display:none!important}
+</style>
+<script>if(window.parent!==window)document.addEventListener('DOMContentLoaded',()=>document.body.classList.add('embedded-deposito'));</script><style id="closingDepositoOfflineStyle2026">.nav{flex-wrap:wrap;gap:18px}.nav button{white-space:nowrap}#closing .card{max-width:880px}#closing .actions{margin-top:16px}#closing textarea{resize:vertical}@media(max-width:760px){.nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.nav button{justify-content:center;flex-wrap:wrap;font-size:11px;padding:12px 3px}.nav .ico{font-size:16px}.formgrid{grid-template-columns:1fr}#closing .card{padding:18px}}</style>
+<style id="depositInterestDetails2026">
+#calc .interest-breakdown {border:1px solid #ccdbea;border-radius:12px;background:#f9fbff;margin:10px 0 15px;overflow:hidden}
+#calc .interest-breakdown summary {display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none;padding:13px 15px;color:#153f71;font-weight:800;font-size:13px;line-height:1.4;user-select:none}
+#calc .interest-breakdown summary::-webkit-details-marker {display:none}
+#calc .interest-breakdown summary:hover {background:#eef5ff}
+#calc .interest-breakdown summary:focus-visible {outline:2px solid #2c6ab3;outline-offset:-2px}
+#calc .interest-breakdown[open] summary {background:#edf5ff;border-bottom:1px solid #d9e6f4}
+#calc .interest-chevron {display:inline-block;height:8px;width:8px;flex:none;border-right:2px solid #28517b;border-bottom:2px solid #28517b;transform:rotate(45deg);transition:transform .2s}
+#calc .interest-breakdown[open] .interest-chevron {transform:rotate(225deg)}
+#calc .interest-breakdown-inner {padding:12px 14px 14px}
+#calc .interest-desc {color:#536a84;font-size:11px;margin-bottom:10px;line-height:1.5}
+#calc .interest-table-scroll {overflow-x:auto;max-width:100%;border:1px solid #e0e8f2;border-radius:9px;background:#fff}
+#calc .interest-table {width:100%;min-width:410px;border-collapse:collapse;table-layout:auto;font-size:11px;font-variant-numeric:tabular-nums}
+#calc .interest-table th,#calc .interest-table td {padding:9px 8px;border-bottom:1px solid #e7edf4;white-space:nowrap;text-align:right}
+#calc .interest-table th:first-child,#calc .interest-table td:first-child {text-align:left}
+#calc .interest-table thead th {background:#edf3fb;color:#28517b;font-size:10px;font-weight:800}
+#calc .interest-table tbody tr:nth-child(even) {background:#fafcff}
+#calc .interest-table tfoot th,#calc .interest-table tfoot td {background:#eaf4ef;color:#136042;border-bottom:0;font-weight:850}
+#calc .interest-print-bar {display:flex;justify-content:flex-end;padding-top:11px}
+#calc .interest-print-btn {border:1px solid #b5cce6;background:white;color:#164c81;border-radius:9px;min-height:39px;padding:9px 12px;font-size:12px;font-weight:800;cursor:pointer}
+#calc .interest-print-btn:hover {background:#f1f7ff}
+#calc .interest-print-btn:focus-visible {outline:2px solid #2c6ab3;outline-offset:2px}
+@media(max-width:520px){#calc .interest-breakdown-inner {padding:9px}#calc .interest-table{min-width:0;font-size:9.5px}#calc .interest-table th,#calc .interest-table td{padding:8px 3px;letter-spacing:-.15px}#calc .interest-breakdown summary {padding:12px}}
+#depositInterestPrint {display:none}
+@media print {
+ @page {size:A4 portrait;margin:12mm 13mm}
+ html,body {background:#fff!important;color:#173453!important;margin:0!important;padding:0!important}
+ body > *:not(#depositInterestPrint) {display:none!important}
+ #depositInterestPrint {display:block!important;font-family:Arial,sans-serif;color:#16345b;background:white;font-size:10pt;line-height:1.4}
+ #depositInterestPrint * {box-sizing:border-box}
+ #depositInterestPrint .print-depo-top {display:flex;justify-content:space-between;align-items:start;gap:12px;border-bottom:2px solid #17436f;padding-bottom:13px;margin-bottom:16px}
+ #depositInterestPrint .print-depo-brand {font-size:10pt;font-weight:800;color:#17436f;letter-spacing:.8px}
+ #depositInterestPrint .print-depo-title {font-size:18pt;font-weight:800;margin:7px 0 1px}
+ #depositInterestPrint .print-depo-sub {font-size:9pt;color:#64748b;margin:0}
+ #depositInterestPrint .print-depo-ref {font-size:9pt;text-align:right;color:#496177;white-space:nowrap}
+ #depositInterestPrint .print-depo-detail {display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;padding:12px 14px;background:#f4f8fc;border:1px solid #d5e2ef;border-radius:5px;margin-bottom:15px}
+ #depositInterestPrint .print-depo-detail small {display:block;color:#64748b;font-size:8pt;margin-bottom:2px}
+ #depositInterestPrint .print-depo-detail strong {font-size:10pt}
+ #depositInterestPrint .print-depo-tbl {width:100%;border-collapse:collapse;font-size:9pt;font-variant-numeric:tabular-nums}
+ #depositInterestPrint .print-depo-tbl th,#depositInterestPrint .print-depo-tbl td {padding:8px 9px;border-bottom:1px solid #dbe5ef;text-align:right}
+ #depositInterestPrint .print-depo-tbl th:first-child,#depositInterestPrint .print-depo-tbl td:first-child {text-align:left}
+ #depositInterestPrint .print-depo-tbl thead th {background:#183e69;color:white}
+ #depositInterestPrint .print-depo-tbl tbody tr:nth-child(even) {background:#f8fbff}
+ #depositInterestPrint .print-depo-tbl tfoot th,#depositInterestPrint .print-depo-tbl tfoot td {background:#eaf4ee;font-weight:800;color:#105f39;border-bottom:0}
+ #depositInterestPrint .print-depo-tbl tr {break-inside:avoid}
+ #depositInterestPrint .print-depo-tbl thead {display:table-header-group}
+ #depositInterestPrint .print-depo-foot {border-top:1px solid #c8d6e7;margin-top:18px;padding-top:9px;font-size:8pt;color:#65758b}
+}
+</style>
+<style id="depositoPremiumLayoutFix2026">
+/* Keep existing branding and calculations. Scope overrides exclusively to the Deposito simulation. */
+#calc.panel {max-width:1200px!important;width:100%;margin:0 auto;min-width:0}
+#calc .depo-sim-page {max-width:1200px;width:100%;min-width:0;margin:0 auto}
+#calc .depo-sim-heading {padding:20px 0 19px}
+#calc .depo-sim-heading h2 {font-size:clamp(30px,3.5vw,46px);line-height:1.12;letter-spacing:-1.1px;margin:0 0 8px}
+#calc .depo-sim-heading p {font-size:15px;line-height:1.5}
+#calc .depo-sim-layout {display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.94fr);align-items:start;gap:20px}
+#calc .depo-form-card,#calc .depo-summary-card {min-width:0;width:100%;border-radius:17px;padding:22px;box-shadow:0 8px 24px rgba(16,45,80,.06)}
+#calc .depo-form-card h3,#calc .depo-summary-card h3 {font-size:19px;margin:0 0 13px}
+#calc .depo-form-card label {display:block;font-size:13px;line-height:1.35;margin:16px 0 6px}
+#calc .depo-form-card input,#calc .depo-form-card select {display:block;width:100%;max-width:100%;min-width:0;min-height:48px}
+#calc .depo-form-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;row-gap:0}
+#calc .result-hero {min-width:0;width:100%;padding:20px 18px 18px;overflow:hidden}
+#calc .result-hero .hero-kicker {font-size:13px;line-height:1.45;margin:0 0 10px}
+#calc .result-hero .hero-net {display:block;max-width:100%;font-size:clamp(23px,2.9vw,39px);line-height:1.16;font-weight:900;letter-spacing:-.6px;white-space:nowrap;overflow:hidden;text-overflow:clip;margin:0 0 9px;font-variant-numeric:tabular-nums}
+#calc .result-hero .hero-month {font-size:12px;line-height:1.5}
+#calc .summary-list {margin:18px 0 12px}
+#calc .summary-row {font-size:14px;line-height:1.4;align-items:center;min-width:0;gap:10px;padding:12px 0}
+#calc .summary-row strong {font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+#calc .summary-total {display:flex;flex-direction:column;align-items:stretch;gap:9px;min-width:0;padding:15px 16px 16px;margin:8px 0 0;background:linear-gradient(145deg,#ecf8f0,#e0f1e7);border:1px solid #cce3d4;border-radius:13px}
+#calc .summary-total>span {display:block;min-width:0}
+#calc .summary-total b {font-size:14px;line-height:1.35;white-space:normal;display:block;color:#135a39}
+#calc .summary-total .value {display:block;color:#137947;max-width:100%;font-size:clamp(22px,2.25vw,29px);font-weight:900;line-height:1.2;letter-spacing:-.4px;white-space:nowrap;overflow:hidden;font-variant-numeric:tabular-nums}
+#calc .summary-total .summary-sub {font-size:12px;margin-top:4px}
+#calc .summary-note {display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:13px;line-height:1.4;margin:15px 0 8px}
+#calc .summary-note .icon {height:26px;width:26px;flex-shrink:0}
+#calc .depo-payout-line {font-size:12px;line-height:1.4;color:#6b7e90;margin:0 0 16px;padding:0 3px}
+#calc .offer-btn-wide {display:flex;align-items:center;width:100%;min-height:51px;font-size:15px;padding:10px 16px}
+#calc .offer-btn-wide span {margin-left:auto}
+#calc .depo-caption {font-size:11px;line-height:1.6;margin-top:12px}
+@media(max-width:950px) {
+ #calc .depo-sim-layout{grid-template-columns:minmax(0,1fr);gap:14px}
+ #calc .depo-form-card,#calc .depo-summary-card{max-width:680px;margin:0 auto}
+ #calc .result-hero .hero-net{font-size:clamp(26px,4.6vw,40px)}
+ #calc .summary-total .value{font-size:clamp(24px,4vw,30px)}
+}
+@media(max-width:520px){
+ #calc .depo-sim-heading{padding:18px 0 13px}
+ #calc .depo-sim-heading h2{font-size:31px}
+ #calc .depo-form-card,#calc .depo-summary-card{padding:16px}
+ #calc .depo-form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px}
+ #calc .depo-form-card label{font-size:12px}
+ #calc .depo-form-card input,#calc .depo-form-card select{font-size:14px;padding:10px;min-height:45px}
+ #calc .summary-row strong{font-size:13px}
+ #calc .summary-total .value{font-size:clamp(21px,5vw,26px)}
+ #calc .result-hero .hero-net{font-size:clamp(22px,7vw,34px)}
+}
+</style>
+
+<style id="depoNavFinalMobile2026">
+header .wordmark{display:flex;align-items:center;gap:10px;letter-spacing:1px;text-decoration:none}
+header .depo-brand-text{display:flex;flex-direction:column;gap:3px;font-size:22px;font-weight:800;line-height:1.1;letter-spacing:.3px}
+header .depo-brand-text small{font-size:11px;font-weight:500;letter-spacing:.15px;color:#72859a;margin:0;line-height:1.25}
+@media(max-width:760px){
+ .nav {display:flex!important;position:relative!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:4px!important;justify-content:flex-start!important;overscroll-behavior-x:contain;scrollbar-width:thin;scroll-snap-type:x proximity}
+ .nav button {display:flex!important;flex:0 0 auto!important;white-space:nowrap!important;padding:12px 10px!important;gap:6px!important;align-items:center!important;flex-direction:row!important;scroll-snap-align:start}
+ .nav button .ico{display:inline!important;font-size:15px!important;margin:0!important}
+ header .depo-brand-text{font-size:18px}
+ header .depo-brand-text small{font-size:9px}
+}
+@media(max-width:390px){header .depo-brand-text{font-size:16px}header .depo-brand-text small{font-size:8.5px}}
+</style>
+<style id="depoOfferBalanced4060Final2026">
+/* Menu Penawaran, dua kolom 40:60 secara proporsional.
+   Override batas lebar 850px lama khusus menu ini saja. */
+#offer.panel{max-width:none!important;width:100%!important;margin-inline:auto!important;padding-inline:0!important;overflow:visible!important;}
+#offer .offer-page{width:100%;max-width:1320px;margin:0 auto;padding:16px 0 24px;isolation:isolate;}
+#offer .offer-page>.page-heading{margin:8px 0 18px;}
+#offer .offer-hero-strip{width:100%;margin-bottom:18px;}
+#offer .offer-shell{display:grid!important;grid-template-columns:minmax(0,2fr) minmax(0,3fr)!important;gap:clamp(14px,2vw,26px)!important;align-items:start!important;max-width:none!important;width:100%;margin-top:0;}
+#offer .offer-shell>.offer-card{min-width:0;width:100%;max-width:none;box-sizing:border-box;padding:clamp(16px,1.65vw,24px);overflow:visible;border-radius:18px;}
+#offer .offer-shell>.offer-card.offer-right{position:sticky;top:20px;align-self:start;}
+#offer .offer-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;}
+#offer .offer-form-grid>div{min-width:0;}
+#offer .offer-form-grid>.full,#offer .offer-form-grid>.offer-field-group.full{grid-column:1/-1;}
+#offer .offer-form-grid input,#offer .offer-form-grid select{box-sizing:border-box;min-width:0;max-width:100%;width:100%;}
+#offer .offer-preview-frame{box-sizing:border-box;max-width:100%;}
+#offer .offer-preview-body{font-size:13.5px;line-height:1.55;overflow-wrap:anywhere;word-break:normal;}
+#offer .offer-preview-title{line-height:1.4;}
+#offer .offer-toolbar{min-width:0;flex-wrap:wrap;align-items:center;}
+#offer .offer-preview-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+#offer .offer-preview-actions .btn{box-sizing:border-box;min-width:0;width:100%;padding:12px 10px;white-space:normal;}
+@media(max-width:1020px) and (min-width:641px){
+  #offer .offer-form-grid{grid-template-columns:minmax(0,1fr);gap:4px;}
+  #offer .offer-form-grid>.full{grid-column:auto;}
+  #offer .offer-preview-actions{grid-template-columns:1fr;}
+  #offer .offer-card{padding:15px;}
+}
+@media(max-width:640px){
+  #offer .offer-shell{grid-template-columns:minmax(0,1fr)!important;gap:16px!important;}
+  #offer .offer-form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px;}
+  #offer .offer-shell>.offer-card.offer-right{position:static;}
+  #offer .offer-preview-actions{grid-template-columns:1fr;}
+  #offer .offer-page{padding:10px 0 20px;}
+}
+@media(max-width:380px){
+  #offer .offer-form-grid{grid-template-columns:1fr;}
+  #offer .offer-form-grid>.full{grid-column:auto;}
+}
+</style>
+</head><body>
+<header><a class="wordmark" href="#home"><span class="brandmark">D</span><span class="depo-brand-text">DEPOSITO ME</span></a><div class="header-right"><span class="local-indicator">● Penyimpanan lokal</span><button class="install-btn" onclick="installApp()">Pasang aplikasi ↗</button></div></header>
+<div class="wrap"><nav class="nav"><button class="active" data-tab="home"><span class="ico">⌂</span>Beranda</button><button data-tab="calc"><span class="ico">▦</span>Simulasi</button><button data-tab="leads"><span class="ico">♙</span>Calon Deposan</button><button data-tab="offer"><span class="ico">✉</span>Penawaran</button><button data-tab="closing"><span class="ico">✓</span>Closing Deposito</button></nav>
+<section id="home" class="panel active"><div class="page-heading"><div><div class="eyebrow">RUANG KERJA ANDA</div><h1>Kelola peluang.<br><span>Kembangkan hubungan.</span></h1><p>Seluruh aktivitas deposito, dalam satu pandangan.</p></div><div class="date-badge" id="today"></div></div><div class="hero"><div><span class="eyebrow">DEPOSIT PLANNING</span><h2>Perencanaan yang matang.<br>Langkah yang lebih pasti.</h2><p>Bandingkan estimasi hasil dan siapkan penawaran<br>yang sesuai kebutuhan calon deposan.</p><button class="btn gold" onclick="showTab('calc')">Buat simulasi <span>↗</span></button></div><div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="coin">D</div><span class="art-caption">PRECISION IN EVERY PLAN</span></div></div><div class="card"><h2>Ringkasan portofolio</h2><p class="muted">Catat prospek deposito dan tindak lanjuti dengan lebih teratur.</p><div class="stats"><div class="stat"><small>Total prospek</small><strong id="statLeads">0</strong></div><div class="stat"><small>Prospek aktif</small><strong id="statActive">0</strong></div><div class="stat"><small>Estimasi dana prospek</small><strong id="statFunds">Rp0</strong></div><div class="stat"><small>Sudah ditempatkan</small><strong id="statPlaced">Rp0</strong></div></div><div class="actions"><button class="btn full" onclick="showTab('leads');document.getElementById('leadName').focus()">＋ Tambah calon deposan</button><button class="btn secondary full" onclick="showTab('calc')">Buka simulasi bunga</button></div></div><div class="card"><h2>Dari percakapan menjadi peluang</h2><p>Bangun hubungan yang lebih personal. Siapkan rincian nominal, pilihan tenor, dan estimasi bunga dalam pesan penawaran yang mudah dipahami.</p><p class="muted">Nominal, suku bunga, tenor, pencairan sebelum jatuh tempo, dan penjaminan mengikuti persetujuan serta ketentuan resmi bank.</p><button class="btn secondary full" onclick="showTab('offer')">Siapkan pesan WhatsApp</button></div><div class="notice"><b>Mode lokal:</b> Ruang kerja simulasi dan pencatatan. Data disimpan di browser/perangkat ini, belum tersinkron antarpegawai dan bukan sistem resmi bank.</div></section>
+<section id="calc" class="panel"><div class="depo-sim-page"><div class="depo-sim-heading"><h2>Simulasi Deposito</h2><p>Rencanakan penempatan dana dengan mudah.</p></div><div class="depo-sim-layout"><div class="depo-form-card"><h3>Detail Penempatan</h3><label for="calcClient">Nama calon deposan</label><input id="calcClient" placeholder="Bapak/Ibu Nasabah"><label for="calcPrincipal">Nominal penempatan</label><input id="calcPrincipal" type="number" min="0" value="1000000000" placeholder="1000000000"><div class="depo-form-grid"><div><label for="calcRate">Suku bunga per tahun</label><select id="calcRate"><option value="4">4,00%</option><option value="4.5">4,50%</option><option value="5" selected>5,00%</option><option value="5.5">5,50%</option><option value="6">6,00%</option></select></div><div><label for="calcTenor">Jangka waktu</label><select id="calcTenor"><option value="1">1 bulan</option><option value="3" selected>3 bulan</option><option value="6">6 bulan</option><option value="12">12 bulan</option></select></div><div><label for="calcTax">Asumsi pajak bunga</label><select id="calcTax"><option value="20" selected>20%</option><option value="10">10%</option><option value="0">0%</option></select></div><div><label for="calcPayout">Pembayaran bunga</label><select id="calcPayout"><option value="Bulanan" selected>Bulanan</option><option value="Jatuh Tempo">Saat jatuh tempo</option></select></div></div><button class="btn full" onclick="calculate()">Hitung Simulasi</button></div><div class="depo-summary-card"><h3>Ringkasan Hasil</h3><div class="result-hero"><div class="hero-kicker" id="summaryHeroKicker">Estimasi bunga bersih • 3 bulan</div><div class="hero-net" id="net">Rp10.000.000</div><div class="hero-month" id="summaryMonthly">Rata-rata Rp3.333.333 per bulan</div></div><ul class="summary-list"><li class="summary-row"><span>Bunga kotor</span><strong id="gross">Rp12.500.000</strong></li><li class="summary-row"><span>Pajak bunga (<span id="summaryTaxRate">20%</span>)</span><strong id="summaryTax">Rp2.500.000</strong></li><li class="summary-row summary-total"><span><b>Pokok + bunga bersih</b><span class="summary-sub" id="summaryAccumulation">Akumulasi selama 3 bulan</span></span><strong class="value" id="summaryTotal">Rp1.010.000.000</strong></li></ul><div class="summary-note"><span class="icon">✓</span><span>Pencairan sebelum jatuh tempo: <strong>Tanpa penalti</strong></span></div><div class="depo-payout-line" id="summaryPayoutText">Pembayaran bunga: Bulanan</div><details class="interest-breakdown" id="interestBreakdown">
+  <summary><span class="interest-toggle-text">Lihat Rincian Bunga</span><span class="interest-chevron" aria-hidden="true"></span></summary>
+  <div class="interest-breakdown-inner">
+    <div class="interest-desc" id="interestPaymentInfo">Estimasi bunga dibayarkan bulanan</div>
+    <div class="interest-table-scroll"><table class="interest-table" aria-label="Rincian pembayaran bunga deposito">
+      <thead><tr><th scope="col">Periode</th><th scope="col">Bunga Kotor</th><th scope="col">Pajak</th><th scope="col">Bunga Bersih</th></tr></thead>
+      <tbody id="interestRows"></tbody>
+      <tfoot><tr><th scope="row">Total</th><td id="interestTotalGross">—</td><td id="interestTotalTax">—</td><td id="interestTotalNet">—</td></tr></tfoot>
+    </table></div>
+    <div class="interest-print-bar"><button type="button" class="interest-print-btn" onclick="printInterestBreakdown()"><span aria-hidden="true">▤</span> Cetak Rincian Bunga (A4)</button></div>
+  </div>
+</details>
+<button class="btn offer-btn-wide" onclick="useCalcInOffer()">Buat Penawaran <span>→</span></button></div></div><div class="depo-caption">Ilustrasi desain • Simulasi penempatan deposito</div></div></section>
+<section id="leads" class="panel"><div class="card"><h2>Database calon deposan</h2><input aria-label="Cari prospek" id="searchLead" placeholder="Cari nama, instansi, PIC..." oninput="renderLeads()"><div class="divider"></div><h3 id="formTitle">Tambah calon deposan</h3><input id="leadId" class="hidden"><label for="leadName">Nama instansi / calon deposan *</label><input id="leadName" placeholder="Nama BPR, perusahaan, atau nasabah"><div class="formgrid"><div><label for="leadPic">Nama PIC</label><input id="leadPic" placeholder="Nama kontak"></div><div><label for="leadPhone">WhatsApp</label><input id="leadPhone" inputmode="tel" placeholder="08xxxxxxxxxx"></div></div><div class="formgrid"><div><label for="leadAmount">Perkiraan dana (Rp)</label><input id="leadAmount" type="number" min="0" placeholder="500000000"></div><div><label for="leadStatus">Status</label><select id="leadStatus"><option>Prospek baru</option><option>Sudah dihubungi</option><option>Negosiasi</option><option>Sudah ditempatkan</option><option>Tidak jadi</option></select></div></div><label for="leadNotes">Catatan tindak lanjut</label><textarea id="leadNotes" rows="2" placeholder="Tanggal follow-up, kebutuhan tenor, hasil diskusi..."></textarea><div class="actions"><button class="btn" onclick="saveLead()">Simpan calon deposan</button><button class="btn secondary" onclick="resetLeadForm()">Bersihkan</button></div></div><div class="card"><h2>Daftar prospek</h2><div id="leadList"></div><div class="actions"><button class="btn secondary" onclick="exportCSV()">Ekspor CSV</button><button class="btn secondary" onclick="importCSVPrompt()">Impor CSV</button></div></div></section>
+<section id="offer" class="panel"><div class="offer-page"><div class="page-heading"><div><div class="eyebrow">DEPOSITO ME</div><h1>Penawaran Deposito</h1><p>Siapkan penawaran personal untuk calon deposan.</p></div></div><div class="offer-hero-strip" aria-hidden="true"><div class="offer-meta-bar"><div class="offer-profile"><div class="offer-avatar"></div><div>Penawaran Premium</div></div></div><div class="mini-tabs"><span>Beranda</span><span>Simulasi</span><span>Calon Deposan</span><span class="active">Penawaran</span></div></div><div class="offer-shell"><div class="offer-card"><h3>Detail Penawaran</h3><div class="offer-form-grid"><div class="full"><label for="offerName">Nama penerima</label><input id="offerName" placeholder="Bapak/Ibu"></div><div class="full"><label for="offerPhone">Nomor WhatsApp (opsional)</label><input id="offerPhone" inputmode="tel" placeholder="08xxxxxxxxxx"></div><div class="offer-field-group full"><label for="offerPrincipal">Nominal deposito</label><span class="prefix">Rp</span><input id="offerPrincipal" class="has-prefix" type="number" min="0" value="1000000000"></div><div class="offer-field-group"><label for="offerRate">Bunga per tahun</label><input id="offerRate" class="has-suffix" type="number" min="0" max="100" step="0.01" value="5"><span class="suffix">%</span></div><div><label for="offerTenor">Jangka waktu</label><select id="offerTenor"><option value="1">1 bulan</option><option value="3" selected>3 bulan</option><option value="6">6 bulan</option><option value="12">12 bulan</option></select></div><div class="offer-field-group"><label for="offerTax">Asumsi pajak</label><input id="offerTax" class="has-suffix" type="number" min="0" max="100" step="1" value="20"><span class="suffix">%</span></div><div><label for="offerPayout">Pembayaran bunga</label><select id="offerPayout"><option value="Bulanan" selected>Bulanan</option><option value="Jatuh Tempo">Saat jatuh tempo</option></select></div><div><label for="offerAO">Nama AO</label><input id="offerAO" placeholder="Nama petugas"></div><div><label for="offerBranch">Cabang</label><select id="offerBranch"><option value="">Pilih cabang</option><option>Area 2</option><option>Makassar</option><option>Palu</option><option>Bulukumba</option><option>Luwuk</option><option>Kendari</option></select></div></div><div class="actions"><button class="btn full" onclick="buildOffer()">Perbarui Penawaran</button></div></div><div class="offer-card offer-right"><div class="offer-toolbar"><h3>Pratinjau Penawaran</h3><button class="btn secondary" type="button" onclick="toggleOfferEditor()">✎ Edit Pesan</button></div><div class="offer-preview-frame"><div id="offerPreview" class="offer-preview-body"></div></div><div class="offer-editor hidden" id="offerEditorWrap"><label for="offerMessage">Editor pesan</label><textarea id="offerMessage" rows="9"></textarea></div><div class="offer-preview-actions"><button class="btn whatsapp" onclick="openWhatsApp()">🟢 Buka WhatsApp</button><button class="btn secondary" onclick="copyOffer()">📋 Salin Pesan</button></div><div class="offer-help">Periksa pesan di WhatsApp sebelum mengirim.</div></div></div></section>
+<section id="closing" class="panel" aria-label="Pelaporan Closing Deposito">
+  <div class="card"><div class="eyebrow">AO FUNDING · PELAPORAN</div><h2>Pelaporan Closing Deposito</h2>
+    <div class="notice" style="margin-bottom:12px">UJI OFFLINE — Gunakan data fiktif. Input AO belum termasuk realisasi. Nominal baru dihitung dalam NOA/penempatan setelah diperiksa dan disetujui Administrator pada Dashboard.</div>
+    <form id="depositoClosingForm">
+      <div class="formgrid"><div><label for="closingName">Nama deposan / instansi</label><input id="closingName" maxlength="90" required placeholder="Nama contoh deposan" autocomplete="off"></div>
+      <div><label for="closingAccount">Nomor rekening deposito</label><input id="closingAccount" maxlength="30" minlength="4" required pattern="[A-Za-z0-9-]{4,30}" placeholder="Rekening uji / nomor referensi" autocomplete="off"></div>
+      <div><label for="closingDate">Tanggal penempatan</label><input id="closingDate" type="date" required></div>
+      <div><label for="closingAmount">Nominal penempatan (Rp)</label><input id="closingAmount" type="number" min="1000" max="1000000000000000" step="1000" required placeholder="Contoh: 100000000"></div>
+      <div><label for="closingTenor">Tenor deposito (bulan)</label><input id="closingTenor" type="number" min="1" max="120" step="1" value="3" required></div>
+      <div><label for="closingRate">Bunga (% per tahun)</label><input id="closingRate" type="number" min="0" max="100" step="0.01" value="5" required></div></div>
+      <label for="closingNotes">Catatan AO (opsional)</label><textarea id="closingNotes" maxlength="300" rows="2" placeholder="Contoh: Dokumen disampaikan untuk verifikasi"></textarea>
+      <div class="actions"><button class="btn" type="submit" id="closingSubmit">Kirim Laporan Closing</button><button class="btn secondary" type="reset">Bersihkan</button></div>
+      <p id="closingFeedback" class="muted" role="status" style="margin-top:12px" aria-live="polite">Setelah dikirim, status awal: Menunggu Verifikasi.</p>
+    </form>
+  </div>
+</section>
+<footer>DEPOSITO ME<br>Simulasi dan pencatatan • Bukan layanan transaksi bank</footer></div>
+<script>
+function validateFields(ids){for(const id of ids){const e=document.getElementById(id);if(!e.checkValidity()||!Number.isFinite(Number(e.value))){e.reportValidity();e.focus();return false}}return true}const KEY='aurelDepositoLeadsV1';let leads=[];try{leads=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){leads=[]}let lastCalc={principal:1000000000,rate:5,tenor:3,gross:12500000,net:10000000};const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function persist(){try{localStorage.setItem(KEY,JSON.stringify(leads))}catch(e){alert('Penyimpanan penuh atau tidak tersedia. Ekspor data sebagai cadangan.')}updateStats();renderLeads()}function showTab(id){document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='leads')renderLeads();location.hash=id;window.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('.nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===id?'page':'false'))}document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));function updateStats(){document.getElementById('statLeads').textContent=leads.length;document.getElementById('statActive').textContent=leads.filter(x=>!['Sudah ditempatkan','Tidak jadi'].includes(x.status)).length;document.getElementById('statFunds').textContent=rupiah(leads.filter(x=>x.status!=='Tidak jadi').reduce((s,x)=>s+(+x.amount||0),0));document.getElementById('statPlaced').textContent=rupiah(leads.filter(x=>x.status==='Sudah ditempatkan').reduce((s,x)=>s+(+x.amount||0),0))}function calculate(){if(!validateFields(['calcPrincipal','calcRate','calcTax']))return null;let principal=Math.max(0,+document.getElementById('calcPrincipal').value||0),rate=Math.max(0,+document.getElementById('calcRate').value||0),tenor=+document.getElementById('calcTenor').value,tax=Math.min(100,Math.max(0,+document.getElementById('calcTax').value||0)),gross=principal*rate/100*tenor/12,net=gross*(1-tax/100),taxAmount=gross-net,total=principal+net,payout=(document.getElementById('calcPayout')?.value||'Bulanan'),avgMonthly=tenor>0?net/tenor:net;lastCalc={principal,rate,tenor,gross,net,tax,taxAmount,total,payout};document.getElementById('gross').textContent=rupiah(gross);document.getElementById('net').textContent=rupiah(net);const kicker=document.getElementById('summaryHeroKicker');if(kicker)kicker.textContent=`Estimasi bunga bersih • ${tenor} bulan`;const monthly=document.getElementById('summaryMonthly');if(monthly)monthly.textContent=`Rata-rata ${rupiah(avgMonthly)} per bulan`;const taxRate=document.getElementById('summaryTaxRate');if(taxRate)taxRate.textContent=`${tax}%`;const taxTarget=document.getElementById('summaryTax');if(taxTarget)taxTarget.textContent=rupiah(taxAmount);const totalTarget=document.getElementById('summaryTotal');if(totalTarget)totalTarget.textContent=rupiah(total);const acc=document.getElementById('summaryAccumulation');if(acc)acc.textContent=`Akumulasi selama ${tenor} bulan`;const payoutText=document.getElementById('summaryPayoutText');if(payoutText)payoutText.textContent=payout==='Bulanan'?'Pembayaran bunga: Bulanan':'Pembayaran bunga: Saat jatuh tempo';window.fitDepositResultText?.();return lastCalc}function useCalcInOffer(){let c=calculate();if(!c)return;document.getElementById('offerPrincipal').value=c.principal;document.getElementById('offerRate').value=c.rate;document.getElementById('offerTenor').value=String(c.tenor);if(document.getElementById('offerTax'))document.getElementById('offerTax').value=c.tax??20;if(document.getElementById('offerPayout'))document.getElementById('offerPayout').value=c.payout||'Bulanan';document.getElementById('offerName').value=document.getElementById('calcClient').value;showTab('offer');buildOffer()}function resetLeadForm(){['leadId','leadName','leadPic','leadPhone','leadAmount','leadNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('leadStatus').value='Prospek baru';document.getElementById('formTitle').textContent='Tambah calon deposan'}function saveLead(){if(!validateFields(['leadAmount']))return;let name=document.getElementById('leadName').value.trim();if(!name){alert('Nama instansi/calon deposan wajib diisi.');return}let id=document.getElementById('leadId').value||String(Date.now());let obj={id,name,pic:document.getElementById('leadPic').value.trim(),phone:document.getElementById('leadPhone').value.trim(),amount:+document.getElementById('leadAmount').value||0,status:document.getElementById('leadStatus').value,notes:document.getElementById('leadNotes').value.trim(),updated:new Date().toISOString()};let i=leads.findIndex(x=>x.id===id);if(i>=0)leads[i]=obj;else leads.unshift(obj);persist();resetLeadForm();alert('Data calon deposan tersimpan di perangkat ini.')}function editLead(id){let x=leads.find(x=>x.id===id);if(!x)return;document.getElementById('leadId').value=x.id;document.getElementById('leadName').value=x.name;document.getElementById('leadPic').value=x.pic;document.getElementById('leadPhone').value=x.phone;document.getElementById('leadAmount').value=x.amount;document.getElementById('leadStatus').value=x.status;document.getElementById('leadNotes').value=x.notes;document.getElementById('formTitle').textContent='Edit calon deposan';window.scrollTo({top:0,behavior:'smooth'})}function deleteLead(id){if(confirm('Hapus data calon deposan ini?')){leads=leads.filter(x=>x.id!==id);persist()}}function renderLeads(){let q=(document.getElementById('searchLead')?.value||'').toLowerCase();let filtered=leads.filter(x=>[x.name,x.pic,x.phone,x.status].join(' ').toLowerCase().includes(q));let el=document.getElementById('leadList');if(!filtered.length){el.innerHTML='<div class="empty">Belum ada data yang cocok. Tambahkan calon deposan melalui formulir di atas.</div>';return}el.innerHTML=filtered.map(x=>`<div class="lead"><div class="leadtop"><div><div class="leadname">${esc(x.name)}</div><div class="leadmeta">PIC: ${esc(x.pic||'-')}<br>WhatsApp: ${esc(x.phone||'-')}<br>Perkiraan dana: <b>${rupiah(x.amount)}</b><br><span class="pill">${esc(x.status)}</span>${x.notes?'<br>Catatan: '+esc(x.notes):''}</div></div></div><div class="actions"><button class="btn secondary" onclick="editLead('${x.id}')">Edit</button><button class="btn secondary" onclick="leadToOffer('${x.id}')">Penawaran WA</button><button class="btn red" onclick="deleteLead('${x.id}')">Hapus</button></div></div>`).join('')}function leadToOffer(id){let x=leads.find(x=>x.id===id);if(!x)return;document.getElementById('offerName').value=x.pic||x.name;document.getElementById('offerPhone').value=x.phone;document.getElementById('offerPrincipal').value=x.amount||1000000000;showTab('offer');buildOffer()}function toggleOfferEditor(){const wrap=document.getElementById('offerEditorWrap');if(!wrap)return;wrap.classList.toggle('hidden')}function syncOfferPreview(){const target=document.getElementById('offerPreview');const msg=document.getElementById('offerMessage')?.value||'';if(!target)return;target.innerHTML=msg?msg.split('\n').map(line=>'<p>'+esc(line)+'</p>').join(''):'<p class="muted">Pratinjau akan muncul di sini.</p>';}function buildOffer(){if(!validateFields(['offerPrincipal','offerRate']))return;let name=document.getElementById('offerName').value.trim()||'Bapak/Ibu',principal=Math.max(0,+document.getElementById('offerPrincipal').value||0),rate=Math.max(0,+document.getElementById('offerRate').value||0),tenor=+document.getElementById('offerTenor').value,tax=Math.min(100,Math.max(0,+document.getElementById('offerTax').value||0)),payout=document.getElementById('offerPayout').value||'Bulanan',ao=document.getElementById('offerAO').value.trim()||'Nama petugas',branch=document.getElementById('offerBranch').value||'Cabang / unit kerja',gross=principal*rate/100*tenor/12,taxAmount=gross*(tax/100),net=gross-taxAmount,total=principal+net,avgMonthly=tenor>0?net/tenor:net;let msg=`Yth. ${name},
+Dengan hormat,
+
+Kami dari  menawarkan Deposito Berjangka sebagai pilihan penempatan dana Bapak/Ibu. Berikut simulasi penempatan beserta estimasi hasil yang dapat diterima:
+
+• Nominal penempatan: ${rupiah(principal)}
+• Suku bunga ilustrasi: ${rate.toFixed(2)}% per tahun
+• Jangka waktu: ${tenor} bulan
+• Estimasi bunga kotor: ${rupiah(gross)}
+• Estimasi pajak bunga (${tax}%): ${rupiah(taxAmount)}
+• Estimasi bunga bersih: ${rupiah(net)}
+• Total pokok dan bunga bersih selama ${tenor} bulan: ${rupiah(total)}
+
+Apabila bunga dibayarkan ${payout==='Bulanan'?'setiap bulan':'saat jatuh tempo'}, estimasi bunga bersih ${payout==='Bulanan'?'rata-rata sebesar '+rupiah(avgMonthly)+' per bulan, sedangkan ':'akan diterima pada akhir tenor bersamaan dengan '}pokok deposito sebesar ${rupiah(principal)}.
+
+Pencairan sebelum jatuh tempo tidak dikenakan penalti, sehingga memberikan fleksibilitas apabila Bapak/Ibu membutuhkan dana lebih awal.
+
+Dengan senang hati, kami siap membantu Bapak/Ibu menentukan penempatan yang sesuai dengan kebutuhan serta mendampingi proses pembukaan deposito.
+
+Terima kasih atas perhatian dan kepercayaan Bapak/Ibu.
+
+Hormat kami,
+${ao}
+${branch}`;document.getElementById('offerMessage').value=msg;const preview=document.getElementById('offerPreview');if(preview){preview.innerHTML=`<div class="offer-preview-title">PENAWARAN DEPOSITO BERJANGKA</div><p>Yth. ${esc(name)},<br>Dengan hormat,</p><p>Kami dari  menawarkan Deposito Berjangka sebagai pilihan penempatan dana Bapak/Ibu. Berikut simulasi penempatan beserta estimasi hasil yang dapat diterima:</p><ul class="offer-bullets"><li>Nominal penempatan: ${esc(rupiah(principal))}</li><li>Suku bunga ilustrasi: ${esc(rate.toFixed(2))}% per tahun</li><li>Jangka waktu: ${esc(String(tenor))} bulan</li><li>Estimasi bunga kotor: ${esc(rupiah(gross))}</li><li>Estimasi pajak bunga (${esc(String(tax))}%): ${esc(rupiah(taxAmount))}</li><li>Estimasi bunga bersih: <b>${esc(rupiah(net))}</b></li></ul><span class="offer-highlight">Total pokok dan bunga bersih selama ${esc(String(tenor))} bulan: ${esc(rupiah(total))}</span><p>Apabila bunga dibayarkan ${payout==='Bulanan'?'setiap bulan, estimasi bunga bersih rata-rata sebesar <b>'+esc(rupiah(avgMonthly))+'</b> per bulan, sedangkan':'saat jatuh tempo, maka bunga bersih akan diterima pada akhir tenor bersamaan dengan'} pokok deposito sebesar ${esc(rupiah(principal))}.</p><p>Pencairan sebelum jatuh tempo tidak dikenakan penalti, sehingga memberikan fleksibilitas apabila Bapak/Ibu membutuhkan dana lebih awal.</p><p>Dengan senang hati, kami siap membantu Bapak/Ibu menentukan penempatan yang sesuai dengan kebutuhan serta mendampingi proses pembukaan deposito.</p><p>Terima kasih atas perhatian dan kepercayaan Bapak/Ibu.</p><p>Hormat kami,<br>${esc(ao)}<br>${esc(branch)}</p>`;}return msg}function openWhatsApp(){if(!document.getElementById('offerMessage').value.trim())buildOffer();let phone=document.getElementById('offerPhone').value.replace(/\D/g,'');if(phone.startsWith('0'))phone='62'+phone.slice(1);let url='https://wa.me/'+(phone?phone:'')+'?text='+encodeURIComponent(document.getElementById('offerMessage').value);window.open(url,'_blank','noopener')}async function copyOffer(){if(!document.getElementById('offerMessage').value.trim())buildOffer();try{await navigator.clipboard.writeText(document.getElementById('offerMessage').value);alert('Pesan berhasil disalin.')}catch(e){document.getElementById('offerMessage').select();alert('Pilih dan salin teks penawaran secara manual.')}}function exportCSV(){let rows=[['Nama','PIC','WhatsApp','Perkiraan Dana','Status','Catatan','Terakhir Diperbarui'],...leads.map(x=>[x.name,x.pic,x.phone,x.amount,x.status,x.notes,x.updated])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}));a.download='database_calon_deposan.csv';a.click();URL.revokeObjectURL(a.href)}function importCSVPrompt(){let input=document.createElement('input');input.type='file';input.accept='.csv,text/csv';input.onchange=()=>{let file=input.files[0];if(!file)return;let reader=new FileReader();reader.onload=()=>{let lines=String(reader.result).replace(/^\ufeff/,'').split(/\r?\n/).filter(Boolean);if(lines.length<2){alert('File CSV kosong atau format tidak sesuai.');return}let parse=line=>{let out=[],cur='',inside=false;for(let i=0;i<line.length;i++){let c=line[i];if(c==='"'&&line[i+1]==='"'&&inside){cur+='"';i++}else if(c==='"')inside=!inside;else if(c===','&&!inside){out.push(cur);cur=''}else cur+=c}out.push(cur);return out};let data=lines.slice(1).map(line=>parse(line)).filter(r=>r[0]).map(r=>({id:String(Date.now())+Math.random(),name:r[0]||'',pic:r[1]||'',phone:r[2]||'',amount:+r[3]||0,status:r[4]||'Prospek baru',notes:r[5]||'',updated:new Date().toISOString()}));leads=[...data,...leads];persist();alert(data.length+' data berhasil diimpor.')} ;reader.readAsText(file)};input.click()}document.getElementById('offerMessage').value='';calculate();updateStats();renderLeads();buildOffer();
+</script><div id="toast" role="status" aria-live="polite"></div><dialog id="installDialog"><button class="dialog-close btn secondary" onclick="document.getElementById('installDialog').close()" aria-label="Tutup">×</button><div class="eyebrow">DEPOSITO ME DI PERANGKAT ANDA</div><h2>Akses lebih cepat,<br>langsung dari layar utama.</h2><p><b>Android:</b> buka melalui Chrome, pilih menu ⋮ → Tambahkan ke layar utama / Instal aplikasi.</p><p><b>iPhone & iPad:</b> buka melalui Safari, ketuk Bagikan → Tambahkan ke Layar Utama.</p><p class="muted">Pemasangan membutuhkan alamat HTTPS. Data tersimpan pada browser ini; ekspor CSV untuk membuat cadangan atau pindah perangkat.</p></dialog><script id="depositoInterestTableA4_2026">
+(() => {
+ 'use strict';
+ const get = id => document.getElementById(id);
+ // In rupiah: distribute whole-rupiah rounding so table totals match the simulation headline.
+ function divideRupiah(amount, count, first) {
+   const base = Math.floor(amount/count), extra = amount-base*count;
+   return Array.from({length:count}, (_,i)=>base + (first ? (i<extra?1:0) : (i>=count-extra?1:0)));
+ }
+ function rowsFor(c) {
+   if(!c || !Number.isFinite(c.gross) || !Number.isFinite(c.net) || !Number.isInteger(c.tenor) || c.tenor<1) return [];
+   const gross = Math.round(c.gross), net = Math.round(c.net), tax = gross-net;
+   if(c.payout !== 'Bulanan') return [{label:`Jatuh tempo (${c.tenor} bulan)`,gross,tax,net}];
+   const grosses=divideRupiah(gross,c.tenor,true);
+   const taxes=divideRupiah(tax,c.tenor,false);
+   return grosses.map((value,i)=>({label:`Bulan ${i+1}`,gross:value,tax:taxes[i],net:value-taxes[i]}));
+ }
+ const number = amount => 'Rp'+Math.round(amount).toLocaleString('id-ID');
+ function fillRows(tbody,rows) {
+   tbody.replaceChildren();
+   for(const item of rows) {
+     const tr=document.createElement('tr');
+     for(const value of [item.label,number(item.gross),number(item.tax),number(item.net)]) {
+       const td=document.createElement('td');td.textContent=value;tr.appendChild(td);
+     }
+     tbody.appendChild(tr);
+   }
+ }
+ function refresh() {
+   if(!lastCalc) return;
+   const c=lastCalc,rows=rowsFor(c);
+   if(!rows.length) return;
+   const total=rows.reduce((acc,r)=>({gross:acc.gross+r.gross,tax:acc.tax+r.tax,net:acc.net+r.net}),{gross:0,tax:0,net:0});
+   fillRows(get('interestRows'),rows);
+   get('interestTotalGross').textContent=number(total.gross);
+   get('interestTotalTax').textContent=number(total.tax);
+   get('interestTotalNet').textContent=number(total.net);
+   get('interestPaymentInfo').textContent=c.payout==='Bulanan'
+     ? `Perkiraan penerimaan bunga untuk ${c.tenor} bulan (bulanan)`
+     : `Perkiraan akumulasi bunga dibayarkan sekali pada akhir tenor ${c.tenor} bulan`;
+   return {rows,total};
+ }
+ window.printInterestBreakdown=function(){
+   if(!calculate()) return;
+   const info=refresh();if(!info)return;
+   const c=lastCalc;
+   const put=(id,value)=>{get(id).textContent=value};
+   const now=new Date();
+   put('printDate',now.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}));
+   put('printDepositorName',get('calcClient').value.trim()||'—');
+   put('printDepositPrincipal',number(c.principal));
+   put('printDepositRate',c.rate.toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2})+'% per tahun');
+   put('printDepositTenor',c.tenor+' bulan');
+   put('printDepositTax',c.tax+'%');
+   put('printDepositPayout',c.payout);
+   fillRows(get('printInterestRows'),info.rows);
+   put('printGross',number(info.total.gross));put('printTax',number(info.total.tax));put('printNet',number(info.total.net));
+   window.print();
+ };
+ // Refresh on the same action used by the original calculator.
+ const oldCalculate=window.calculate;
+ window.calculate=function(...args){const value=oldCalculate.apply(this,args);if(value)refresh();return value;};
+ for(const id of ['calcRate','calcTenor','calcTax','calcPayout'])get(id).addEventListener('change',()=>window.calculate());
+ for(const id of ['calcPrincipal'])get(id).addEventListener('change',()=>window.calculate());
+ refresh();
+})();
+</script>
+<script id="depositoEnhance">document.getElementById('today').textContent=new Intl.DateTimeFormat('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+let installPrompt;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e});
+async function installApp(){if(installPrompt){await installPrompt.prompt();installPrompt=null}else document.getElementById('installDialog').showModal()}
+
+const initialTab=location.hash.slice(1);if(['home','calc','leads','offer','closing'].includes(initialTab))showTab(initialTab);
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(['home','calc','leads','offer','closing'].includes(id)&&!document.getElementById(id).classList.contains('active'))showTab(id)});
+// Import CSV as records, preserving quoted multiline notes.
+function parseCSV(text){const rows=[];let row=[],cell='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(cell);cell=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cell);if(row.some(Boolean))rows.push(row);row=[];cell=''}else cell+=c}if(quoted)throw Error('Tanda kutip CSV tidak lengkap.');row.push(cell);if(row.some(Boolean))rows.push(row);return rows}
+function importCSVPrompt(){const input=document.createElement('input');input.type='file';input.accept='.csv,text/csv';input.onchange=async()=>{try{const file=input.files[0];if(!file)return;if(file.size>5000000)throw Error('Ukuran maksimum CSV adalah 5 MB.');const rows=parseCSV((await file.text()).replace(/^\ufeff/,''));if(rows.length<2||rows[0][0]!=='Nama'||rows[0][3]!=='Perkiraan Dana')throw Error('Gunakan format CSV dari tombol Ekspor CSV.');const statuses=['Prospek baru','Sudah dihubungi','Negosiasi','Sudah ditempatkan','Tidak jadi'];const records=rows.slice(1).map((r,i)=>{if(r.length!==7||!r[0].trim()||!Number.isFinite(Number(r[3]))||Number(r[3])<0||!statuses.includes(r[4]))throw Error('Data tidak valid pada baris '+(i+2));return {id:crypto.randomUUID(),name:r[0],pic:r[1],phone:r[2],amount:Number(r[3]),status:r[4],notes:r[5],updated:new Date().toISOString()}});leads=[...records,...leads];persist();alert(records.length+' prospek berhasil diimpor.')}catch(e){alert(e.message)}};input.click()}
+function exportCSV(){const safe=v=>{let s=String(v??'');return /^[=+@\-\t\r]/.test(s)?"'"+s:s};const rows=[['Nama','PIC','WhatsApp','Perkiraan Dana','Status','Catatan','Terakhir Diperbarui'],...leads.map(x=>[x.name,x.pic,x.phone,x.amount,x.status,x.notes,x.updated])];const csv=rows.map(r=>r.map(v=>'"'+safe(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='DEPOSITO_ME_Prospek_'+[new Date().getFullYear(),String(new Date().getMonth()+1).padStart(2,'0'),String(new Date().getDate()).padStart(2,'0')].join('')+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+</script><script id="depositoFundingActivityBridge2026">
+/* DEPOSITO ME -> aplikasi induk. Catatan hanya aktivitas/nominal indikatif,
+   data prospek lengkap tetap berada di perangkat pengguna. */
+(() => {
+  'use strict';
+  const ALLOWED = new Set(['deposito_simulate','deposito_lead_save','deposito_lead_placed',
+    'deposito_lead_lost','deposito_lead_delete','deposito_offer','deposito_export']);
+  function notify(action, amount=0, reference='') {
+    if(window.parent === window || !ALLOWED.has(action)) return;
+    const n=Number(amount);
+    const value=Number.isFinite(n)&&n>=0?Math.round(n):0;
+    const origin=location.protocol==='file:' || location.origin==='null' ? '*' : location.origin;
+    window.parent.postMessage({channel:'SIM_DEPOSITO_ACTIVITY',action,amount:value,
+      reference:String(reference||'').slice(0,55)},origin);
+  }
+  // Hitung hanya ketika tombol simulasi ditekan, bukan pada inisialisasi halaman.
+  document.addEventListener('click', event => {
+    const btn=event.target.closest('button[onclick]');
+    if(!btn || btn.getAttribute('onclick')?.trim()!=='calculate()')return;
+    if(document.getElementById('calcPrincipal').checkValidity() &&
+       document.getElementById('calcRate').checkValidity() &&
+       document.getElementById('calcTax').checkValidity()) {
+      notify('deposito_simulate',lastCalc?.principal||0);
+    }
+  });
+  const originalSave=window.saveLead;
+  window.saveLead=function(...args){
+    const inputId=document.getElementById('leadId').value;
+    const name=document.getElementById('leadName').value.trim();
+    const oldLength=leads.length;
+    const beforeId=inputId ? leads.find(x=>x.id===inputId) : null;
+    const out=originalSave.apply(this,args);
+    const saved=inputId ? leads.find(x=>x.id===inputId) : leads[0];
+    // Jangan catat jika formulir tidak valid / penyimpanan tidak berlangsung.
+    const success=!!saved && saved.name===name && (inputId ? !!beforeId : leads.length>oldLength);
+    if(success){
+      const action=saved.status==='Sudah ditempatkan'?'deposito_lead_placed':
+        saved.status==='Tidak jadi'?'deposito_lead_lost':'deposito_lead_save';
+      notify(action,saved.amount,'DEP-'+saved.id);
+    }
+    return out;
+  };
+  const originalDelete=window.deleteLead;
+  window.deleteLead=function(id,...args){
+    const previous=leads.find(x=>x.id===id);
+    const result=originalDelete.apply(this,[id,...args]);
+    if(previous && !leads.some(x=>x.id===id))notify('deposito_lead_delete',0,'DEP-'+id);
+    return result;
+  };
+  const originalOffer=window.openWhatsApp;
+  window.openWhatsApp=function(...args){
+    const amount=Number(document.getElementById('offerPrincipal').value)||0;
+    const result=originalOffer.apply(this,args);
+    // Permintaan membuka WA bukan bukti pesan terkirim.
+    notify('deposito_offer',amount);
+    return result;
+  };
+  const originalExport=window.exportCSV;
+  window.exportCSV=function(...args){
+    const result=originalExport.apply(this,args);
+    notify('deposito_export');
+    return result;
+  };
+})();
+</script>
+<script id="depositoClosingOffline2026">
+(() => {
+  const form=document.getElementById('depositoClosingForm'),feedback=document.getElementById('closingFeedback');
+  document.getElementById('closingDate').value=new Date().toLocaleDateString('en-CA');
+  function send(data){
+    if(window.parent===window){feedback.textContent='Buka DEPOSITO ME dari aplikasi utama untuk pelaporan closing.';return;}
+    const dest=location.protocol==='file:'?'*':location.origin;
+    window.parent.postMessage({channel:'SIM_DEPOSITO_CLOSING',...data},dest);
+  }
+  form.addEventListener('submit',e=>{
+    e.preventDefault();if(!form.reportValidity())return;
+    const payload={name:document.getElementById('closingName').value.trim(),
+      account:document.getElementById('closingAccount').value.trim(),date:document.getElementById('closingDate').value,
+      amount:Number(document.getElementById('closingAmount').value),tenor:Number(document.getElementById('closingTenor').value),
+      rate:Number(document.getElementById('closingRate').value),notes:document.getElementById('closingNotes').value.trim()};
+    feedback.textContent='Mengirim laporan ke Dashboard Admin lokal…';send({op:'submit',payload});
+  });
+  window.addEventListener('message',e=>{
+    if(e.source!==window.parent || e.data?.channel!=='SIM_DEPOSITO_CLOSING_RESULT')return;
+    feedback.textContent=e.data.message||'Laporan diproses.';
+    feedback.style.color=e.data.ok?'#18794e':'#a33a22';
+    if(e.data.ok){form.reset();document.getElementById('closingDate').value=new Date().toLocaleDateString('en-CA');}
+  });
+})();
+</script>
+<script id="depoResponsiveAmountFit2026">
+/* Prevent very large nominal amounts from clipping while preserving the font hierarchy. */
+(() => {
+ function fit() {
+   for(const id of ['net','summaryTotal']) {
+     const el=document.getElementById(id);
+     if(!el || !el.getBoundingClientRect().width) continue;
+     el.style.fontSize='';
+     const range=document.createRange();range.selectNodeContents(el);
+     const max=el.clientWidth-1;
+     let size=parseFloat(getComputedStyle(el).fontSize);
+     while(range.getBoundingClientRect().width>max && size>16) {
+       size=Math.max(16,size-1);
+       el.style.fontSize=size+'px';
+     }
+   }
+ }
+ window.fitDepositResultText=fit;
+ window.addEventListener('resize',fit);
+ window.addEventListener('load',fit);
+ document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>requestAnimationFrame(fit)));
+ requestAnimationFrame(fit);
+})();
+</script>
+<section id="depositInterestPrint" aria-label="Cetak rincian bunga deposito">
+ <div class="print-depo-top"><div><div class="print-depo-brand">DEPOSITO ME · </div><h1 class="print-depo-title">RINCIAN SIMULASI BUNGA DEPOSITO</h1><p class="print-depo-sub">Estimasi perhitungan bunga deposito</p></div><div class="print-depo-ref" id="printDate">—</div></div>
+ <div class="print-depo-detail">
+  <div><small>Nama Calon Deposan</small><strong id="printDepositorName">—</strong></div><div><small>Nominal Penempatan</small><strong id="printDepositPrincipal">—</strong></div>
+  <div><small>Suku Bunga Per Tahun</small><strong id="printDepositRate">—</strong></div><div><small>Tenor</small><strong id="printDepositTenor">—</strong></div>
+  <div><small>Pajak Bunga</small><strong id="printDepositTax">—</strong></div><div><small>Pembayaran Bunga</small><strong id="printDepositPayout">—</strong></div>
+ </div>
+ <table class="print-depo-tbl"><thead><tr><th>Periode</th><th>Bunga Kotor</th><th>Pajak</th><th>Bunga Bersih</th></tr></thead><tbody id="printInterestRows"></tbody>
+ <tfoot><tr><th>Total</th><td id="printGross">—</td><td id="printTax">—</td><td id="printNet">—</td></tr></tfoot></table>
+ <p class="print-depo-foot">Perhitungan indikatif berdasarkan bunga sederhana dengan tenor/12. Nominal aktual dapat berbeda sesuai dasar hari, pembulatan, ketentuan pajak dan produk bank. Pencairan sebelum jatuh tempo tanpa penalti mengikuti ketentuan produk yang berlaku; perlakuan bunga dapat berbeda.</p>
+</section>
+</body></html>

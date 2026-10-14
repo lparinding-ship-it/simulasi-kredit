@@ -430,6 +430,8 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
 (() => {
   'use strict';
   const embedded = window.parent !== window;
+  const parentTargetOrigin=window.location.protocol==='file:'?'*':window.location.origin;
+  const expectedParentOrigin=window.location.protocol==='file:'?'null':window.location.origin;
   const initial = {
     creditProduct:'method2', debtor:'SIMULASI CONTOH', reference:'SIM-3G-20261012-001',birth:'1970-01-01',retirementAge:58,
     retirementDate:'2028-01-01',autoRetirement:true,salary:7000000,pensionSalary:4500000,
@@ -625,7 +627,7 @@ function setupAutoPlafonPanel(){
       $('plusAjkNote').textContent=m.ajkQuote.label;
       $('plusAjkNote').style.color=m.ajkQuote.available?'#52788b':'#b72c41';
     }
-    if(m.errors.length){if(embedded)window.parent.postMessage({channel:'SIM_PLUS',event:'invalid'},window.location.origin);$('notices').innerHTML=m.errors.map(t=>`<div class="notice bad"><span class="symbol">!</span><span>${safe(t)}</span></div>`).join('');return;}
+    if(m.errors.length){if(embedded)window.parent.postMessage({channel:'SIM_PLUS',event:'invalid'},parentTargetOrigin);$('notices').innerHTML=m.errors.map(t=>`<div class="notice bad"><span class="symbol">!</span><span>${safe(t)}</span></div>`).join('');return;}
     $('retirementDate').disabled=!!state.autoRetirement;
     $('principal').disabled=state.loanMode==='maximum';
     $('activeReference').disabled=state.paymentMode!=='reference';
@@ -685,7 +687,7 @@ function setupAutoPlafonPanel(){
         rows:m.rows.map(r=>({month:r.month,date:toIso(r.date),phase:r.phase,
           beginning:r.beginning,interest:r.interest,principalPaid:r.principalPaid,
           payment:r.payment,ending:r.ending,remark:r.remark}))
-      }},window.location.origin);
+      }},parentTargetOrigin);
     }
   }
   function renderSchedule(m){
@@ -796,7 +798,7 @@ function setupAutoPlafonPanel(){
     if(!current||current.errors.length){alert('Perbaiki data simulasi terlebih dahulu.');return;}
     if(embedded){
       if(!current.good || current.balance>1){alert('Cetak dinonaktifkan: hasil simulasi perlu review, coverage/angsuran atau baki debet belum memenuhi validasi.');return;}
-      window.parent.postMessage({channel:'SIM_PLUS',event:'print',mode:mode==='card'?'card':'summary'},window.location.origin);
+      window.parent.postMessage({channel:'SIM_PLUS',event:'print',mode:mode==='card'?'card':'summary'},parentTargetOrigin);
       return;
     }
     printMode=mode;
@@ -807,7 +809,7 @@ function setupAutoPlafonPanel(){
   $('printBtn').addEventListener('click',()=>requestPrint('simulation'));
   $('printPlusSchedule').addEventListener('click',()=>{
     if(embedded){
-      if(current && current.good && current.balance<=1){window.parent.postMessage({channel:'SIM_PLUS',event:'print',mode:'schedule'},window.location.origin);}
+      if(current && current.good && current.balance<=1){window.parent.postMessage({channel:'SIM_PLUS',event:'print',mode:'schedule'},parentTargetOrigin);}
       else alert('Cetak ditolak: validasi coverage dan pelunasan akhir belum terpenuhi.');
     } else {
       showTab('jadwal'); document.querySelector('#view-jadwal').scrollIntoView({behavior:'smooth'});
@@ -847,7 +849,7 @@ function setupAutoPlafonPanel(){
     if(wanted==='method1'||wanted==='method2')state.creditProduct=wanted;
     state.reference = newReference(productCode(state));
     window.addEventListener('message', event=>{
-      if(event.origin!==location.origin || event.source!==window.parent || event.data?.channel!=='SIM_PLUS_PARENT')return;
+      if(event.origin!==expectedParentOrigin || event.source!==window.parent || event.data?.channel!=='SIM_PLUS_PARENT')return;
       const command=event.data;
       if(command.event==='set-method'&&['method1','method2'].includes(command.method)){
         if(state.creditProduct!==command.method){state.creditProduct=command.method;state.reference=newReference(productCode(state));applyInputs();render();}
