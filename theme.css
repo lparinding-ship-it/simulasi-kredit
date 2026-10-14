@@ -1,0 +1,568 @@
+/* Light / Dark Theme — SIM Kredit + Deposito — presentation only. */
+:root{color-scheme:light}
+html[data-app-theme="dark"]{color-scheme:dark;--app-bg:#0d1729;--app-surface:#18283d;--app-surface-2:#21354d;--app-ink:#eaf2ff;--app-sub:#bacbe0;--app-border:#364b65;--app-gold:#ddba70;
+ --ink:#eaf2ff;--muted:#b5c6db;--edge:#364b65;--line:#364b65;--bg:#0d1729;--soft:#1a2e48;--white:#18283d;--shadow:0 15px 36px rgba(0,0,0,.24);}
+.app-theme-switch{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:38px;padding:8px 13px;border:1px solid #c9d9ed;background:linear-gradient(145deg,#fff,#eef5ff);border-radius:999px;color:#163a68;font:700 12px/1.2 system-ui,"Segoe UI",sans-serif;white-space:nowrap;cursor:pointer;box-shadow:0 5px 14px rgba(24,65,110,.1);transition:transform .15s,background .2s,border-color .2s}
+.app-theme-switch:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(24,65,110,.16)}
+.app-theme-switch:focus-visible{outline:3px solid #5ea7fc;outline-offset:2px}
+.app-theme-switch .app-theme-icon{font-size:16px;line-height:1}
+html[data-app-theme="dark"] .app-theme-switch{background:linear-gradient(145deg,#273d5b,#192d48);border-color:#506f94;color:#f4deb3;box-shadow:0 7px 20px #0004}
+#monitorAccess .app-theme-switch{position:absolute;top:16px;right:16px}
+header .app-theme-switch{margin-left:auto}
+#monitorAdmin .monitor-admin-actions .app-theme-switch{margin:0}
+header .header-right .app-theme-switch{margin:0}
+.top-actions .app-theme-switch{margin:0}
+html[data-app-theme="dark"] body{background:#0d1729!important;color:#eaf2ff!important}
+@media screen{
+/* Generic surfaces across main, embedded, dashboard, and funding modules */
+html[data-app-theme="dark"] :is(.card,.panel,.section-card,.form-card,.result-card,.metric,.stat,.kpi,.field,.result,.notice,.stage,.schedule,.table-wrap,.repayment-card,.sheet,.form-section,.ux-stat,.bp-stat,.bp-tab,.tht-box,.tht-metric,.salary-fact,.input-group,.insurance-box,.computed-row,.facility-cell,.business-cost-entry){background-color:#18283d!important;color:#eaf2ff;border-color:#364b65!important}
+html[data-app-theme="dark"] :is(.card,.panel,.stage,.result-card,.metric,.stat,.kpi,.tht-box,.bp-stat){box-shadow:0 12px 28px #0003}
+html[data-app-theme="dark"] :is(input,select,textarea,.field,input[type="date"],.outline){background:#1b2d43!important;color:#f3f7ff!important;border-color:#51647c!important}
+html[data-app-theme="dark"] :is(input,textarea)::placeholder{color:#a7b7cc!important;opacity:1}
+html[data-app-theme="dark"] :is(input,select,textarea):disabled{background:#24374e!important;color:#bac8d8!important}
+html[data-app-theme="dark"] select option{background:#192a40;color:#f0f5ff}
+html[data-app-theme="dark"] :is(h1,h2,h3,h4,h5,h6,label,.section-title,.stat strong,.kpi strong,.metric strong,.brand,.intro,.intro h1,.page-heading h1,.depo-sim-heading h2){color:#edf5ff!important}
+html[data-app-theme="dark"] :is(p,.muted,.hint,.help,.caption,small,.section-subtitle,.monitor-muted,.bp-intro p,.ux-desc,.depo-caption){color:#b8c7d9}
+html[data-app-theme="dark"] :is(table,th,td,.statline,.detail-row,.summary-row,.result-line){color:#e3edff;border-color:#354c65!important}
+html[data-app-theme="dark"] :is(thead,thead th,.table-header,.table-heading){background:#243b55!important;color:#ecf4ff!important}
+html[data-app-theme="dark"] :is(.btn.secondary,.btn-soft,.outline,.monitor-small-btn,.um-btn){background:#243b54!important;color:#e6f1ff!important;border-color:#466482!important}
+html[data-app-theme="dark"] :is(.nav button,.tab,.bp-tab,.pill,.chip){color:#dceaff;border-color:#3a536c}
+html[data-app-theme="dark"] a:not(.btn):not(.top-print-button):not(.wordmark){color:#8bc9ff}
+/* Primary loan and all six products */
+html[data-app-theme="dark"] body>header{background:#14283f!important;border-bottom-color:#415874!important;color:#eaf2ff}
+html[data-app-theme="dark"] header .brand-light{color:#b6c9d9!important}
+html[data-app-theme="dark"] :is(main,.intro,.layout,.monitor-app-inner,.ux-workspace,#coreMain,#thtMain,#depositoMain,#plusMain){color:#edf5ff}
+html[data-app-theme="dark"] :is(#globalProductNav,#bankPremiumHub,.gpn-inner,.gpn-bar,.ux-workspace,.bp-intro,.bp-tabs,.tht-field,.tht-detail,.ux-stat,.bp-stat,.bp-tab,.input-field-block,.capacity-input-item){border-color:#364b65;color:#d9e8fb}
+html[data-app-theme="dark"] #globalProductNav{background:#13263e!important;border-color:#354963!important}
+html[data-app-theme="dark"] #globalProductSelect{background:#1d324d!important;color:#f3f8ff!important;border-color:#49617c!important}
+html[data-app-theme="dark"] :is(.gpn-caption b,.gpn-caption span,#globalProductNav label,.bp-intro h2,.bp-kicker,.ux-step,.ux-stat-label,.input-group-title,.section-kicker){color:#c0dcf8!important}
+html[data-app-theme="dark"] :is(#bankPremiumHub .bp-tab,#bankPremiumHub .bp-stat,.bp-tab,.bp-stat,.bp-stat-text,.bp-stat-value,.bp-stat-label){background:#1a3049!important;color:#edf5ff!important;border-color:#354d69!important}
+html[data-app-theme="dark"] :is(#bankPremiumHub,#coreMain,.plus-shell,.plus-identity,.ux-panel,.tht-field,.tht-note,.facility-row,.insurance-box){background-color:#172a42!important;color:#eaf2ff!important;border-color:#3a526c!important}
+html[data-app-theme="dark"] :is(.salary-highlight-main,.automatic-pill,.method,.input-group,.computed-row,.summary-card,.credit-result){background-color:#203652!important;color:#e7f1ff!important;border-color:#3d5b7c!important}
+/* Login and admin */
+html[data-app-theme="dark"] #monitorAccess{background:radial-gradient(circle at 13% 10%,#193859,#0b1628 66%)!important;color:#f0f6ff!important}
+html[data-app-theme="dark"] #monitorAccess .monitor-login-card{background:#172a42!important;color:#eaf4ff!important;border-color:#395572!important;box-shadow:0 25px 60px #0005}
+html[data-app-theme="dark"] #monitorAccess :is(h1,p,label,.monitor-muted){color:#dcecff!important}
+html[data-app-theme="dark"] #monitorAdmin{background:#0d192b!important;color:#e9f1ff!important}
+html[data-app-theme="dark"] #monitorAdmin :is(.monitor-admin-title h1,.pro-chart-card-head h3){color:#eaf3ff!important}
+html[data-app-theme="dark"] #monitorAdmin :is(.monitor-kpi,.monitor-table-wrap,.pro-chart-card,.monitor-recap-card,.monitor-archive-audit,.monitor-recaps,.monitor-chart-card,.monitor-admin-card,.monitor-insight-card){background:#182c44!important;color:#e7f3ff!important;border-color:#3c5470!important;box-shadow:0 12px 30px #0003}
+html[data-app-theme="dark"] #monitorAdmin :is(.monitor-kpi span,.monitor-kpi strong,.monitor-muted,.monitor-table th,.monitor-table td,.monitor-recap-table th,.monitor-recap-table td,.pro-chart-card-head span){color:#d7e7fa!important;border-color:#354d69!important}
+html[data-app-theme="dark"] #monitorAdmin :is(.monitor-table th,.monitor-recap-table th,.monitor-audit-table th){background:#27425f!important;color:#ecf4ff!important}
+html[data-app-theme="dark"] #monitorAdmin :is(.monitor-table tr:hover td,.monitor-recap-table tr:hover td){background:#243d5a!important}
+html[data-app-theme="dark"] #adminUserManagement{background:#182d45!important;color:#e8f4ff!important;border-color:#3d5974!important;box-shadow:0 16px 38px #0004}
+html[data-app-theme="dark"] #adminUserManagement :is(h2,p,label,.um-head,.um-field,.um-table,.um-table th,.um-table td){color:#e6f1ff!important;border-color:#3a536d!important}
+html[data-app-theme="dark"] #adminUserManagement :is(#umModeHint,.um-head,.um-list,.um-toolbar){background:#1e344f!important;border-color:#3e5b77!important;color:#dceeff!important}
+html[data-app-theme="dark"] #adminUserManagement :is(.um-table th,.um-table thead){background:#28445f!important;color:#f0f5ff!important}
+html[data-app-theme="dark"] #adminUserManagement :is(.um-field input,.um-field select,#umSearch){background:#1a3049!important;color:#edf5ff!important;border-color:#4e6883!important}
+html[data-app-theme="dark"] #monitorDeleteDialog{background:#192d46!important;color:#edf5ff!important;border:1px solid #56718f}
+html[data-app-theme="dark"] #monitorDeleteDialog :is(label,h2,h3,p){color:#eaf4ff!important}
+/* Deposito modules: cards, blue and gold highlights remain distinct */
+html[data-app-theme="dark"] #calc :is(.depo-form-card,.depo-summary-card),html[data-app-theme="dark"] #offer :is(.offer-card,.offer-preview-frame){background:linear-gradient(165deg,#1b3049,#16283d)!important;color:#eef5ff!important;border-color:#3c5978!important;box-shadow:0 15px 36px #0003!important}
+html[data-app-theme="dark"] #calc :is(.depo-form-card h3,.depo-summary-card h3),html[data-app-theme="dark"] #offer :is(.offer-toolbar h3,.offer-card h3,.offer-preview-title){color:#f0f6ff!important}
+html[data-app-theme="dark"] #calc :is(.summary-row,.summary-row strong),html[data-app-theme="dark"] #offer :is(.offer-preview-body,.offer-preview-body p,.offer-bullets,.offer-bullets li){color:#e3edff!important}
+html[data-app-theme="dark"] #calc .summary-total{background:linear-gradient(135deg,#153e3d,#1e5149)!important;border-color:#3d7764!important}
+html[data-app-theme="dark"] #calc .summary-total :is(b,strong,.value){color:#9df0be!important}
+html[data-app-theme="dark"] #calc :is(.summary-note,.interest-breakdown,.interest-breakdown-inner,.interest-table-scroll),html[data-app-theme="dark"] #offer .offer-editor{background:#1b314c!important;border-color:#425b78!important;color:#e9f2ff!important}
+html[data-app-theme="dark"] #calc :is(.interest-table th,.interest-table td){background:#1b3047!important;color:#e7efff!important;border-color:#3d526a!important}
+html[data-app-theme="dark"] #offer .offer-highlight{background:#184a56!important;color:#c9fcff!important;border-left-color:#50c0c3}
+html[data-app-theme="dark"] #offer .offer-preview-frame:before{opacity:.5}
+html[data-app-theme="dark"] .offer-hero-strip{box-shadow:0 24px 40px #0004!important}
+html[data-app-theme="dark"] .offer-preview-actions .btn.secondary{background:#203b55!important;color:#eaf3ff!important}
+html[data-app-theme="dark"] :is(.page-heading h1,.depo-sim-heading h2){color:#f1f7ff!important}
+html[data-app-theme="dark"] #home :is(.stat,.card),html[data-app-theme="dark"] #leads :is(.card,.stat),html[data-app-theme="dark"] #closing :is(.card,.stat){background:#1b304a!important;color:#e9f1ff!important;border-color:#3e5b77!important}
+/* Pegawai Plus embedded cards, result table and controls */
+html[data-app-theme="dark"] .topbar{background:linear-gradient(120deg,#0b1b30,#203b57)!important}
+html[data-app-theme="dark"] .page :is(.panel,.kpi,.stage,.repayment-card,.result-section,.table-wrap,.card-screen,.chart-panel,.ratio-area){background:#192c43!important;border-color:#3e556f!important;color:#eaf2ff!important}
+html[data-app-theme="dark"] .page :is(.kpi-number,.statline b,.result-section strong,.panel-heading h3,.panel-heading h2,.tab,.table-wrap th,.table-wrap td){color:#edf5ff!important;border-color:#3c536c!important}
+html[data-app-theme="dark"] .page :is(.tab,.notice,.hint,.formula,.pill,.chip){background:#1c3550!important;color:#dcecff!important;border-color:#4c627d!important}
+html[data-app-theme="dark"] .page :is(.table-wrap th,.schedule th){background:#26415e!important;color:#f1f6ff!important}
+html[data-app-theme="dark"] .page :is(.table-wrap td,.schedule td){background:#1a2f48!important;color:#e4effe!important}
+}
+@media(max-width:650px){.app-theme-switch{padding:8px 10px;min-height:36px;font-size:11px}header .app-theme-switch{margin-left:0}#monitorAccess .app-theme-switch{top:8px;right:8px}}
+@media print{
+ html,html[data-app-theme="dark"]{color-scheme:light!important}
+ html[data-app-theme="dark"] body{background:#fff!important;color:#172d35!important}
+ .app-theme-switch{display:none!important}
+ html[data-app-theme="dark"] :is(.print-section,#schedulePrint,#summaryPrint,.a4-sheet,.print-page,table,.paper,.sheet){background:#fff!important;color:#162f4f!important}
+ html[data-app-theme="dark"] :is(.print-section,#schedulePrint,#summaryPrint,.a4-sheet,.print-page,.paper,.sheet) *{color:revert-layer!important}
+}
+
+
+@media screen{
+html[data-app-theme="dark"] .depo-brand-text{color:#eaf4ff!important}
+html[data-app-theme="dark"] .wordmark{color:#eaf4ff!important}
+html[data-app-theme="dark"] .nav{background:transparent!important}
+html[data-app-theme="dark"] .nav button{background:#203852!important;color:#dbe9ff!important;border-color:#395673!important}
+html[data-app-theme="dark"] .nav button.active{background:linear-gradient(145deg,#2a5e96,#214b78)!important;color:#fff!important;border-color:#6594c6!important}
+html[data-app-theme="dark"] #calc :is(.depo-rate-percent,.interest-toggle-text,.interest-chevron,.interest-desc,.interest-print-btn){color:#b4d8ff!important}
+html[data-app-theme="dark"] #calc .interest-breakdown{background:#1a324c!important}
+html[data-app-theme="dark"] #calc .interest-breakdown :is(button,summary){background:#203d59!important;color:#cde5ff!important;border-color:#4d6b8a!important}
+html[data-app-theme="dark"] .offer-form-grid .suffix,html[data-app-theme="dark"] .offer-form-grid .prefix{color:#bad4eb!important}
+html[data-app-theme="dark"] #adminUserManagement :is(table,tbody,tr,td){background:#182d45!important;color:#eaf3ff!important;border-color:#3c5570!important}
+html[data-app-theme="dark"] #adminUserManagement :is(thead,thead tr,th){background:#26435e!important;color:#f0f6ff!important;border-color:#49637e!important}
+html[data-app-theme="dark"] #adminUserManagement :is(.um-table-wrap,.um-list,.um-table,.um-grid){background-color:transparent!important;border-color:#3c5570!important}
+html[data-app-theme="dark"] #adminUserManagement .um-state.on{background:#1c553e!important;color:#a8f2cb!important}
+html[data-app-theme="dark"] #adminUserManagement .um-state.off{background:#553728!important;color:#ffd6b3!important}
+}
+
+
+/* ========================================================================
+   DARK CONTRAST REPAIR — loan simulation and document preview
+   Resolves mixed white surfaces/dark labels and dark-on-dark facility tiles.
+   Screen-only. A4 print styling intentionally remains unchanged.
+   ======================================================================== */
+@media screen {
+  html[data-app-theme="dark"] #coreMain #results {
+    color: #e8f1ff !important;
+    background: transparent !important;
+  }
+  html[data-app-theme="dark"] #coreMain .print-heading {
+    border-color: #415c7b !important;
+  }
+  html[data-app-theme="dark"] #coreMain .print-heading :is(h1,.print-eyebrow,small,b) {
+    color: #eaf3ff !important;
+  }
+  html[data-app-theme="dark"] #coreMain .print-heading p,
+  html[data-app-theme="dark"] #coreMain .print-heading-meta small {
+    color: #b5cbe3 !important;
+  }
+  html[data-app-theme="dark"] #coreMain .print-heading-meta span {
+    background: #284360 !important;
+    color: #e7f2ff !important;
+    border-color: #4e6e91 !important;
+  }
+  html[data-app-theme="dark"] #coreMain :is(.doc-report-identity,.product-summary,.print-facility) {
+    background: linear-gradient(145deg,#203652,#1b2f49) !important;
+    color: #eaf3ff !important;
+    border: 1px solid #3c5573 !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,.16) !important;
+  }
+  html[data-app-theme="dark"] #coreMain .doc-report-identity :is(div,b,strong),
+  html[data-app-theme="dark"] #coreMain .print-facility :is(.facility-grid,.facility-cell),
+  html[data-app-theme="dark"] #coreMain .product-summary :is(div,p,strong) {
+    background: transparent !important;
+  }
+  html[data-app-theme="dark"] #coreMain :is(.doc-report-identity span,.facility-cell span) {
+    color: #b6cce5 !important;
+  }
+  html[data-app-theme="dark"] #coreMain :is(.doc-report-identity b,.facility-cell strong,.product-summary strong) {
+    color: #f4f8ff !important;
+  }
+  html[data-app-theme="dark"] #coreMain #policySummary {
+    color: #edbfad !important;
+  }
+  html[data-app-theme="dark"] #coreMain .section-kicker {
+    color: #bad7f3 !important;
+  }
+  html[data-app-theme="dark"] #coreMain .section-kicker span {
+    background: #2b4c72 !important;
+    color: #eaf3ff !important;
+  }
+  html[data-app-theme="dark"] #coreMain .hero {
+    background: linear-gradient(115deg,#164572,#2468a6) !important;
+    box-shadow: 0 16px 34px rgba(1,10,30,.28) !important;
+  }
+  html[data-app-theme="dark"] #coreMain .hero :is(.hero-value,.hero-top,.hero-bottom strong) {
+    color: #fff !important;
+  }
+  html[data-app-theme="dark"] #coreMain .hero .pill {
+    color: #194c81 !important;
+    background: #eaf3ff !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight {
+    --risk-ink: #ff9aa7;
+    --risk-bg: #392437;
+    --risk-border: #83556d;
+    --risk-chip: #542c42;
+    background: #392437 !important;
+    color: #fff0f3 !important;
+    border-color: var(--risk-border) !important;
+    border-left: 5px solid var(--risk-ink) !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight.risk-caution {
+    --risk-ink:#ffd18a; --risk-bg:#453623; --risk-border:#886d45; --risk-chip:#594326;
+    background:#453623 !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight.risk-normal {
+    --risk-ink:#7ee1b9; --risk-bg:#173d38; --risk-border:#3a7668; --risk-chip:#205249;
+    background:#173d38 !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight :is(.salary-highlight-main,.salary-highlight-aside,.salary-fact) {
+    background: transparent !important;
+    color: #f6f7ff !important;
+    box-shadow: none !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight :is(.salary-eyebrow,.salary-fact span,.salary-highlight-main small) {
+    color: #e0dce9 !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight .salary-amount {
+    color: var(--risk-ink) !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight .salary-fact b {
+    background: transparent !important;
+    color: #f9fbff !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight .salary-risk {
+    background: var(--risk-chip) !important;
+    color: #ffbac4 !important;
+    border: 1px solid var(--risk-border) !important;
+  }
+  html[data-app-theme="dark"] #coreMain .salary-highlight.risk-caution .salary-risk {color:#ffe4b4!important;}
+  html[data-app-theme="dark"] #coreMain .salary-highlight.risk-normal .salary-risk {color:#adf4d5!important;}
+  html[data-app-theme="dark"] #coreMain :is(.metric,.composition,.capacity,.disbursement,.schedule) {
+    background: #1d314a !important;
+    border: 1px solid #405773 !important;
+    color: #e9f3ff !important;
+  }
+  html[data-app-theme="dark"] #coreMain :is(.metric span,.metric small,.legend p,.detail-row span,.idir-display span,.schedule .hint) {
+    color: #b8cbe0 !important;
+  }
+  html[data-app-theme="dark"] #coreMain :is(.metric strong,.detail-row b,.legend strong,.capacity h2,.disbursement h2,.schedule h2) {
+    color: #f1f7ff !important;
+  }
+  html[data-app-theme="dark"] #coreMain .metric:first-child strong {color:#ffa0b2!important;}
+  html[data-app-theme="dark"] #coreMain .metric:last-child strong {color:#83e2bd!important;}
+  html[data-app-theme="dark"] #coreMain .composition .donut > div {
+    background: #1d314a !important;
+    color: #f1f7ff !important;
+  }
+  html[data-app-theme="dark"] #coreMain .composition .donut :is(strong,span) {color:#e8f3ff!important;}
+  html[data-app-theme="dark"] #coreMain .capacity .idir-display strong {color:#ff9aa7!important;}
+  html[data-app-theme="dark"] #coreMain .capacity .risk-note {
+    background:#4d3042!important;color:#ffcfda!important;
+  }
+  html[data-app-theme="dark"] #coreMain .capacity .idir-track {background:#334d69!important;}
+  html[data-app-theme="dark"] #coreMain .capacity .status {
+    background:#27405e!important;color:#bcdcff!important;
+  }
+  html[data-app-theme="dark"] #coreMain .disbursement :is(.cost-summary,.insurance-box) {
+    background:#273e59!important;color:#edf5ff!important;
+    border-color:#415b77!important;
+  }
+  html[data-app-theme="dark"] #coreMain .disbursement :is(.cost-summary b,.net-row b) {color:#9fe6ce!important;}
+  html[data-app-theme="dark"] #coreMain .schedule :is(th,thead,tfoot td) {
+    background:#2a4664!important;color:#e9f3ff!important;
+  }
+  html[data-app-theme="dark"] #coreMain .schedule td {
+    background:#203650!important;color:#e5f1ff!important;
+    border-color:#425a72!important;
+  }
+  html[data-app-theme="dark"] #coreMain .schedule td:last-child {color:#add2ff!important;}
+  html[data-app-theme="dark"] #coreMain :is(.author-credit,.report-disclaimer) {color:#a9c2df!important;border-color:#3d5674!important;}
+  /* Correct legacy credit form overrides that force white while in dark mode. */
+  html[data-app-theme="dark"] #coreMain .inputs {background:#172a41!important;color:#eaf3ff!important;}
+  html[data-app-theme="dark"] #coreMain .input-group {background:#203651!important;border-color:#415d7d!important;}
+  html[data-app-theme="dark"] #coreMain .input-group-title,
+  html[data-app-theme="dark"] #coreMain .input-field-block>label {color:#d6e9ff!important;}
+  html[data-app-theme="dark"] #coreMain :is(input,select,textarea) {
+    background:#1a2f49!important;color:#f4f8ff!important;border-color:#526e8d!important;
+  }
+  html[data-app-theme="dark"] #coreMain .input-group :is(.hint,.computed-row span,.computed-row output) {color:#bcd1e9!important;}
+}
+
+
+/* FIX 2026-10-14: clean PAPER schedule preview on dark app UI.
+   Limit scope to the CPNS/ASN schedule-print document to avoid altering
+   credit calculations, simulation cards, authentication, or funding UI. */
+@media screen {
+  html[data-app-theme="dark"] body.printing-schedule {
+    background: radial-gradient(circle at 50% 0%, #172c49 0%, #0b1526 75%) !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule > #schedulePrint {
+    background: #fff !important;
+    color: #193453 !important;
+    border: 1px solid #d5e2f0 !important;
+    box-shadow: 0 22px 56px rgba(0,0,0,.30), 0 3px 12px rgba(0,0,0,.08) !important;
+    color-scheme: light;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .schedule-print-toolbar {
+    background: #fff !important;
+    border-bottom: 1px solid #d9e5f2 !important;
+    color: #315277 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .schedule-print-toolbar :is(div,strong) {
+    color: #315277 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .schedule-print-toolbar button {
+    color: #164477 !important;
+    background: #fff !important;
+    border-color: #b9cce3 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .schedule-print-toolbar button.sp-go-print {
+    color: #fff !important;
+    background: #174a81 !important;
+    border-color: #174a81 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-header {
+    background: #fff !important;
+    border-color: #bfcee1 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-icon {
+    background: #123a6a !important;
+    color: #fff !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-eyebrow {
+    color: #446fa2 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-header h1 {
+    color: #123d75 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-header p,.sp-ref,.sp-ref span) {
+    color: #577294 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-identity,.sp-facility) {
+    background: linear-gradient(180deg,#fafdff,#f3f7fc) !important;
+    border: 1px solid #d5e3f1 !important;
+    color: #173658 !important;
+    box-shadow: none !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-identity div,.sp-facility div) {
+    background: transparent !important;
+    color: #173658 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-identity span,.sp-facility span) {
+    color: #55769c !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-identity b,.sp-facility b) {
+    color: #122e54 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-subtitle {
+    color: #123d75 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-subtitle strong {
+    color: #123d75 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-subtitle span {
+    color: #54739b !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table {
+    background: #fff !important;
+    color: #213e60 !important;
+    border-color: #dbe5ef !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table thead,
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table thead tr,
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table thead th {
+    background: #184b83 !important;
+    color: #fff !important;
+    border-color: #184b83 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tbody tr,
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tbody tr td {
+    background: #fff !important;
+    color: #315578 !important;
+    border-color: #e0e8f2 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tbody tr:nth-child(even),
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tbody tr:nth-child(even) td {
+    background: #edf4fb !important;
+    color: #315578 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tbody td:last-child {
+    color: #123f75 !important;
+    font-weight: 800 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tfoot,
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tfoot tr,
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tfoot td {
+    background: #dcebf9 !important;
+    color: #123d73 !important;
+    border-color: #c2d5e8 !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-verify,.sp-bottom,.sp-credit) {
+    color: #557293 !important;
+    border-color: #d7e4f1 !important;
+  }
+  /* Keep the optional featured payment amount legible on browsers that display it. */
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-payment-hero {
+    background: linear-gradient(115deg,#153f72,#235e97) !important;
+    color: #fff !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-payment-hero :is(span,strong,b,small) {
+    color: #fff !important;
+  }
+}
+/* Physical/PDF output remains an ink-friendly white A4 document. */
+@media print {
+  html[data-app-theme="dark"] body.printing-schedule,
+  html[data-app-theme="dark"] body.printing-schedule > #schedulePrint {
+    background: #fff !important;
+    color: #193453 !important;
+    color-scheme: light;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-identity,.sp-facility) {
+    background: #f5f8fd !important;
+    border-color: #d4e0ec !important;
+  }
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-identity span,.sp-facility span) {color:#557293!important;}
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint :is(.sp-identity b,.sp-facility b,.sp-subtitle strong) {color:#173c69!important;}
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-header h1 {color:#143a6b!important;}
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table th {background:#1d4a80!important;color:#fff!important;}
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tbody td {background:#fff!important;color:#25405d!important;}
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tbody tr:nth-child(even) td {background:#f7f9fc!important;}
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tbody td:last-child {color:#174a84!important;}
+  html[data-app-theme="dark"] body.printing-schedule #schedulePrint .sp-table tfoot td {background:#eaf1fa!important;color:#173f75!important;}
+}
+
+
+/* === 2026-10-14 · Skema-3 THT + semua dokumen jadwal: kontras premium ===
+   PRESENTASI SAJA; tidak menyentuh kalkulasi, identitas/login, atau Firebase. */
+@media screen {
+  /* Background navy bercahaya yang tetap halus dan tidak mengganggu data. */
+  html[data-app-theme="dark"] body.ui-kredit-awal:not(.printing-schedule):not(.plus-document-preview) {
+    background:
+      radial-gradient(ellipse 54% 35% at 96% 13%, rgba(42,122,210,.33) 0%, transparent 74%),
+      radial-gradient(ellipse 46% 34% at 3% 48%, rgba(27,98,181,.25) 0%, transparent 77%),
+      linear-gradient(130deg, #0c1d34 0%, #0e2b4c 45%, #0c1c33 100%) !important;
+    background-attachment: fixed !important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #bankPremiumHub {
+    background:linear-gradient(130deg,rgba(14,45,82,.96),rgba(11,32,59,.97)) !important;
+    color:#f2f7ff !important;
+    border:1px solid #28558c!important;
+    border-radius:18px!important;
+    box-shadow:0 18px 42px rgba(0,7,24,.32),inset 0 1px rgba(255,255,255,.055)!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #bankPremiumHub .bp-intro :is(h2,p),
+  html[data-app-theme="dark"] body.ui-kredit-awal #bankPremiumHub .bp-kicker {color:#eef6ff!important}
+  html[data-app-theme="dark"] body.ui-kredit-awal #bankPremiumHub .bp-tab {
+    background:#143457!important;color:#e9f3ff!important;border-color:#3c668f!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #bankPremiumHub .bp-tab.active {
+    background:linear-gradient(125deg,#1855a1,#2168ba)!important;color:white!important;border-color:#5f9edf!important
+  }
+  /* Lembar putih pada input dan hasil Skema-3 meskipun background aplikasi gelap. */
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-box,
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain #thtIdentitySlot>.input-group-document,
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .input-group-document {
+    background:#fff!important;color:#193657!important;
+    border:1px solid #cddff0!important;border-radius:14px!important;
+    box-shadow:0 10px 24px rgba(4,17,39,.18)!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-box h3,
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain :is(.tht-field label,.input-field-block>label,.input-group-title,.tht-detail b) {
+    color:#174675!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain :is(.tht-field small,.tht-note,.doc-note,.tht-detail span) {
+    color:#4b6786!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain :is(.tht-field input,.tht-field select,.input-field-block input) {
+    background:#153254!important;color:#fff!important;border:1px solid #436891!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain :is(.tht-field input,.input-field-block input)::placeholder {
+    color:#c9daec!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain :is(.tht-detail,.tht-ajk-result,.tht-note,.tht-status,.tht-info) {
+    background:#f2f7fd!important;color:#295578!important;border-color:#d5e4f1!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain #thtDetails,
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain #thtDetails *:not(.tht-status) {
+    color:#28496b!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-max-card {
+    background:linear-gradient(130deg,#e3f1ff,#aad5ff)!important;border-color:#8cbeed!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-max-card :is(strong,span,small,div) {
+    color:#123f77!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-metric:not(.primary){
+    background:#eef5fc!important;color:#1b4773!important;border-color:#d6e4f2!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-metric:not(.primary) :is(span,strong) {color:#164a7c!important}
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-metric.positive strong {color:#137657!important}
+  /* Tabel Skema-3: setiap angka dan tanggal kontras pada baris putih-biru. */
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-table-wrap {
+    background:#fff!important;border:1px solid #d2e1f1!important;
+    border-radius:10px;box-shadow:0 4px 12px rgba(15,47,88,.045)
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-table-wrap :is(table,tbody,tr){background:transparent!important;color:#234a70!important}
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-table-wrap thead th {
+    background:#163c68!important;color:#fff!important;border-color:#2e5680!important;font-weight:750!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-table-wrap tbody td {
+    background:#fff!important;color:#23466b!important;border-color:#dce7f2!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-table-wrap tbody tr:nth-child(even) td {
+    background:#edf4fb!important;color:#23466b!important;
+  }
+  html[data-app-theme="dark"] body.ui-kredit-awal #thtMain .tht-table-wrap tbody td:last-child {
+    color:#12467a!important;font-weight:800!important;
+  }
+  /* Cetak ringkasan dan jadwal semua produk via panel plusDocument. */
+  html[data-app-theme="dark"] body.plus-document-preview{background:#0f1f38!important}
+  html[data-app-theme="dark"] body.plus-document-preview #plusDocument,
+  html[data-app-theme="dark"] body.plus-document-preview #plusPrintBody,
+  html[data-app-theme="dark"] body.plus-document-preview :is(.pd-summary,.pd-schedule-page,.ps-unified) {
+    background:#fff!important;color:#203c5b!important;color-scheme:light;
+  }
+  html[data-app-theme="dark"] body.plus-document-preview #plusDocument {
+    border:1px solid #d3e1ef!important;border-radius:15px;
+    box-shadow:0 20px 48px rgba(1,13,32,.32)!important;
+  }
+  html[data-app-theme="dark"] body.plus-document-preview #plusPreviewToolbar{
+    background:#f2f7fd!important;color:#1b466e!important;border-bottom-color:#d2e3f4!important;
+  }
+  html[data-app-theme="dark"] body.plus-document-preview #plusPreviewToolbar :is(b,small) {color:#24547c!important}
+  html[data-app-theme="dark"] body.plus-document-preview :is(.pd-head h1,.pd-section-title,.ps-title-block h1,.ps-section-kicker) {color:#143f74!important}
+  html[data-app-theme="dark"] body.plus-document-preview :is(.pd-datum,.ps-document-identity,.ps-facility-grid,.ps-product-note) {
+    background:#f4f8fe!important;color:#20446e!important;border-color:#d5e3f2!important;
+  }
+  html[data-app-theme="dark"] body.plus-document-preview :is(.pd-datum span,.pd-head small,.pd-head-meta,.ps-field span,.pd-foot){color:#607d9d!important}
+  html[data-app-theme="dark"] body.plus-document-preview :is(.pd-datum strong,.pd-head-meta strong,.ps-field strong,.ps-product-note strong){color:#173e6d!important}
+  html[data-app-theme="dark"] body.plus-document-preview :is(.pd-schedule-table,.pd-schedule-page){color:#1f3d60!important}
+  html[data-app-theme="dark"] body.plus-document-preview .pd-schedule-table thead th{
+    background:#194777!important;color:#fff!important;border-color:#194777!important;
+  }
+  html[data-app-theme="dark"] body.plus-document-preview .pd-schedule-table tbody td{
+    background:#fff!important;color:#2c5175!important;border-bottom-color:#dce7f2!important;
+  }
+  html[data-app-theme="dark"] body.plus-document-preview .pd-schedule-table tbody tr:nth-child(even) td{
+    background:#edf4fb!important;color:#2c5175!important;
+  }
+  html[data-app-theme="dark"] body.plus-document-preview .pd-schedule-table tfoot td{
+    background:#e3effb!important;color:#164476!important;
+  }
+}
+@media print {
+  /* CSS tema tidak boleh mewarnai PDF, bahkan saat mode gelap aktif. */
+  html[data-app-theme="dark"] body.plus-document-preview,
+  html[data-app-theme="dark"] body.plus-document-preview #plusDocument,
+  html[data-app-theme="dark"] body.plus-document-preview :is(.pd-summary,.pd-schedule-page,.ps-unified){
+    background:#fff!important;color:#203c5b!important;color-scheme:light!important;
+    box-shadow:none!important;border-radius:0!important;
+  }
+  html[data-app-theme="dark"] body.plus-document-preview .pd-schedule-table th {background:#194777!important;color:#fff!important}
+  html[data-app-theme="dark"] body.plus-document-preview .pd-schedule-table tbody td {background:#fff!important;color:#204469!important}
+  html[data-app-theme="dark"] body.plus-document-preview .pd-schedule-table tbody tr:nth-child(even) td {background:#edf4fb!important}
+  html[data-app-theme="dark"] body.plus-document-preview .pd-schedule-table tfoot td {background:#e3effb!important;color:#184475!important}
+}
+
+/* Angsuran Pegawai Plus (iframe): pratinjau/cetak tetap berupa lembar putih. */
+@media screen {
+  html[data-app-theme="dark"] .card-screen .card-paper,
+  html[data-app-theme="dark"] .print-card-page,
+  html[data-app-theme="dark"] .card-paper {
+    background:#fff!important;color:#1b3a5d!important;border:1px solid #d1e0ef!important;
+    box-shadow:0 14px 32px rgba(2,16,36,.22)!important;color-scheme:light;
+  }
+  html[data-app-theme="dark"] .card-paper :is(.card-title h3,.card-highlights strong,.card-identity strong,.card-kicker,.card-stamp),
+  html[data-app-theme="dark"] .print-card-page :is(h1,h2,h3,strong){color:#163d69!important}
+  html[data-app-theme="dark"] .card-paper :is(.card-title p,.card-identity span,.card-highlights span,small,p){color:#59789a!important}
+  html[data-app-theme="dark"] .card-paper .repayment-card th,
+  html[data-app-theme="dark"] .print-card-page .repayment-card th{
+    background:#173f70!important;color:#fff!important;border-color:#285485!important;
+  }
+  html[data-app-theme="dark"] .card-paper .repayment-card tbody td,
+  html[data-app-theme="dark"] .print-card-page .repayment-card tbody td{
+    background:#fff!important;color:#284b73!important;border-color:#dce7f2!important;
+  }
+  html[data-app-theme="dark"] .card-paper .repayment-card tbody tr:nth-child(even) td,
+  html[data-app-theme="dark"] .print-card-page .repayment-card tbody tr:nth-child(even) td{
+    background:#edf4fb!important;color:#284b73!important;
+  }
+}
+@media print {
+  html[data-app-theme="dark"] :is(.card-paper,.print-card-page){background:#fff!important;color:#17395e!important;color-scheme:light!important;box-shadow:none!important}
+  html[data-app-theme="dark"] .repayment-card tbody td{background:#fff!important;color:#234365!important}
+  html[data-app-theme="dark"] .repayment-card tbody tr:nth-child(even) td{background:#f2f6fa!important}
+}
