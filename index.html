@@ -1482,11 +1482,11 @@ body.deposit-active #printActionFeedback{display:none!important}
 </style>
 <style id="fundingDashboardTableTuning2026">
 #monitorAdmin .monitor-delete-toolbar[hidden],#monitorAdmin .monitor-archive-audit[hidden]{display:none!important}
-#monitorAdmin .monitor-activity-table thead th:first-child,#monitorAdmin .monitor-activity-table tbody td:first-child{display:none}
-#monitorAdmin .monitor-activity-table thead th:last-child,#monitorAdmin .monitor-activity-table tbody td:last-child{display:none}
+
+
 </style>
 <style id="dashboardProfessional3D2026">
-/* Dashboard professional — khusus paket pengujian offline. */
+/* Dashboard professional — produksi Firebase. */
 #monitorAdmin{background:linear-gradient(180deg,#eaf2fc 0%,#f5f8fd 28%,#f5f8fc 100%);color:#193657;padding:25px clamp(12px,2.5vw,36px)}
 #monitorAdmin .monitor-admin-inner{max-width:1560px;margin:auto}
 #monitorAdmin .monitor-admin-title{padding:22px 25px;border-radius:19px;background:linear-gradient(110deg,#0c3159,#164d81 65%,#286da8);border:1px solid #28598a;box-shadow:0 14px 32px rgba(15,55,100,.19);color:#fff;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
@@ -1650,7 +1650,7 @@ body.deposit-active #printActionFeedback{display:none!important}
 @media(max-width:900px){#adminUserManagement .um-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:590px){#adminUserManagement{padding:15px}#adminUserManagement .um-grid{grid-template-columns:1fr}}
 @media print{#adminUserManagement{display:none!important}}
-</style><link rel="stylesheet" href="./theme.css?v=20261014tht-schedule-lightpaper2"><script src="./theme.js?v=20261014" defer></script></head>
+</style><link rel="stylesheet" href="./theme.css?v=20261014-admin-online-restored-v29"><script src="./theme.js?v=20261014" defer></script></head>
 <body class="monitor-locked">
 <aside id="printActionFeedback" role="alert" aria-live="assertive" hidden>
   <button type="button" id="printFeedbackClose" aria-label="Tutup pemberitahuan">×</button>
@@ -1669,6 +1669,7 @@ body.deposit-active #printActionFeedback{display:none!important}
       <input id="monitorPassword" type="password" required autocomplete="current-password" placeholder="Masukkan password">
       <button id="monitorLoginSubmit" class="monitor-primary" type="submit" style="width:100%;margin-top:20px">Masuk ke aplikasi</button>
     </form>
+    <button id="monitorResetPassword" type="button" class="monitor-small-btn" style="width:100%;margin-top:10px">Aktivasi akun / Atur ulang sandi via email</button>
     <div id="monitorLoginStatus" role="status">Menghubungkan Firebase… Pastikan internet tersedia.</div>
     <div class="monitor-muted">Data simulasi kredit dapat dikirim ke database sesuai kebijakan organisasi. Jangan gunakan data nasabah riil tanpa persetujuan dan ketentuan perlindungan data yang berlaku. Login membutuhkan internet.</div>
   </div>
@@ -1693,9 +1694,9 @@ body.deposit-active #printActionFeedback{display:none!important}
 </section>
 <section id="monitorAdmin" hidden aria-label="Dashboard monitoring administrator">
  <div class="monitor-admin-inner">
-  <div class="monitor-admin-title"><div><small>DASHBOARD TERPADU · UJI OFFLINE</small><h1>Monitoring Lending &amp; Funding</h1></div>
+  <div class="monitor-admin-title"><div><small>DASHBOARD TERPADU · ONLINE</small><h1>Monitoring Lending &amp; Funding</h1></div>
    <div class="monitor-admin-actions"><button id="monitorRefresh" class="monitor-primary" type="button">Perbarui data</button><button id="adminUsersNav" type="button">Manajemen Pengguna</button><button id="monitorCloseAdmin" class="monitor-small-btn" type="button">Kembali ke simulasi</button></div></div>
-  <p class="monitor-muted">Dashboard uji lokal — indikator, grafik dan rekap bersumber dari aktivitas dalam sesi browser. Bukan data produksi, bukan realisasi kredit maupun penempatan deposito terverifikasi.</p>
+  <p class="monitor-muted">Dashboard aktivitas berdasarkan data Firebase. Plafon dan nominal prospek hanya estimasi; closing deposito dihitung setelah pemeriksaan Administrator.</p>
 
 <section id="adminUserManagement" hidden aria-label="Manajemen Pengguna AO">
   <div class="um-head"><div><h2>Manajemen Pengguna AO</h2><p>Kelola profil dan akses AO Lending/Funding dengan Firebase Spark (gratis).</p></div><button type="button" id="umRefresh" class="um-btn">↻ Muat Ulang User</button></div>
@@ -1724,16 +1725,7 @@ body.deposit-active #printActionFeedback{display:none!important}
       <button id="monitorCategoryFunding" type="button" data-category="funding" aria-pressed="false"><span>AO Funding</span><small>DEPOSITO ME</small></button>
     </div>
   </nav>
-  <details class="monitor-test-settings" id="monitorTestSettings">
-    <summary><span>Pengaturan petugas &amp; data uji lokal</span><span class="settings-summary-right">Pengujian tanpa Firebase</span></summary>
-    <div class="monitor-test-settings-content">
-      <label>Nama petugas uji<input id="monitorTestOfficer" type="text" maxlength="60" value="Petugas Uji" placeholder="Nama petugas (uji lokal)" /></label>
-      <label>Cabang uji<input id="monitorTestBranch" type="text" maxlength="60" value="Cabang Uji" placeholder="Nama cabang (uji lokal)" /></label>
-      <button type="button" id="fundingDemoLending" class="monitor-small-btn">Catat simulasi kredit uji</button>
-      <button type="button" id="fundingDemoSeed" class="monitor-small-btn">Muat data contoh fiktif</button>
-      <button type="button" id="fundingDemoReset" class="monitor-small-btn">Kosongkan data uji</button>
-    </div>
-  </details>
+
   <div class="monitor-report-filters" aria-label="Filter laporan aktivitas">
    <label>Mulai tanggal<input id="monitorFrom" type="date"></label>
    <label>Sampai tanggal<input id="monitorTo" type="date"></label>
@@ -1744,7 +1736,7 @@ body.deposit-active #printActionFeedback{display:none!important}
    <label class="monitor-search-label">Pencarian<input id="monitorFilter" type="search" placeholder="Cari nama AO, debitur, nomor referensi..." /></label>
    <button id="monitorResetFilters" type="button" class="monitor-small-btn">Reset filter</button>
   </div>
-  <div class="monitor-export-toolbar"><button id="monitorExportExcel" class="monitor-primary" type="button" disabled>↓ Ekspor Excel — 1 Sheet (.xlsx)</button><button id="monitorExportCSV" class="monitor-small-btn" type="button" disabled>↓ Ekspor CSV + Rekap (.zip)</button><span id="monitorDashStatus" class="monitor-muted" role="status">Belum memuat aktivitas.</span></div>
+  <div class="monitor-export-toolbar"><button id="monitorExportExcel" class="monitor-primary" type="button" disabled>↓ Ekspor Excel — 1 Sheet (.xlsx)</button><button id="monitorExportCSV" class="monitor-small-btn" type="button" disabled>↓ Ekspor CSV + Rekap (.zip)</button><span id="monitorDashStatus" class="monitor-muted" role="status">Menampilkan maksimum 500 aktivitas terbaru, 300 laporan closing terbaru, dan 50 audit terbaru untuk menjaga kinerja.</span></div>
   <div class="monitor-metrics">
    <div class="monitor-kpi"><span>Pengguna Terdaftar</span><strong id="monitorMetricUser">—</strong></div>
    <div class="monitor-kpi"><span>Akses aplikasi (sesuai filter)</span><strong id="monitorMetricAccess">—</strong></div>
@@ -1763,17 +1755,17 @@ body.deposit-active #printActionFeedback{display:none!important}
       <article class="pro-chart-card"><div class="pro-chart-card-head"><h3>Aktivitas per AO</h3><span>Petugas teratas</span></div><div id="proAoChart" class="pro-ao-bars"></div></article>
     </div>
   </section>
-  <div class="monitor-delete-toolbar" aria-label="Pengelolaan aktivitas administrator — mode uji offline">
+  <div class="monitor-delete-toolbar" aria-label="Pengelolaan aktivitas administrator">
     <button id="monitorDeleteSelected" class="monitor-delete-btn monitor-delete-bulk" type="button" disabled>Hapus aktivitas terpilih</button>
     <span id="monitorSelectedCount" class="monitor-muted" role="status">0 aktivitas dipilih</span>
-    <span class="monitor-muted">Uji offline: penghapusan permanen dari daftar aktivitas lokal, tidak dapat dipulihkan. Laporan closing terpisah tidak terhapus.</span>
+    <span class="monitor-muted">Penghapusan permanen hanya untuk Administrator dan akan dicatat dalam audit. Data closing terpisah tetap disimpan.</span>
   </div>
   <div class="monitor-category-detail-title"><b id="monitorActivityTableTitle">Riwayat Aktivitas Semua AO</b><span id="monitorCategoryNote">Jenis aktivitas mengikuti produk yang dipasarkan, bukan semata jabatan pengguna.</span></div>
   <div class="monitor-table-wrap"><table class="monitor-table monitor-activity-table" aria-label="Aktivitas penggunaan aplikasi">
    <thead><tr><th class="monitor-select-column"><input type="checkbox" id="monitorSelectPage" aria-label="Pilih semua aktivitas di halaman ini" title="Pilih semua aktivitas pada halaman" /></th><th>Waktu</th><th>Nama Petugas</th><th>Cabang</th><th>Aktivitas</th><th>No. Referensi</th><th>Nama Debitur</th><th>Produk</th><th>Gaji/THP</th><th>Plafon / Nominal Indikatif</th><th>Angsuran</th><th>Dana Bersih</th><th class="monitor-action-column">Aksi</th></tr></thead><tbody id="monitorHistory"></tbody>
   </table></div>
-  <details class="monitor-archive-audit" id="monitorDeleteAuditDetails"><summary>Jejak penghapusan aktivitas (ringkasan lokal)</summary>
-    <p>Hanya waktu, jumlah aktivitas, dan alasan penghapusan disimpan (maksimum 50 tindakan). Aktivitas asli tidak disimpan sebagai arsip. Tidak terhubung Firebase.</p>
+  <details class="monitor-archive-audit" id="monitorDeleteAuditDetails"><summary>Jejak penghapusan aktivitas (audit server)</summary>
+    <p>Ringkasan waktu, identitas Administrator, referensi aktivitas, dan alasan dicatat di Firebase sebelum aktivitas dihapus. Tidak menyimpan salinan data simulasi.</p>
     <div class="monitor-table-wrap"><table class="monitor-table monitor-audit-table"><thead><tr><th>Waktu</th><th>Pelaksana</th><th>Jumlah dihapus</th><th>Alasan</th></tr></thead><tbody id="monitorDeleteAuditBody"></tbody></table></div>
   </details>
   <div class="monitor-history-pager"><label>Baris per halaman <select id="monitorPageSize"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option></select></label><span id="monitorPageInfo" class="monitor-muted">—</span><button class="monitor-small-btn" id="monitorPrevPage" type="button">← Sebelumnya</button><button class="monitor-small-btn" id="monitorNextPage" type="button">Berikutnya →</button></div>
@@ -1799,7 +1791,7 @@ body.deposit-active #printActionFeedback{display:none!important}
     <div class="monitor-table-wrap closing-table-scroll"><table class="monitor-table" aria-label="Daftar closing deposito yang dilaporkan AO">
       <thead><tr><th>Waktu Input</th><th>AO / Cabang</th><th>Deposan</th><th>Rekening</th><th>Tgl Penempatan</th><th>Nominal (Rp)</th><th>Tenor</th><th>Bunga</th><th>Status</th><th>Referensi Verifikasi</th><th>Aksi Admin</th></tr></thead><tbody id="closingTableBody"></tbody>
     </table></div>
-    <p class="closing-caution">Data penempatan yang belum diperiksa tidak termasuk NOA atau nominal terverifikasi. Akun deposito ditampilkan sebagian untuk privasi. Untuk penggunaan sebenarnya, wajib rekonsiliasi dengan laporan penempatan bank dan pembatasan akses server.</p>
+    <p class="closing-caution">Data penempatan yang belum diperiksa tidak termasuk NOA atau nominal terverifikasi. Akun deposito ditampilkan sebagian untuk privasi. Verifikasi Administrator wajib didukung pencocokan dengan laporan penempatan bank.</p>
   </section>
   <div class="monitor-recaps">
     <section><h2>Rekap AO Funding</h2><div class="monitor-table-wrap"><table class="monitor-table monitor-recap-table"><thead><tr><th>Nama AO</th><th>Cabang</th><th>Buka</th><th>Simulasi</th><th>Prospek</th><th>Penawaran WA</th><th>Status Ditempatkan*</th><th>Estimasi Dana (Rp)</th><th>NOA Terverifikasi</th><th>Nominal Terverifikasi</th></tr></thead><tbody id="fundingRecapAO"></tbody></table></div></section>
@@ -1831,7 +1823,7 @@ body.deposit-active #printActionFeedback{display:none!important}
     <form id="monitorDeleteForm" class="monitor-delete-form">
       <h2 id="monitorDeleteTitle">Konfirmasi Hapus Aktivitas</h2>
       <p id="monitorDeleteDescription"></p>
-      <p class="monitor-delete-caution">Permanen: aktivitas terpilih akan dihapus dari penyimpanan lokal, grafik, rekap dan ekspor; tidak dapat dipulihkan. Data closing/rekening disimpan terpisah. Hanya ringkasan waktu, jumlah, dan alasan yang disimpan sebagai audit.</p>
+      <p class="monitor-delete-caution">Permanen: aktivitas terpilih akan dihapus dari penyimpanan lokal, grafik, rekap dan ekspor; tidak dapat dipulihkan. Data closing/rekening disimpan terpisah. Audit mencatat waktu, pelaksana, ID aktivitas, dan alasan.</p>
       <label for="monitorDeleteReason">Alasan penghapusan (wajib)</label>
       <textarea id="monitorDeleteReason" required minlength="5" maxlength="160" placeholder="Contoh: Aktivitas tercatat ganda, berdasarkan pemeriksaan administrator."></textarea>
       <p id="monitorDeleteError" class="monitor-delete-error" role="alert"></p>
@@ -2099,7 +2091,7 @@ body.plus-document-preview>#thtMain,body.monitor-locked>#thtMain,body.monitor-ad
   <div class="deposito-integrated-view">
     <iframe id="depositoFrame" title="Aplikasi simulasi dan prospek DEPOSITO ME" src="about:blank" loading="lazy" referrerpolicy="same-origin" allow="clipboard-write"></iframe>
   </div>
-  <p class="deposito-integration-storage">UJI OFFLINE: aktivitas yang dilakukan sekarang akan muncul pada Dashboard Admin dalam sesi browser ini. Tidak ada koneksi ke Firebase. Data prospek sendiri masih tersimpan lokal di browser.</p>
+  <p class="deposito-integration-storage">Aktivitas AO dicatat di Firebase. Data prospek lengkap tetap disimpan di browser; laporan closing masuk Firebase untuk pemeriksaan Administrator.</p>
 </main>
 
 <div id="plusDocument" hidden aria-live="polite">
@@ -2832,7 +2824,7 @@ window.SIM_MONITOR_RESET = function () {
 };
 
 </script>
-<!-- UJI OFFLINE SAJA: pendaftaran service worker dimatikan -->
+<!-- ONLINE SAJA: pendaftaran service worker dimatikan -->
 <script id="unifiedProductsBridge">
 (() => {
   'use strict';
@@ -3402,7 +3394,7 @@ window.SIM_MONITOR_RESET = function () {
 </script>
 
 <script src="./report-export.js" defer></script>
-<!-- UJI OFFLINE SAJA: Firebase auth/monitoring tidak dihubungkan -->
+<!-- Firebase Authentication dan monitoring produksi -->
 <script id="professionalExperienceV2">
 /* Design enhancements; does not modify loan calculations. */
 (()=>{
@@ -3633,37 +3625,7 @@ const boot=()=>{
 })();
 </script>
 
-<script id="offlineThtPreviewOnly">
-// LOKAL / OFFLINE ONLY. Do not deploy this test version to GitHub Pages.
-window.addEventListener('DOMContentLoaded', () => {
-  const $ = id => document.getElementById(id);
-  document.body.classList.remove('monitor-locked');
-  $('monitorAccess').hidden=true;
-  $('monitorAdmin').hidden=true;
-  $('monitorAppControls').hidden=false;
-  $('monitorWho').textContent='SIMULASI TERPADU · UJI OFFLINE · Tanpa Firebase';
-  $('monitorLogout').hidden=true;
-  $('monitorAdminButton').hidden=false;
-  $('globalProductNav').hidden=false;
-  // This test never reads, writes, or authenticates against the online database.
-  const nav=$('globalProductSelect');
-  nav.value='deposito';
-  nav.dispatchEvent(new Event('change',{bubbles:true}));
-  // Prevent data persistence during local testing.
-  const saveButton=$('thtSave');
-  saveButton.disabled=true;
-  saveButton.title='Mode uji offline: tidak menyimpan ke Firebase';
-  // The existing calculator toggles disabled on every recalculation; keep it
-  // disabled in the offline sandbox only, without changing the online source.
-  new MutationObserver(()=>{if(!saveButton.disabled)saveButton.disabled=true;})
-    .observe(saveButton,{attributes:true,attributeFilter:['disabled']});
-  saveButton.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();},true);
-  $('monitorSave').disabled=true;
-  const info=$('thtSaveStatus');
-  info.textContent='MODE UJI OFFLINE — Ubah Estimasi THT atau Maksimum Kredit atas THT (%). Plafon akan terisi otomatis; tidak ada data dikirim ke Firebase.';
-  info.setAttribute('role','status');
-});
-</script>
+
 <script id="depositoIframeResize2026">
 (() => {
   const frame = document.getElementById('depositoFrame');
@@ -3709,7 +3671,9 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 })();
 </script>
-<script src="./offline-funding-admin.js"></script>
+<script type="module" src="./firebase-monitor.js"></script>
+<script src="./online-funding-admin.js"></script>
+<script>if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('./sw.js').catch(console.warn);</script>
 <script id="aoSyncAcrossProducts2026">
 (() => {
   const officer = document.getElementById('docOfficer');
