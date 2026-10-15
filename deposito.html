@@ -178,12 +178,71 @@ header .depo-brand-text small{font-size:11px;font-weight:500;letter-spacing:.15p
   #offer .offer-form-grid{grid-template-columns:1fr;}
   #offer .offer-form-grid>.full{grid-column:auto;}
 }
+
+/* DEPOSITO ME — ringkasan hasil premium dan ringkas, 15 Oktober 2026.
+   Perubahan visual saja: rumus 30/365 dan hasil perhitungan tidak diubah. */
+.depo-summary-card .result-hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(125deg,#0d315d 0%,#174b83 66%,#1c558c 100%);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;padding:22px 23px 21px;
+  box-shadow:0 12px 25px rgba(10,43,81,.12);
+}
+.depo-summary-card .result-hero::after{
+  content:"";pointer-events:none;position:absolute;right:-74px;top:-89px;
+  width:238px;height:238px;border:1px solid rgba(255,255,255,.11);
+  border-radius:50%;box-shadow:0 0 0 42px rgba(255,255,255,.025);
+}
+.depo-summary-card .result-hero-top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;margin-bottom:19px;position:relative;z-index:1;
+}
+.depo-summary-card .result-hero .hero-kicker{
+  color:#eaf3fc;font-size:13px;font-weight:700;
+  letter-spacing:.03em;margin:0;line-height:1.4;
+}
+.depo-summary-card .result-hero .hero-tenor{
+  color:#e7f2fc;font-size:12px;font-weight:700;
+  white-space:nowrap;padding:6px 10px;
+  border:1px solid rgba(222,235,251,.3);border-radius:999px;
+  background:rgba(255,255,255,.08);
+}
+.depo-summary-card .result-hero .hero-net{
+  color:#fff;position:relative;z-index:1;
+  font-size:clamp(31px,3.7vw,48px);line-height:1.1;
+  letter-spacing:-.9px;margin:0 0 12px;overflow-wrap:anywhere;
+}
+.depo-summary-card .result-hero .hero-month{
+  color:#d9e9fb;position:relative;z-index:1;
+  font-size:13px;line-height:1.4;font-weight:500;
+}
+.depo-summary-card .summary-total{
+  background:linear-gradient(118deg,#eaf7ef,#e0f1e8);
+  border:1px solid #c6e2d2;padding:18px 17px;
+  flex-wrap:wrap;gap:12px;
+}
+.depo-summary-card .summary-total b{color:#155d3d;font-size:15px;line-height:1.4}
+.depo-summary-card .summary-total .summary-sub{
+  color:#527966;font-weight:500;font-size:12px;margin-top:4px;
+}
+.depo-summary-card .summary-total .value{
+  color:#087747;font-size:clamp(21px,2.5vw,28px);
+  letter-spacing:-.45px;overflow-wrap:anywhere;
+}
+/* Cara pembayaran sudah ada pada formulir dan rincian bunga, tidak perlu diulang. */
+.depo-summary-card #summaryPayoutText{display:none!important}
+@media(max-width:570px){
+  .depo-summary-card .result-hero{padding:19px 18px 20px}
+  .depo-summary-card .result-hero-top{margin-bottom:16px}
+  .depo-summary-card .result-hero .hero-tenor{font-size:11px}
+  .depo-summary-card .summary-total{padding:16px 14px}
+}
 </style>
 </head><body>
 <header><a class="wordmark" href="#home"><span class="brandmark">D</span><span class="depo-brand-text">DEPOSITO ME</span></a><div class="header-right"><span class="local-indicator">● Penyimpanan lokal</span><button class="install-btn" onclick="installApp()">Pasang aplikasi ↗</button></div></header>
 <div class="wrap"><nav class="nav"><button class="active" data-tab="home"><span class="ico">⌂</span>Beranda</button><button data-tab="calc"><span class="ico">▦</span>Simulasi</button><button data-tab="leads"><span class="ico">♙</span>Calon Deposan</button><button data-tab="offer"><span class="ico">✉</span>Penawaran</button><button data-tab="closing"><span class="ico">✓</span>Closing Deposito</button></nav>
 <section id="home" class="panel active"><div class="page-heading"><div><div class="eyebrow">RUANG KERJA ANDA</div><h1>Kelola peluang.<br><span>Kembangkan hubungan.</span></h1><p>Seluruh aktivitas deposito, dalam satu pandangan.</p></div><div class="date-badge" id="today"></div></div><div class="hero"><div><span class="eyebrow">DEPOSIT PLANNING</span><h2>Perencanaan yang matang.<br>Langkah yang lebih pasti.</h2><p>Bandingkan estimasi hasil dan siapkan penawaran<br>yang sesuai kebutuhan calon deposan.</p><button class="btn gold" onclick="showTab('calc')">Buat simulasi <span>↗</span></button></div><div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="coin">D</div><span class="art-caption">PRECISION IN EVERY PLAN</span></div></div><div class="card"><h2>Ringkasan portofolio</h2><p class="muted">Catat prospek deposito dan tindak lanjuti dengan lebih teratur.</p><div class="stats"><div class="stat"><small>Total prospek</small><strong id="statLeads">0</strong></div><div class="stat"><small>Prospek aktif</small><strong id="statActive">0</strong></div><div class="stat"><small>Estimasi dana prospek</small><strong id="statFunds">Rp0</strong></div><div class="stat"><small>Sudah ditempatkan</small><strong id="statPlaced">Rp0</strong></div></div><div class="actions"><button class="btn full" onclick="showTab('leads');document.getElementById('leadName').focus()">＋ Tambah calon deposan</button><button class="btn secondary full" onclick="showTab('calc')">Buka simulasi bunga</button></div></div><div class="card"><h2>Dari percakapan menjadi peluang</h2><p>Bangun hubungan yang lebih personal. Siapkan rincian nominal, pilihan tenor, dan estimasi bunga dalam pesan penawaran yang mudah dipahami.</p><p class="muted">Nominal, suku bunga, tenor, pencairan sebelum jatuh tempo, dan penjaminan mengikuti persetujuan serta ketentuan resmi bank.</p><button class="btn secondary full" onclick="showTab('offer')">Siapkan pesan WhatsApp</button></div><div class="notice"><b>Mode lokal:</b> Ruang kerja simulasi dan pencatatan. Data disimpan di browser/perangkat ini, belum tersinkron antarpegawai dan bukan sistem resmi bank.</div></section>
-<section id="calc" class="panel"><div class="depo-sim-page"><div class="depo-sim-heading"><h2>Simulasi Deposito</h2><p>Rencanakan penempatan dana dengan mudah.</p></div><div class="depo-sim-layout"><div class="depo-form-card"><h3>Detail Penempatan</h3><label for="calcClient">Nama calon deposan</label><input id="calcClient" placeholder="Bapak/Ibu Nasabah"><label for="calcPrincipal">Nominal penempatan</label><input id="calcPrincipal" type="number" min="0" value="1000000000" placeholder="1000000000"><div class="depo-form-grid"><div><label for="calcStartDate">Tanggal penempatan</label><input type="date" id="calcStartDate" required></div><div><label for="calcEndDate">Jatuh tempo</label><input type="date" id="calcEndDate" readonly aria-label="Tanggal jatuh tempo otomatis"></div><div><label for="calcRate">Suku bunga per tahun</label><div class="depo-rate-input"><input id="calcRate" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" maxlength="8" value="5,00" placeholder="Contoh 5,25" aria-describedby="calcRateHint" aria-invalid="false"><span class="depo-rate-percent" aria-hidden="true">%</span></div><small id="calcRateHint" class="depo-rate-hint">Isi bunga manual, contoh 5,25%</small></div><div><label for="calcTenor">Jangka waktu</label><select id="calcTenor"><option value="1">1 bulan</option><option value="3" selected>3 bulan</option><option value="6">6 bulan</option><option value="12">12 bulan</option></select></div><div><label for="calcTax">Asumsi pajak bunga</label><select id="calcTax"><option value="20" selected>20%</option><option value="10">10%</option><option value="0">0%</option></select></div><div><label for="calcPayout">Pembayaran bunga</label><select id="calcPayout"><option value="Bulanan" selected>Bulanan</option><option value="Jatuh Tempo">Saat jatuh tempo</option></select></div></div><div class="depo-actual365-note" id="calcDayBasisInfo" role="status">Basis 30/365 · 1 bulan = 30 hari bunga, jatuh tempo mengikuti kalender.</div><button class="btn full" onclick="calculate()">Hitung Simulasi</button></div><div class="depo-summary-card"><h3>Ringkasan Hasil</h3><div class="result-hero"><div class="hero-kicker" id="summaryHeroKicker">Estimasi bunga bersih • 3 bulan</div><div class="hero-net" id="net">Rp10.000.000</div><div class="hero-month" id="summaryMonthly">Rata-rata bunga bersih per bulan</div></div><ul class="summary-list"><li class="summary-row"><span>Bunga kotor</span><strong id="gross">Rp12.500.000</strong></li><li class="summary-row"><span>Pajak bunga (<span id="summaryTaxRate">20%</span>)</span><strong id="summaryTax">Rp2.500.000</strong></li><li class="summary-row summary-total"><span><b>Pokok + bunga bersih</b><span class="summary-sub" id="summaryAccumulation">30/365 · 30 hari per bulan</span></span><strong class="value" id="summaryTotal">Rp1.010.000.000</strong></li></ul><div class="summary-note"><span class="icon">✓</span><span>Pencairan sebelum jatuh tempo: <strong>Tanpa penalti</strong></span></div><div class="depo-payout-line" id="summaryPayoutText">Pembayaran bunga: Bulanan</div><details class="interest-breakdown" id="interestBreakdown">
+<section id="calc" class="panel"><div class="depo-sim-page"><div class="depo-sim-heading"><h2>Simulasi Deposito</h2><p>Rencanakan penempatan dana dengan mudah.</p></div><div class="depo-sim-layout"><div class="depo-form-card"><h3>Detail Penempatan</h3><label for="calcClient">Nama calon deposan</label><input id="calcClient" placeholder="Bapak/Ibu Nasabah"><label for="calcPrincipal">Nominal penempatan</label><input id="calcPrincipal" type="number" min="0" value="1000000000" placeholder="1000000000"><div class="depo-form-grid"><div><label for="calcStartDate">Tanggal penempatan</label><input type="date" id="calcStartDate" required></div><div><label for="calcEndDate">Jatuh tempo</label><input type="date" id="calcEndDate" readonly aria-label="Tanggal jatuh tempo otomatis"></div><div><label for="calcRate">Suku bunga per tahun</label><div class="depo-rate-input"><input id="calcRate" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" maxlength="8" value="5,00" placeholder="Contoh 5,25" aria-describedby="calcRateHint" aria-invalid="false"><span class="depo-rate-percent" aria-hidden="true">%</span></div><small id="calcRateHint" class="depo-rate-hint">Isi bunga manual, contoh 5,25%</small></div><div><label for="calcTenor">Jangka waktu</label><select id="calcTenor"><option value="1">1 bulan</option><option value="3" selected>3 bulan</option><option value="6">6 bulan</option><option value="12">12 bulan</option></select></div><div><label for="calcTax">Asumsi pajak bunga</label><select id="calcTax"><option value="20" selected>20%</option><option value="10">10%</option><option value="0">0%</option></select></div><div><label for="calcPayout">Pembayaran bunga</label><select id="calcPayout"><option value="Bulanan" selected>Bulanan</option><option value="Jatuh Tempo">Saat jatuh tempo</option></select></div></div><button class="btn full" onclick="calculate()">Hitung Simulasi</button></div><div class="depo-summary-card"><h3>Ringkasan Hasil</h3><div class="result-hero"><div class="result-hero-top"><div class="hero-kicker" id="summaryHeroKicker">Estimasi Bunga Bersih</div><span class="hero-tenor" id="summaryTenor">Tenor 3 bulan</span></div><div class="hero-net" id="net">Rp10.000.000</div><div class="hero-month" id="summaryMonthly">Rata-rata per bulan: Rp3.333.333</div></div><ul class="summary-list"><li class="summary-row"><span>Bunga kotor</span><strong id="gross">Rp12.500.000</strong></li><li class="summary-row"><span>Pajak bunga (<span id="summaryTaxRate">20%</span>)</span><strong id="summaryTax">Rp2.500.000</strong></li><li class="summary-row summary-total"><span><b>Total Pokok + Bunga Bersih</b><span class="summary-sub" id="summaryAccumulation">Akumulasi selama tenor</span></span><strong class="value" id="summaryTotal">Rp1.010.000.000</strong></li></ul><div class="summary-note"><span class="icon">✓</span><span>Pencairan sebelum jatuh tempo: <strong>Tanpa penalti</strong></span></div><div class="depo-payout-line" id="summaryPayoutText">Pembayaran bunga: Bulanan</div><details class="interest-breakdown" id="interestBreakdown">
   <summary><span class="interest-toggle-text">Lihat Rincian Bunga</span><span class="interest-chevron" aria-hidden="true"></span></summary>
   <div class="interest-breakdown-inner">
     <div class="interest-desc" id="interestPaymentInfo">Estimasi bunga dibayarkan bulanan</div>
@@ -293,15 +352,16 @@ function calculate(){
   }catch(err){const date=document.getElementById('calcStartDate');date.setCustomValidity(err.message);date.reportValidity();date.setCustomValidity('');return null;}
   lastCalc=result;
   document.getElementById('calcEndDate').value=result.maturityDate;
-  document.getElementById('calcDayBasisInfo').textContent=`Basis 30/365 · ${result.tenor} × 30 = ${result.days} hari bunga; jatuh tempo ${depoFormatTanggal(result.maturityDate)}`;
+
   document.getElementById('gross').textContent=rupiah(result.gross);
   document.getElementById('net').textContent=rupiah(result.net);
-  document.getElementById('summaryHeroKicker').textContent=`Estimasi bunga bersih • ${result.tenor} bulan / ${result.days} hari`;
-  document.getElementById('summaryMonthly').textContent=`Rata-rata ${rupiah(result.avgMonthly)} per bulan (basis 30/365)`;
+  document.getElementById('summaryHeroKicker').textContent='Estimasi Bunga Bersih';
+  document.getElementById('summaryTenor').textContent=`Tenor ${result.tenor} bulan`;
+  document.getElementById('summaryMonthly').textContent=`Rata-rata per bulan: ${rupiah(result.avgMonthly)}`;
   document.getElementById('summaryTaxRate').textContent=`${result.tax}%`;
   document.getElementById('summaryTax').textContent=rupiah(result.taxAmount);
   document.getElementById('summaryTotal').textContent=rupiah(result.total);
-  document.getElementById('summaryAccumulation').textContent=`Basis 30/365 · ${result.days} hari bunga`;
+  document.getElementById('summaryAccumulation').textContent='Akumulasi selama tenor';
   document.getElementById('summaryPayoutText').textContent=result.payout==='Bulanan'?'Pembayaran bunga: Bulanan':'Pembayaran bunga: Saat jatuh tempo';
   window.fitDepositResultText?.();return lastCalc;
 }
