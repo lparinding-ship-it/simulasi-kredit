@@ -75,3 +75,56 @@
   window.AppTheme={set:apply,get:()=>theme};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
+
+
+/* Cetak KPEG Plus Metode 1/2: nomor angsuran berurutan dan 1 kelompok = 1 lembar A4.
+   Hanya mengatur DOM pratinjau/cetak; tidak menghitung ulang nominal kredit. */
+(function fixPegawaiPlusPrintPagination(){
+  'use strict';
+  const ROWS_PER_A4 = 24;
+  function paginate(){
+    if (!document.body.classList.contains('plus-document-preview')) return;
+    const host=document.getElementById('plusPrintBody');
+    if (!host) return;
+    const oldPages=Array.from(host.querySelectorAll('.pd-schedule-page'));
+    if (!oldPages.length) return;
+    const container=oldPages[0].parentElement;
+    if (!container || container.dataset.kpegA4Pagination === '24') return;
+    const rows=oldPages.flatMap(page=>Array.from(page.querySelectorAll('tbody > tr')));
+    if (!rows.length || !oldPages[0].querySelector('.pd-schedule-table tbody')) return;
+    const count=Math.ceil(rows.length / ROWS_PER_A4);
+    const newPages=[];
+    for (let start=0; start<rows.length; start+=ROWS_PER_A4){
+      const end=Math.min(start+ROWS_PER_A4,rows.length);
+      const page=oldPages[0].cloneNode(true);
+      const tbody=page.querySelector('.pd-schedule-table tbody');
+      tbody.replaceChildren(...rows.slice(start,end).map(r=>r.cloneNode(true)));
+      const subtitle=page.querySelector('.pd-head small');
+      if(subtitle){
+        const pageNo=Math.floor(start/ROWS_PER_A4)+1;
+        subtitle.textContent=subtitle.textContent.replace(/Halaman\s+\d+\s*\/\s*\d+/i,`Halaman ${pageNo}/${count}`);
+      }
+      const section=page.querySelector('.pd-section-title');
+      if(section)section.textContent=`RINCIAN BULAN ${start+1}—${end} / ${rows.length}`;
+      // Identitas lengkap (debitur, cabang, AO, plafon, angsuran) cukup pada lembar pertama.
+      // Lembar berikutnya tetap mencantumkan judul, nomor referensi, nomor halaman dan tabel.
+      if (start > 0) {
+        page.querySelector('.pd-grid')?.remove();
+        page.classList.add('pd-schedule-continuation');
+      }
+      newPages.push(page);
+    }
+    container.replaceChildren(...newPages);
+    container.dataset.kpegA4Pagination = '24';
+  }
+  function init(){
+    const host=document.getElementById('plusPrintBody');
+    if (!host) return;
+    const observer=new MutationObserver(paginate);
+    observer.observe(host,{childList:true});
+    window.addEventListener('beforeprint',paginate);
+    paginate();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
+  else init();
+})();
