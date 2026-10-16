@@ -2891,8 +2891,8 @@ window.SIM_MONITOR_RESET = function () {
     if(!plusSnap) return null;
     const d=identity();
     return {reference:d.reference,debtorName:d.debtor,
-      product:plusSnap.product,salary:plusSnap.salary,principal:plusSnap.principal,
-      netDisbursement:plusSnap.netDisbursement,payment:plusSnap.payment};
+      product:plusSnap.product,salary:Number(plusSnap.salary)||0,principal:Number(plusSnap.principal)||0,
+      netDisbursement:Number(plusSnap.netDisbursement)||0,payment:Number(plusSnap.payment)||0};
   };
   window.SIM_MONITOR_CAN_SAVE=()=>{
     const doc=identity(),complete=!!(doc.reference&&doc.debtor&&doc.date&&doc.branch&&doc.ao);

@@ -154,10 +154,26 @@ async function manageUser(operation,payload={}){
  return {ok:true,uid};
 }
 window.SIM_FIREBASE_BRIDGE={identity,loadAdmin,writeActivity,deleteActivities,createClosing,reviewClosing,manageUser};
+// Catat rincian hanya jika snapshot simulasi benar-benar lengkap dan valid.
+// Aktivitas membuka produk tidak mempunyai data debitur (ini disengaja).
 window.SIM_MONITOR_AUDIT=async action=>{
   if(!actor||!allowedActions.has(action))return;
   const snap=window.SIM_MONITOR_GET_SNAPSHOT?.()||{};
-  return writeActivity({action,reference:snap.reference||'',product:snap.product||'KREDIT CPNS/ASN',debtorName:action==='open_app'?'':snap.debtorName||'',amount:action==='open_app'?0:snap.principal||0,salary:action==='open_app'?0:snap.salary||0,payment:action==='open_app'?0:snap.payment||0,netDisbursement:action==='open_app'?0:snap.netDisbursement||0});
+  const isOpen=action==='open_app';
+  const isCreditResult=['save_simulation','print_summary','print_schedule','download_csv'].includes(action);
+  if(isCreditResult){
+    if(!window.SIM_MONITOR_CAN_SAVE?.())throw Error('Simulasi belum valid; data aktivitas tidak disimpan.');
+    const amount=Number(snap.principal),salary=Number(snap.salary),payment=Number(snap.payment),net=Number(snap.netDisbursement);
+    if(!String(snap.debtorName||'').trim()||!String(snap.reference||'').trim()||
+       ![amount,salary,payment,net].every(Number.isFinite)||
+       amount<=0||salary<=0||payment<=0||net<0){
+      throw Error('Data debitur atau hasil simulasi belum lengkap; aktivitas tidak disimpan.');
+    }
+  }
+  return writeActivity({action,reference:snap.reference||'',product:snap.product||'KREDIT CPNS/ASN',
+    debtorName:isOpen?'':snap.debtorName||'',amount:isOpen?0:snap.principal||0,
+    salary:isOpen?0:snap.salary||0,payment:isOpen?0:snap.payment||0,
+    netDisbursement:isOpen?0:snap.netDisbursement||0});
 };
 $('monitorLoginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('monitorLoginSubmit');btn.disabled=true;showStatus('Memeriksa akun Firebase…');try{await signInWithEmailAndPassword(auth,$('monitorEmail').value.trim(),$('monitorPassword').value);$('monitorPassword').value='';}catch(err){showStatus(friendly(err),true);}finally{btn.disabled=false;}});
 $('monitorLogout').addEventListener('click',async()=>{await signOut(auth);$('monitorPassword').value='';clearSession();showStatus('Anda telah keluar.');});
@@ -175,7 +191,7 @@ $('monitorSave').addEventListener('click',async()=>{
   try{await window.SIM_MONITOR_AUDIT('save_simulation');$('monitorSaveStatus').textContent='Simulasi tersimpan di Firebase.';}
   catch(err){$('monitorSaveStatus').textContent='Gagal menyimpan: '+friendly(err);}finally{btn.disabled=false;}
 });
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!actor)return;const map={print:'print_summary',schedulePrintNow:'print_schedule',csv:'download_csv'};if(map[b.id])window.SIM_MONITOR_AUDIT(map[b.id]).catch(console.warn);});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!actor)return;const map={print:'print_summary',schedulePrintNow:'print_schedule',csv:'download_csv'};if(map[b.id])window.SIM_MONITOR_AUDIT(map[b.id]).catch(err=>{console.warn('Aktivitas tidak dicatat:',err);});});
 setPersistence(auth,browserLocalPersistence).catch(console.warn);
 onAuthStateChanged(auth,async user=>{
   clearSession();if(!user){showStatus('Silakan login untuk menggunakan aplikasi.');return;}
