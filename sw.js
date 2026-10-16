@@ -1,10 +1,11 @@
-/* Simulasi Kredit PWA — scoped to /simulasi-kredit/.
-   Only public app files are cached. User-entered values are not stored here.
-   Bump APP_CACHE_VERSION when updating the UI/logic. */
-const APP_CACHE_VERSION = 'simkredit-kpeg-phase-elegant-v38-20261016';
+/* Simulasi Kredit PWA — GitHub Pages. Cache V43. */
+const APP_CACHE_VERSION = 'simkredit-kpeg-angsuran-tetap-v43-20261016';
 const APP_URL = new URL('./', self.registration.scope).href;
-const ASSET_PATHS = ['./', './index.html', './manifest.webmanifest','./firebase-monitor.js', './pegawai-plus.html',
-  './report-export.js','./online-funding-admin.js', './user-management.js', './theme.css', './theme.js', './deposito.html', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const ASSET_PATHS = ['./', './index.html', './manifest.webmanifest',
+  './firebase-monitor.js','./pegawai-plus.html','./report-export.js',
+  './online-funding-admin.js','./user-management.js','./theme.css',
+  './theme.js','./deposito.html','./icon-192.png','./icon-512.png',
+  './apple-touch-icon.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -29,16 +30,15 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin || !url.pathname.startsWith(new URL(APP_URL).pathname)) return;
-  // Network-first for pages: online updates should be fetched whenever possible.
+  if (url.origin !== self.location.origin ||
+      !url.pathname.startsWith(new URL(APP_URL).pathname)) return;
+
   if (req.mode === 'navigate') {
     event.respondWith((async () => {
       try {
         const fresh = await fetch(req);
         if (fresh.ok) {
           const cache = await caches.open(APP_CACHE_VERSION);
-          // Cache each page under its own URL: never overwrite the loan homepage
-          // with the separately navigable Deposito ME page.
           await cache.put(req, fresh.clone());
           if (url.pathname === new URL('./', APP_URL).pathname ||
               url.pathname === new URL('./index.html', APP_URL).pathname) {
@@ -56,7 +56,8 @@ self.addEventListener('fetch', event => {
     })());
     return;
   }
-  // Cache-first for static assets; they update on cache-version change.
+
+  // CSS/JS: asset caching updates on version change.
   event.respondWith((async () => {
     const hit = await caches.match(req);
     if (hit) return hit;

@@ -347,7 +347,7 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
   }
 }
 </style>
-<link rel="stylesheet" href="./theme.css?v=20261014-admin-online-restored-v29"><script src="./theme.js?v=20261014" defer></script></head>
+<link rel="stylesheet" href="./theme.css?v=20261014tht-schedule-lightpaper2"><script src="./theme.js?v=20261014" defer></script></head>
 <body class="embedded-plus">
 <script>if(window.parent===window)document.documentElement.classList.add('plus-direct-mode');</script>
 <div id="plusDirectNotice" style="display:none;max-width:540px;margin:12vh auto;padding:28px;background:white;border-radius:14px;border:1px solid #d3e1ee;font:15px/1.7 system-ui;color:#24425e"><h2>Masuk melalui Simulasi Kredit</h2><p>Untuk menggunakan produk Pegawai Plus, silakan login melalui aplikasi utama sehingga identitas petugas dan aktivitas dapat dicatat.</p><a href="./index.html" style="color:#215e9b;font-weight:800">Buka aplikasi utama →</a></div>
@@ -384,7 +384,7 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
 <div class="field"><label for="principal">Plafon manual (Rp)</label><input id="principal" data-key="principal" data-money class="currency" type="text" inputmode="numeric" value="244.744.000"></div>
 <div class="field"><label for="increment">Kelipatan pembulatan plafon (Rp)</label><input id="increment" data-key="increment" data-money class="currency" type="text" inputmode="numeric" value="1.000"></div>
 <div class="field"><label for="activeReference">Angsuran pegawai acuan (Rp)</label><input id="activeReference" data-key="activeReference" data-money class="currency" type="text" inputmode="numeric" value="5.949.276"></div><div class="field"><label for="pensionReference">Angsuran pensiun acuan (Rp)</label><input id="pensionReference" data-key="pensionReference" data-money class="currency" type="text" inputmode="numeric" value="3.149.990"></div>
-<div class="field"><label for="finalMode">Perlakuan angsuran terakhir</label><select id="finalMode" data-key="finalMode"><option value="adjust">Sesuaikan agar lunas</option><option value="fixed">Pertahankan sesuai angsuran</option></select></div>
+<div class="field"><label for="finalMode">Perlakuan angsuran terakhir</label><select id="finalMode" data-key="finalMode"><option value="fixed">Angsuran tetap sampai akhir (wajib)</option></select></div>
 <div class="field"><label for="safetyBuffer">Cadangan pengurang plafon (Rp)</label><input id="safetyBuffer" data-key="safetyBuffer" data-money class="currency" type="text" inputmode="numeric" value="0"></div>
 </div><div class="quick-actions"><button type="button" class="btn btn-soft" id="presetBtn">Isi Contoh Sesuai PDF</button><button type="button" class="btn btn-primary" id="maximumBtn">Hitung Plafon Maksimum</button></div></div></section>
 <section class="panel"><div class="panel-heading"><span class="panel-index">04</span><div><h3>Biaya Kredit, Retensi & Dana Bersih</h3><p id="retentionPolicyText">Retensi aktif mengikuti pilihan produk; retensi pensiun diinput manual dalam jumlah bulan.</p></div></div><div class="panel-body"><div class="fields"><div class="field"><label for="adminPercent">Administrasi (% dari plafon)</label><input id="adminPercent" data-key="adminPercent" type="number" min="0" max="100" step="0.01" value="0"><div class="hint">Nominal otomatis: <strong id="adminCalculated">Rp0</strong></div></div><div class="field"><label for="provision">Provisi (%)</label><input id="provision" data-key="provision" type="number" step="0.01" min="0" max="100" value="0"></div><div class="field full plus-ajk-choice"><label for="ajkType">Pilihan Asuransi Jiwa Kredit (AJK)</label><select id="ajkType" data-key="ajkType"><option value="ajk">AJK CHUBB — premi otomatis</option><option value="ajk_other">AJK LAIN — premi manual</option><option value="none">TANPA AJK</option></select><div class="hint">Premi CHUBB mengikuti tabel tarif referensi berdasarkan usia, tenor dan plafon. Konfirmasi tarif polis sebelum digunakan.</div></div>
@@ -437,7 +437,7 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
     retirementDate:'2028-01-01',autoRetirement:true,salary:7000000,pensionSalary:4500000,
     startDate:'2026-10-12',tenor:120,interest:13,buffer:1,activeCap:85,pensionCap:70,
     loanMode:'maximum',paymentMode:'auto',principal:244744000,increment:1000,
-    activeReference:5949276,pensionReference:3149990,finalMode:'adjust',safetyBuffer:0,
+    activeReference:5949276,pensionReference:3149990,finalMode:'fixed',safetyBuffer:0,
     admin:0,adminPercent:0,provision:0,insurance:0,ajkType:'ajk',ajkOtherCompany:'',ajkOtherPremium:0,pensionRetentionMonths:0,oldLoan:0
   };
   const moneyKeys = ['salary','pensionSalary','principal','increment','activeReference','pensionReference','safetyBuffer','admin','insurance','ajkOtherPremium','oldLoan'];
@@ -513,21 +513,36 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
       pensionPayment=Math.max(0,Math.floor(Math.min(cap2,standard)+1e-8));
       activePayment=Math.max(0,Math.ceil((principal-pensionPayment*f2)/f1-1e-8));
     }
+    // Kebijakan angsuran tetap: periode terakhir memakai angsuran reguler
+    // fase terkait. Selisih pembulatan yang kecil dibebankan sebagai koreksi
+    // bunga periode terakhir, BUKAN mengubah nominal angsuran.
+    // Jika angsuran tidak dapat melunasi secara matematis (selisih material),
+    // pertahankan nilainya, tampilkan saldo sebenarnya, lalu BLOKIR CETAK.
     const rows=[];let balance=principal, paid=0, totalInterest=0, totalPrincipal=0, maxActualOver=0, negativeAmort=false;
+    let lastRoundingAdjustment=0, earlyPayoff=false;
+    const roundingTolerance=Math.min(720,Math.max(100,tenure*2));
     for(let month=1;month<=tenure;month++){
       const isActive=month<=n1,phase=isActive?'PEGAWAI':'PENSIUN';
-      const due=addMonths(start,month),beginning=Math.max(0,balance);
-      const interest=beginning>0?Math.round(beginning*r):0;
+      const due=addMonths(start,month),beginning=balance;
+      let interest=beginning>0?Math.round(beginning*r):0;
       const regular=isActive?activePayment:pensionPayment;
-      let payment=0;
-      if(beginning>0)payment=month===tenure&&src.finalMode==='adjust'?beginning+interest:Math.min(regular,beginning+interest);
+      const payment=regular; // term terakhir TIDAK disesuaikan.
+      if(month===tenure && beginning>0 && regular>0){
+        const requiredInterest=regular-beginning;
+        const diff=requiredInterest-interest;
+        if(requiredInterest>=0 && Math.abs(diff)<=roundingTolerance){
+          interest=requiredInterest;
+          lastRoundingAdjustment=diff;
+        }
+      }
       const principalPaid=payment-interest;
-      const ending=Math.max(0,beginning-principalPaid);
+      const ending=beginning-principalPaid;
       const cap=isActive?cap1:cap2;
       const exceeded=Math.max(0,payment-cap);
       maxActualOver=Math.max(maxActualOver,exceeded);
       if(principalPaid<0)negativeAmort=true;
-      let remark = exceeded>1 ? 'Di atas coverage' : principalPaid<0?'Bunga belum tertutup' : month===tenure&&ending>1?'Sisa pokok':month===tenure&&payment!==regular?'Angsuran akhir disesuaikan':'';
+      if(ending < -1 && month<tenure)earlyPayoff=true;
+      let remark = exceeded>1 ? 'Di atas coverage' : principalPaid<0?'Bunga belum tertutup' : ending < -1?'Kelebihan pembayaran' : month===tenure&&ending>1?'Sisa pokok' : month===tenure&&lastRoundingAdjustment?'Pembulatan bunga terakhir':'';
       rows.push({month,date:due,phase,beginning,interest,principalPaid,payment,ending,remark,cap});
       balance=ending;paid+=payment;totalInterest+=interest;totalPrincipal+=principalPaid;
     }
@@ -548,16 +563,18 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
     if(activePayment>cap1+1&&n1>0)warnings.push('Angsuran reguler pegawai melebihi batas coverage aktif.');
     if(pensionPayment>cap2+1&&n2>0)warnings.push('Angsuran reguler pensiun melebihi batas coverage pensiun.');
     if(negativeAmort)warnings.push('Terdapat periode ketika pembayaran kurang dari bunga sehingga outstanding bertambah.');
-    if(balance>1)warnings.push(`Pada bulan terakhir, masih terdapat sisa pokok ${rp(balance)} yang belum dilunasi.`);
-    if(maxActualOver>1)warnings.push('Terdapat angsuran aktual, termasuk penyesuaian terakhir, yang melampaui batas coverage.');
+    if(balance>1)warnings.push(`Angsuran tetap tidak melunasi seluruh baki debet; terdapat sisa pokok ${rp(balance)}. Periksa tenor, plafon, dan angsuran sebelum cetak.`);
+    if(balance < -1)warnings.push(`Angsuran tetap menghasilkan kelebihan bayar ${rp(-balance)}. Periksa kesesuaian plafon dan angsuran referensi sebelum cetak.`);
+    if(earlyPayoff)warnings.push('Skema angsuran menyebabkan kelebihan pembayaran sebelum tenor berakhir; parameter perlu diperiksa.');
+    if(maxActualOver>1)warnings.push('Terdapat angsuran aktual yang melampaui batas coverage.');
     if(net<0)warnings.push('Jumlah biaya dan potongan lebih tinggi daripada plafon kredit sehingga dana bersih menjadi negatif.');
     if(Number(src.pensionRetentionMonths)<0||Number(src.pensionRetentionMonths)>n2)errors.push('Jumlah bulan retensi pensiun harus antara 0 dan masa angsuran pensiun ('+n2+' bulan).');
     if(Number(src.pensionRetentionMonths)%1!==0)errors.push('Jumlah bulan retensi pensiun harus berupa bilangan bulat.');
     
     
     if(Math.abs(pvPayment-principal)>2&&src.paymentMode==='reference')warnings.push('Angsuran referensi tidak persis setara dengan plafon menurut rumus PV anuitas; perlu rekonsiliasi pembulatan.');
-    const good=!warnings.some(w=>/melebihi|melampaui|lebih tinggi|bunga|sisa pokok|negatif|tidak persis/i.test(w))&&errors.length===0&&balance<=1;
-    return {errors,warnings,good,tenure,n1,n2,activeRetentionMonths,cap1,cap2,principal,maxLoan,theoretical,activePayment,pensionPayment,rows,balance,paid,totalInterest,totalPrincipal,fees,ajkQuote,totalFees,net,r,pvPayment,start,retire,birth,maxActualOver};
+    const good=!warnings.some(w=>/melebihi|melampaui|lebih tinggi|bunga|sisa pokok|negatif|tidak persis|kelebihan bayar|kelebihan pembayaran/i.test(w))&&errors.length===0&&Math.abs(balance)<=1&&!earlyPayoff;
+    return {errors,warnings,good,tenure,n1,n2,activeRetentionMonths,cap1,cap2,principal,maxLoan,theoretical,activePayment,pensionPayment,rows,balance,paid,totalInterest,totalPrincipal,fees,ajkQuote,totalFees,net,r,pvPayment,start,retire,birth,maxActualOver,lastRoundingAdjustment};
   }
   function setText(id,content){const el=$(id);if(el)el.textContent=content;}
   function meter(id,ratio){ const el=$(id);el.style.width=clamp(ratio,0,100)+'%';el.classList.toggle('is-over',ratio>100.001);}
@@ -605,7 +622,7 @@ function setupAutoPlafonPanel(){
   function render(){
     state.loanMode='maximum';
     state.paymentMode='auto';
-    state.finalMode='adjust';
+    state.finalMode='fixed';
     current=calc(state);const m=current;
     setText('topProductLabel',productMethod(state).toUpperCase());
     setText('headlineProductLabel',productMethod(state));
@@ -693,7 +710,7 @@ function setupAutoPlafonPanel(){
   function renderSchedule(m){
     setText('scheduleSub', `${m.tenure} bulan · ${m.n1} bulan aktif + ${m.n2} bulan pensiun · bunga efektif ${state.interest}%/tahun · bunga bulan 1 ${rp(m.rows[0]?.interest||0)}`);
     $('scheduleBody').innerHTML=m.rows.map((row,i)=>`<tr class="${i===m.n1&&m.n2?'stage-change':''}"><td>${row.month}</td><td>${dmy(row.date)}</td><td><span class="tag ${row.phase==='PENSIUN'?'retired':''}">${row.phase}</span></td><td>${fmt(row.beginning)}</td><td>${fmt(row.interest)}</td><td class="${row.principalPaid<0?'status-negative':''}">${fmt(row.principalPaid)}</td><td>${fmt(row.payment)}</td><td>${fmt(row.ending)}</td></tr>`).join('');
-    $('scheduleFooter').innerHTML=`<span>Total pembayaran: <strong>${rp(m.paid)}</strong></span><span>Total bunga: <strong>${rp(m.totalInterest)}</strong></span><span>Outstanding akhir: <strong>${rp(m.balance)}</strong></span>`;
+    $('scheduleFooter').innerHTML=`<span>Total pembayaran: <strong>${rp(m.paid)}</strong></span><span>Total bunga: <strong>${rp(m.totalInterest)}</strong></span><span>Outstanding akhir: <strong>${rp(m.balance)}</strong></span>${m.lastRoundingAdjustment?`<span>Pembulatan bunga bulan akhir: <strong>${m.lastRoundingAdjustment>0?'+':''}${rp(m.lastRoundingAdjustment)}</strong> (angsuran tetap)</span>`:''}`;
   }
   function cardFields(m){
     return [
@@ -708,7 +725,7 @@ function setupAutoPlafonPanel(){
     $('cardIdentity').innerHTML=cardFields(m).map(([label,value])=>`<div class="identity-unit"><b>${safe(label)}</b><strong>${safe(value)}</strong></div>`).join('');
     $('cardHighlights').innerHTML=[['Angsuran Pegawai',rp(m.activePayment)],['Angsuran Pensiun',rp(m.pensionPayment)],['Jumlah Angsuran',rp(m.paid)],['Baki Debet Akhir',rp(m.balance)]].map(([label,value])=>`<div class="highlight"><span>${safe(label)}</span><strong>${safe(value)}</strong></div>`).join('');
     $('cardStatus').className='card-status'+(!m.good?' warning':'');
-    $('cardStatus').textContent=(m.good?'PROYEKSI TERHITUNG. ':'PERLU VERIFIKASI PERHITUNGAN. ')+`${m.n1} bulan pegawai aktif dan ${m.n2} bulan pensiun. ${!m.good?'Angsuran akhir atau selisih pembulatan perlu dikonfirmasi ke core banking.':''}`;
+    $('cardStatus').textContent=(m.good?'PROYEKSI TERHITUNG. ':'PERLU VERIFIKASI PERHITUNGAN. ')+`${m.n1} bulan pegawai aktif dan ${m.n2} bulan pensiun. ${!m.good?'Periksa baki debet dan kesesuaian angsuran sebelum digunakan.':''}`;
     $('cardBody').innerHTML=cardRows(m,m.rows);
     $('cardTotals').innerHTML=`<span>Total pokok: <strong>${rp(m.totalPrincipal)}</strong></span><span>Total bunga: <strong>${rp(m.totalInterest)}</strong></span><span>Total angsuran: <strong>${rp(m.paid)}</strong></span><span>Sisa akhir: <strong>${rp(m.balance)}</strong></span>`;
   }
@@ -725,7 +742,7 @@ function setupAutoPlafonPanel(){
         <div class="print-card-stage"><strong>Fase Aktif:</strong> ${m.n1} × ${rp(m.activePayment)} &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Fase Pensiun:</strong> ${m.n2} × ${rp(m.pensionPayment)} &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Angsuran ke:</strong> ${part[0].month}–${part[part.length-1].month}</div>
         <table class="repayment-card"><thead><tr><th>No.</th><th>Tgl Jatuh Tempo</th><th>Fase</th><th>Pokok (Rp)</th><th>Bunga (Rp)</th><th>Angsuran (Rp)</th><th>Sisa Pokok (Rp)</th></tr></thead><tbody>${cardRows(m,part)}</tbody></table>
         ${start+groupSize>=m.rows.length?`<div class="print-card-summary"><span>Total Pokok <b>${rp(m.totalPrincipal)}</b></span><span>Total Bunga <b>${rp(m.totalInterest)}</b></span><span>Total Angsuran <b>${rp(m.paid)}</b></span><span>Saldo Akhir <b>${rp(m.balance)}</b></span></div>`:''}
-        ${!m.good && page===total?'<div class="print-card-flag">PERLU REVIEW: terdapat peringatan pada simulasi. Verifikasi jadwal dan angsuran terakhir ke sistem inti bank.</div>':''}
+        ${!m.good && page===total?'<div class="print-card-flag">PERLU REVIEW: terdapat peringatan pada simulasi. Verifikasi jadwal, baki debet, dan total pembayaran ke sistem inti bank.</div>':''}
         <div class="print-card-footer"><div><strong>Kartu simulasi, bukan bukti pembayaran.</strong><br>Sisa pokok merupakan proyeksi; validasi akhir harus mengacu pada core banking.</div><div class="signature">AO / Petugas Bank</div><div class="signature">Debitur</div></div>
       </section>`);
     }
@@ -791,7 +808,7 @@ function setupAutoPlafonPanel(){
   document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
     showTab(btn.dataset.tab);
   }));
-  $('maximumBtn').addEventListener('click',()=>{state.loanMode='maximum';state.paymentMode='auto';state.finalMode='adjust';applyInputs();render();});
+  $('maximumBtn').addEventListener('click',()=>{state.loanMode='maximum';state.paymentMode='auto';state.finalMode='fixed';applyInputs();render();});
   $('presetBtn').addEventListener('click',()=>{state={...initial,creditProduct:state.creditProduct,paymentMode:'reference'};if(embedded)state.reference=newReference(productCode(state));applyInputs();render();});
   $('resetBtn').addEventListener('click',()=>{if(confirm('Kembalikan data ke kondisi awal dengan perhitungan angsuran otomatis?')){state={...initial,creditProduct:state.creditProduct};if(embedded)state.reference=newReference(productCode(state));applyInputs();render();}});
   function requestPrint(mode){
@@ -890,7 +907,7 @@ function setupAutoPlafonPanel(){
   const advanced=['buffer','paymentMode','increment','activeReference','pensionReference','finalMode','safetyBuffer'];
   const details=document.createElement('details');details.id='uxPlusAdvanced';details.className='ux-advanced';
   const title=document.createElement('summary');title.textContent='Pengaturan lanjutan perhitungan';details.appendChild(title);
-  const description=document.createElement('p');description.textContent='Opsi teknis untuk rekonsiliasi: buffer pensiun, angsuran referensi, pembulatan plafon, dan angsuran terakhir. Penggunaan normal tidak memerlukan perubahan parameter ini.';details.appendChild(description);
+  const description=document.createElement('p');description.textContent='Opsi teknis untuk rekonsiliasi: buffer pensiun, angsuran referensi, pembulatan plafon, dan angsuran terakhir. Angsuran terakhir selalu tetap; selisih pembulatan kecil hanya memengaruhi alokasi bunga.';details.appendChild(description);
   const grid=document.createElement('div');grid.className='ux-advanced-grid';details.appendChild(grid);
   const panel=panels[2]?.querySelector('.panel-body');
   if(panel){panel.appendChild(details);for(const id of advanced){const field=document.getElementById(id)?.closest('.field');if(field)grid.appendChild(field);}}
