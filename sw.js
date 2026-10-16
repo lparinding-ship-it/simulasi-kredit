@@ -1,7 +1,7 @@
 /* Simulasi Kredit PWA — scoped to /simulasi-kredit/.
    Only public app files are cached. User-entered values are not stored here.
    Bump APP_CACHE_VERSION when updating the UI/logic. */
-const APP_CACHE_VERSION = 'simkredit-kpeg-a4-identity-first-page-v35-20261016';
+const APP_CACHE_VERSION = 'simkredit-kpeg-phase-elegant-v38-20261016';
 const APP_URL = new URL('./', self.registration.scope).href;
 const ASSET_PATHS = ['./', './index.html', './manifest.webmanifest','./firebase-monitor.js', './pegawai-plus.html',
   './report-export.js','./online-funding-admin.js', './user-management.js', './theme.css', './theme.js', './deposito.html', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];

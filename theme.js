@@ -77,51 +77,144 @@
 })();
 
 
-/* Cetak KPEG Plus Metode 1/2: nomor angsuran berurutan dan 1 kelompok = 1 lembar A4.
-   Hanya mengatur DOM pratinjau/cetak; tidak menghitung ulang nominal kredit. */
+/* KPEG Plus Metode 1/2 — jadwal cetak A4 hemat kertas.
+   30 angsuran pada halaman pertama (dengan identitas), kemudian maksimal 35
+   per halaman lanjutan (tanpa identitas). Bagi sisa baris merata untuk
+   menghindari lembar terakhir yang terlalu kosong.
+   Semua baris adalah hasil render kalkulasi asli; tidak dihitung ulang. */
 (function fixPegawaiPlusPrintPagination(){
   'use strict';
-  const ROWS_PER_A4 = 24;
-  function paginate(){
-    if (!document.body.classList.contains('plus-document-preview')) return;
-    const host=document.getElementById('plusPrintBody');
-    if (!host) return;
-    const oldPages=Array.from(host.querySelectorAll('.pd-schedule-page'));
-    if (!oldPages.length) return;
-    const container=oldPages[0].parentElement;
-    if (!container || container.dataset.kpegA4Pagination === '24') return;
-    const rows=oldPages.flatMap(page=>Array.from(page.querySelectorAll('tbody > tr')));
-    if (!rows.length || !oldPages[0].querySelector('.pd-schedule-table tbody')) return;
-    const count=Math.ceil(rows.length / ROWS_PER_A4);
-    const newPages=[];
-    for (let start=0; start<rows.length; start+=ROWS_PER_A4){
-      const end=Math.min(start+ROWS_PER_A4,rows.length);
-      const page=oldPages[0].cloneNode(true);
-      const tbody=page.querySelector('.pd-schedule-table tbody');
-      tbody.replaceChildren(...rows.slice(start,end).map(r=>r.cloneNode(true)));
-      const subtitle=page.querySelector('.pd-head small');
-      if(subtitle){
-        const pageNo=Math.floor(start/ROWS_PER_A4)+1;
-        subtitle.textContent=subtitle.textContent.replace(/Halaman\s+\d+\s*\/\s*\d+/i,`Halaman ${pageNo}/${count}`);
+  const VERSION = 'kpeg-a4-balanced-phase-elegant-v38';
+  const FIRST_LIMIT = 30;
+  const FOLLOW_LIMIT = 35;
+  function compactPrintStyle(){
+    if (document.getElementById('kpeg-print-hemat-kertas-css')) return;
+    const style=document.createElement('style');
+    style.id='kpeg-print-hemat-kertas-css';
+    // Tabel tetap netral. Hanya label fase dan SATU baris transisi yang diberi aksen.
+    // Scope sempit untuk jadwal KPEG+, tidak mengubah tabel/produk lain.
+    style.textContent=`
+      body.plus-document-preview #plusDocument #plusPrintBody .pd-schedule-table tbody tr td {
+        background:#ffffff!important;color:#1d3c5e!important;box-shadow:none!important;
       }
+      body.plus-document-preview #plusDocument #plusPrintBody .pd-schedule-table tbody tr:nth-child(even) td {
+        background:#f6f8fb!important;
+      }
+      body.plus-document-preview #plusDocument #plusPrintBody .pd-schedule-table tbody tr.kpeg-phase-transition td {
+        background:#e9f4f3!important;
+      }
+      body.plus-document-preview #plusDocument #plusPrintBody .pd-schedule-table .kpeg-phase-tag {
+        display:inline-block;box-sizing:border-box;
+        min-width:50px;padding:2px 6px;border-radius:5px;
+        font-size:8.1px;line-height:1.15;font-weight:700;
+        text-align:center;letter-spacing:0;white-space:nowrap;
+        print-color-adjust:exact;-webkit-print-color-adjust:exact;
+      }
+      body.plus-document-preview #plusDocument #plusPrintBody .pd-schedule-table .kpeg-phase-tag-active {
+        background:#e7f0fc!important;color:#1e568c!important;
+      }
+      body.plus-document-preview #plusDocument #plusPrintBody .pd-schedule-table .kpeg-phase-tag-pension {
+        background:#e6f4ee!important;color:#17684b!important;
+      }
+      body.plus-document-preview #plusDocument .kpeg-amount-active {color:#255887!important;font-weight:700;}
+      body.plus-document-preview #plusDocument .kpeg-amount-pension {color:#276a52!important;font-weight:700;}
+      @media print {
+        body.plus-document-preview #plusDocument .pd-schedule-table tbody td {
+          padding:1.2mm 5px!important;
+        }
+        body.plus-document-preview #plusDocument .pd-schedule-page {
+          break-inside:avoid!important;page-break-inside:avoid!important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  function paginate(){
+    if (!document.body.classList.contains('plus-document-preview'))return;
+    const host=document.getElementById('plusPrintBody');
+    if (!host)return;
+    const oldPages=Array.from(host.querySelectorAll('article.pd-schedule-page'));
+    if (!oldPages.length || oldPages.every(p=>p.dataset.kpegPaginationVersion===VERSION))return;
+    const container=oldPages[0].parentElement;
+    if (!container || !oldPages[0].querySelector('.pd-schedule-table tbody'))return;
+    const allRows=oldPages.flatMap(p=>Array.from(p.querySelectorAll('.pd-schedule-table tbody > tr')));
+    const total=allRows.length;
+    if (!total)return;
+    // Jumlah halaman ditentukan lebih dulu, lalu isinya diratakan tanpa sisa pendek.
+    const firstCount=Math.min(FIRST_LIMIT,total);
+    const remaining=total-firstCount;
+    const followPages=Math.ceil(remaining/FOLLOW_LIMIT);
+    const perFollow=followPages ? Math.floor(remaining/followPages) : 0;
+    const extra=followPages ? remaining%followPages : 0;
+    const sizes=[firstCount];
+    for(let i=0;i<followPages;i++)sizes.push(perFollow+(i<extra?1:0));
+    // Gunakan label ringkas seperti tabel utama (PEGAWAI / PENSIUN).
+    // Seluruh nominal pada kolom lain tetap diambil apa adanya dari hasil kalkulasi.
+    const firstPensionIndex=allRows.findIndex((r,idx)=>{
+      const phase=(r.cells[2]?.textContent||'').trim().toLowerCase();
+      const previous=(allRows[idx-1]?.cells[2]?.textContent||'').trim().toLowerCase();
+      return phase==='pensiun' && (previous==='aktif'||previous==='pegawai');
+    });
+    function applyPhaseMarkers(page, globalOffset) {
+      const rows=Array.from(page.querySelectorAll('.pd-schedule-table tbody tr'));
+      for (let rowIndex=0;rowIndex<rows.length;rowIndex++) {
+        const row=rows[rowIndex];
+        const cell=row.cells[2];
+        if(!cell)continue;
+        const label=(cell.textContent||'').trim().toLowerCase();
+        const isActive=label==='aktif'||label==='pegawai';
+        const isPension=label==='pensiun';
+        if (!isActive&&!isPension)continue;
+        row.classList.remove('kpeg-phase-active','kpeg-phase-pension');
+        row.classList.toggle('kpeg-phase-transition',globalOffset+rowIndex===firstPensionIndex);
+        // Tidak menyentuh isi kolom nominal/angsuran/pokok/bunga/baki debet.
+        const tag=document.createElement('span');
+        tag.className='kpeg-phase-tag '+(isActive?'kpeg-phase-tag-active':'kpeg-phase-tag-pension');
+        tag.textContent=isActive?'PEGAWAI':'PENSIUN';
+        cell.replaceChildren(tag);
+      }
+      // Nominal aktif/pensiun pada identitas halaman pertama, diberi warna tanpa menambah baris.
+      const datum = Array.from(page.querySelectorAll('.pd-datum')).find(d =>
+        /angsuran\s+aktif\s*\/\s*pensiun/i.test(d.querySelector('span')?.textContent || ''));
+      const value = datum?.querySelector('strong');
+      if (value && !value.querySelector('.kpeg-amount-active')) {
+        const parts = value.textContent.trim().split(/\s+\/\s+/);
+        if (parts.length === 2) {
+          const active = document.createElement('span');active.className='kpeg-amount-active';active.textContent=parts[0];
+          const pension = document.createElement('span');pension.className='kpeg-amount-pension';pension.textContent=parts[1];
+          value.replaceChildren(active, document.createTextNode(' / '), pension);
+        }
+      }
+    }
+    const template=oldPages[0];
+    const pages=[];
+    let offset=0;
+    for(let pi=0;pi<sizes.length;pi++){
+      const size=sizes[pi];
+      const page=template.cloneNode(true);
+      page.dataset.kpegPaginationVersion=VERSION;
+      const tbody=page.querySelector('.pd-schedule-table tbody');
+      tbody.replaceChildren(...allRows.slice(offset,offset+size).map(tr=>tr.cloneNode(true)));
+      const subtitle=page.querySelector('.pd-head small');
+      if(subtitle)subtitle.textContent=subtitle.textContent.replace(/Halaman\s+\d+\s*\/\s*\d+/i,`Halaman ${pi+1}/${sizes.length}`);
       const section=page.querySelector('.pd-section-title');
-      if(section)section.textContent=`RINCIAN BULAN ${start+1}—${end} / ${rows.length}`;
-      // Identitas lengkap (debitur, cabang, AO, plafon, angsuran) cukup pada lembar pertama.
-      // Lembar berikutnya tetap mencantumkan judul, nomor referensi, nomor halaman dan tabel.
-      if (start > 0) {
+      if(section)section.textContent=`RINCIAN BULAN ${offset+1}—${offset+size} / ${total}`;
+      if(pi>0){
         page.querySelector('.pd-grid')?.remove();
         page.classList.add('pd-schedule-continuation');
       }
-      newPages.push(page);
+      applyPhaseMarkers(page, offset);
+      pages.push(page);
+      offset+=size;
     }
-    container.replaceChildren(...newPages);
-    container.dataset.kpegA4Pagination = '24';
+    container.replaceChildren(...pages);
   }
   function init(){
+    compactPrintStyle();
     const host=document.getElementById('plusPrintBody');
-    if (!host) return;
+    if(!host)return;
     const observer=new MutationObserver(paginate);
-    observer.observe(host,{childList:true});
+    observer.observe(host,{childList:true,subtree:false});
     window.addEventListener('beforeprint',paginate);
     paginate();
   }
