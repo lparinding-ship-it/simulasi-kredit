@@ -1,5 +1,5 @@
-/* Simulasi Kredit PWA — GitHub Pages. Cache V44. */
-const APP_CACHE_VERSION = 'simkredit-monitoring-v44-20261017';
+/* Simulasi Kredit PWA — GitHub Pages. Cache V45. */
+const APP_CACHE_VERSION = 'simkredit-user-online-v45-20261018';
 const APP_URL = new URL('./', self.registration.scope).href;
 const ASSET_PATHS = ['./', './index.html', './manifest.webmanifest',
   './firebase-monitor.js','./pegawai-plus.html','./report-export.js',

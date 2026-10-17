@@ -4,18 +4,19 @@
 (() => {
  'use strict';
  const $=id=>document.getElementById(id);
- const offline=!document.querySelector('script[src="./firebase-monitor.js"]');
+ const offline=location.protocol==='file:'; // Offline preview only, never on a deployed HTTPS site.
+ const bridgeReady=()=>!!window.SIM_FIREBASE_BRIDGE && typeof window.SIM_FIREBASE_BRIDGE.manageUser==='function';
  const demoKey='SIM_UJI_USER_AO_SPARK_V1';
  const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const category=t=>t==='funding'?'AO Funding':t==='lending'?'AO Lending':'Belum dikategorikan';
  let users=[],editing='',busy=false;
  const msg=(text,err=false)=>{if($('umStatus')){$('umStatus').textContent=text;$('umStatus').classList.toggle('error',err);}};
- const adminOK=()=>offline||!!window.SIM_FIREBASE_BRIDGE?.identity()?.isAdmin;
+ const adminOK=()=>offline||!!window.SIM_FIREBASE_BRIDGE?.identity?.()?.isAdmin;
  function localRead(){try{return JSON.parse(localStorage.getItem(demoKey)||'[]');}catch{return [];}}
  function localWrite(){localStorage.setItem(demoKey,JSON.stringify(users));}
  function busyState(v){busy=v;for(const id of ['umSubmit','umRefresh','umCancelEdit'])$(id).disabled=v;for(const btn of $('umBody').querySelectorAll('button'))btn.disabled=v;}
  async function invoke(operation,data={}){
-   if(!offline){const bridge=window.SIM_FIREBASE_BRIDGE;if(!bridge?.identity()?.isAdmin||typeof bridge.manageUser!=='function')throw Error('Hanya Administrator yang dapat mengelola profil AO.');return bridge.manageUser(operation,data);}
+   if(!offline){const bridge=window.SIM_FIREBASE_BRIDGE;if(!bridgeReady())throw Error('Modul Firebase belum siap. Periksa koneksi internet dan muat ulang halaman.');if(!bridge.identity()?.isAdmin)throw Error('Hanya Administrator yang dapat mengelola profil AO.');return bridge.manageUser(operation,data);}
    users=localRead();
    if(operation==='list')return {users};
    const now=new Date().toISOString();
@@ -43,7 +44,7 @@
   <button class="um-btn" type="button" data-act="toggle">${u.active===true||u.active==='true'?'Nonaktifkan':'Aktifkan'}</button>
   <button class="um-btn danger" type="button" data-act="revoke">Cabut Akses</button></div></td></tr>`).join(''):'<tr><td colspan="5">Tidak ada profil AO sesuai pencarian.</td></tr>';
  }
- async function reload(){if(!adminOK()){msg('Akses Administrator ditolak.',true);return;}
+ async function reload(){if(!adminOK()){msg(!offline&&!bridgeReady()?'Modul Firebase belum siap. Periksa internet atau error pada Console browser.':'Akses Administrator ditolak.',true);return;}
    busyState(true);msg('Memuat profil AO…');try{const res=await invoke('list');users=Array.isArray(res.users)?res.users:[];
    users.sort((a,b)=>String(a.fullName||'').localeCompare(String(b.fullName||''),'id'));display();
    msg(offline?'MODE UJI: semua perubahan hanya tersimpan di browser lokal.':`${users.length} profil AO terbaca dari Cloud Firestore.`);
@@ -91,13 +92,13 @@
  function init(){const nav=$('adminUsersNav'),pane=$('adminUserManagement');if(!nav||!pane)return;
    $('umModeHint').textContent=offline?
      'MODE OFFLINE: data uji lokal, tidak terhubung ke Firebase Authentication atau Firestore.':
-     'FIREBASE SPARK GRATIS: Buat akun login di Firebase Authentication → Users, salin UID ke formulir ini, kemudian kelola profil/akses dari Dashboard. Cabut Akses tidak menghapus akun Authentication.';
-   nav.addEventListener('click',async()=>{if(!adminOK()){alert('Khusus Administrator.');return;}
+     'MODE ONLINE: Akun login berada di Firebase Authentication dan profil AO berada di Cloud Firestore. Pastikan UID keduanya sama.';
+   nav.addEventListener('click',async()=>{if(!adminOK()){msg('Akses Administrator ditolak atau Firebase belum siap.',true);return;}
      const shown=$('monitorAdmin').classList.toggle('um-open');pane.hidden=!shown;nav.textContent=shown?'← Kembali ke Dashboard':'Manajemen Pengguna';if(shown)await reload();});
    $('umForm').addEventListener('submit',submit);$('umCancelEdit').addEventListener('click',reset);
    $('umRefresh').addEventListener('click',reload);$('umSearch').addEventListener('input',display);$('umBody').addEventListener('click',action);
    $('monitorCloseAdmin')?.addEventListener('click',()=>{pane.hidden=true;$('monitorAdmin').classList.remove('um-open');nav.textContent='Manajemen Pengguna';reset();});
-   window.addEventListener('sim-firebase-identity',e=>{if(e.detail?.signedIn)return;pane.hidden=true;$('monitorAdmin').classList.remove('um-open');nav.textContent='Manajemen Pengguna';reset();users=[];display();});
+   window.addEventListener('sim-firebase-identity',e=>{if(e.detail?.signedIn){if(!pane.hidden)reload();return;}pane.hidden=true;$('monitorAdmin').classList.remove('um-open');nav.textContent='Manajemen Pengguna';reset();users=[];display();});
    reset();display();
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
