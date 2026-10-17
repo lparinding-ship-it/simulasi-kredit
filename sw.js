@@ -1,5 +1,5 @@
-/* Simulasi Kredit PWA — GitHub Pages. Cache V43. */
-const APP_CACHE_VERSION = 'simkredit-kpeg-angsuran-tetap-v43-20261016';
+/* Simulasi Kredit PWA — GitHub Pages. Cache V44. */
+const APP_CACHE_VERSION = 'simkredit-monitoring-v44-20261017';
 const APP_URL = new URL('./', self.registration.scope).href;
 const ASSET_PATHS = ['./', './index.html', './manifest.webmanifest',
   './firebase-monitor.js','./pegawai-plus.html','./report-export.js',
@@ -57,7 +57,21 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // CSS/JS: asset caching updates on version change.
+  // JS modules must prefer fresh network data so Firebase validation isn't stale.
+  // The cache remains an offline fallback only for already verified responses.
+  if (url.pathname.endsWith('.js')) {
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(req, {cache:'no-store'});
+        if (fresh.ok) {
+          const cache = await caches.open(APP_CACHE_VERSION);
+          await cache.put(req, fresh.clone());
+        }
+        return fresh;
+      } catch (_) { return (await caches.match(req)) || Response.error(); }
+    })());
+    return;
+  }
   event.respondWith((async () => {
     const hit = await caches.match(req);
     if (hit) return hit;

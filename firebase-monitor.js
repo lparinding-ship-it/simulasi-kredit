@@ -154,6 +154,7 @@ async function manageUser(operation,payload={}){
  return {ok:true,uid};
 }
 window.SIM_FIREBASE_BRIDGE={identity,loadAdmin,writeActivity,deleteActivities,createClosing,reviewClosing,manageUser};
+window.SIM_MONITOR_BUILD='20261017-monitoring-v2';
 // Catat rincian hanya jika snapshot simulasi benar-benar lengkap dan valid.
 // Aktivitas membuka produk tidak mempunyai data debitur (ini disengaja).
 window.SIM_MONITOR_AUDIT=async action=>{
