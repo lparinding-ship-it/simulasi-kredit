@@ -1704,14 +1704,14 @@ body.deposit-active #printActionFeedback{display:none!important}
 </div>
 
 <section id="globalProductNav" aria-label="Pilih produk kredit" hidden>
-  <div class="gpn-inner"><div class="gpn-caption"><b>SIMULASI KREDIT • 6 PRODUK + DEPOSITO</b><span>Pilih produk untuk perhitungan dan cetak dokumen</span></div>
+  <div class="gpn-inner"><div class="gpn-caption"><b>SIMULASI KREDIT • 7 PRODUK + DEPOSITO</b><span>Pilih produk untuk perhitungan dan cetak dokumen</span></div>
   <label for="globalProductSelect">PRODUK KREDIT</label>
   <select id="globalProductSelect">
     <option value="asn">Kredit CPNS/ASN</option><option value="pension">Kredit Pensiun</option>
     <option value="business">Kredit Usaha</option><option value="method2">Kredit Pegawai Plus — Metode 2 (3G) · Rekomendasi</option>
     <option value="method1">Kredit Pegawai Plus — Metode 1 (3F) · Alternatif</option>
     <option value="method3">Kredit KPEG Plus — Skema-3 (THT)</option>
-    <option value="deposito">Simulasi Deposito — DEPOSITO ME</option>
+    <option value="vehicle">Kredit Kendaraan Bermotor (KKB)</option><option value="deposito">Simulasi Deposito — DEPOSITO ME</option>
   </select><span id="gpnStatus">Simulasi satu fase</span>
   </div>
 </section>
@@ -2103,6 +2103,7 @@ body.plus-document-preview>#thtMain,body.monitor-locked>#thtMain,body.monitor-ad
   </div>
 </main>
 
+<style>#vehicleMain[hidden]{display:none!important}#vehicleMain{max-width:1440px;margin:auto;padding:16px}#vehicleFrame{width:100%;height:1600px;border:0}body.vehicle-active .top-print-actions{display:none!important}body.monitor-locked>#vehicleMain,body.monitor-admin-open>#vehicleMain,body.plus-document-preview>#vehicleMain{display:none!important}@media(max-width:720px){#vehicleFrame{height:2600px}}@media print{#vehicleMain{display:none!important}}</style><main id="vehicleMain" hidden aria-label="Kredit Kendaraan Bermotor"><iframe id="vehicleFrame" title="Simulasi Kredit Kendaraan Bermotor" src="about:blank"></iframe></main>
 <main id="depositoMain" hidden aria-label="Simulasi Deposito Terpadu">
   <div class="deposito-integration-heading">
     <div><span class="deposito-integration-kicker">FUNDING · DEPOSITO</span>
@@ -2854,6 +2855,7 @@ window.SIM_MONITOR_RESET = function () {
   const $ = id => document.getElementById(id);
   const isPlus = v => v==='method1'||v==='method2';
   const isTht = v => v==='method3';
+  const isVehicle = v => v==='vehicle';
   const isDeposit = v => v==='deposito';
   const isSpecial = v => isPlus(v)||isTht(v);
   const money = n => 'Rp ' + Math.round(Number(n)||0).toLocaleString('id-ID');
@@ -2885,7 +2887,7 @@ window.SIM_MONITOR_RESET = function () {
   }
   window.SIM_PLUS_ACTIVE=false;
   window.SIM_MONITOR_GET_SNAPSHOT=()=>{
-    if(isDeposit(selected))return null;
+    if(isDeposit(selected)||isVehicle(selected))return null;
     if(isTht(selected))return window.THT_PRODUCT?.snapshot(identity())||null;
     if(!isPlus(selected)) return getCoreSnap?.();
     if(!plusSnap) return null;
@@ -2896,7 +2898,7 @@ window.SIM_MONITOR_RESET = function () {
   };
   window.SIM_MONITOR_CAN_SAVE=()=>{
     const doc=identity(),complete=!!(doc.reference&&doc.debtor&&doc.date&&doc.branch&&doc.ao);
-    if(isDeposit(selected))return false;
+    if(isDeposit(selected)||isVehicle(selected))return false;
     if(isTht(selected))return complete&&!!window.THT_PRODUCT?.get()?.valid;
     if(isPlus(selected))return complete&&!!(plusSnap?.good&&plusSnap.balance<=1);
     return !!getCoreCanSave?.();
@@ -2920,7 +2922,7 @@ window.SIM_MONITOR_RESET = function () {
   function hidePrintFeedback(){ $('printActionFeedback').hidden=true; }
   $('printFeedbackClose').addEventListener('click',hidePrintFeedback);
   function printBlockers(){
-    if(isDeposit(selected))return [];
+    if(isDeposit(selected)||isVehicle(selected))return [];
     const data=identity(),reasons=[];
     if(!data.debtor)reasons.push('Isi nama calon debitur pada Identitas Dokumen.');
     if(!data.reference)reasons.push('Isi nomor referensi simulasi.');
@@ -2958,17 +2960,21 @@ window.SIM_MONITOR_RESET = function () {
   const plusExpectedOrigin=location.protocol==='file:'?'null':location.origin;
   const post=message=>frame.contentWindow?.postMessage({channel:'SIM_PLUS_PARENT',...message},plusTargetOrigin);
   function selectProduct(value){
-    if(!['asn','pension','business','method1','method2','method3','deposito'].includes(value))return;
+    if(!['asn','pension','business','method1','method2','method3','deposito','vehicle'].includes(value))return;
     selected=value; nav.value=value;window.SIM_PLUS_ACTIVE=isSpecial(value);
     // Aksi dan validasi cetak kredit tidak berlaku ketika Deposito dipilih.
     // Tutup pemberitahuan yang mungkin masih terbuka dari produk kredit sebelumnya.
     hidePrintFeedback();
     document.body.classList.toggle('plus-active',isSpecial(value));
     document.body.classList.toggle('deposit-active',isDeposit(value));
-    $('coreMain').hidden=isSpecial(value)||isDeposit(value); $('plusMain').hidden=!isPlus(value);$('thtMain').hidden=!isTht(value);$('depositoMain').hidden=!isDeposit(value);
+    document.body.classList.toggle('vehicle-active',isVehicle(value));
+    $('coreMain').hidden=isSpecial(value)||isDeposit(value)||isVehicle(value); $('plusMain').hidden=!isPlus(value);$('thtMain').hidden=!isTht(value);$('depositoMain').hidden=!isDeposit(value);$('vehicleMain').hidden=!isVehicle(value);
     relocateIdentity(value);
     $('gpnStatus').textContent=isDeposit(value)?'Simulasi deposito dan prospek funding':isTht(value)?'Bunga diblokir + pokok pelunasan THT':isPlus(value)?'Simulasi anuitas dua fase':'Simulasi reguler';
-    if(isDeposit(value)) {
+    if(isVehicle(value)) {
+      $('gpnStatus').textContent='Simulasi Kredit Kendaraan Bermotor';
+      const vf=$('vehicleFrame');if(vf.getAttribute('src')==='about:blank')vf.src='./kendaraan.html';
+    } else if(isDeposit(value)) {
       const depoFrame=$('depositoFrame');
       if(depoFrame.getAttribute('src')==='about:blank')depoFrame.src='./deposito.html';
     } else if(isPlus(value)) {
@@ -3209,7 +3215,7 @@ window.SIM_MONITOR_RESET = function () {
   for(const id of ['print','printScheduleTop']){
     $(id)?.addEventListener('click',e=>{
       // Tombol ini milik kredit. Jangan validasi CPNS/ASN saat modul Deposito aktif.
-      if(isDeposit(selected)){
+      if(isDeposit(selected)||isVehicle(selected)){
         e.preventDefault();
         e.stopImmediatePropagation();
         hidePrintFeedback();
@@ -3454,7 +3460,7 @@ const boot=()=>{
  function update(){
   if(global.hidden||document.body.classList.contains('monitor-locked')){workspace.hidden=true;return;}
   workspace.hidden=false;
-  const p=nav.value||'asn'; if(p==='deposito'){workspace.hidden=true;return;} el('uxProductName').textContent=pnames[p]||p;
+  const p=nav.value||'asn'; if(p==='deposito'||p==='vehicle'){workspace.hidden=true;return;} el('uxProductName').textContent=pnames[p]||p;
   el('uxMethod').textContent=p==='method1'?'3F · TANPA RETENSI AKTIF':p==='method2'?'3G · RETENSI AKTIF OTOMATIS':p==='method3'?'THT · PELUNASAN POKOK AKHIR':'SIMULASI REGULER';
   const set=(id,s)=>{s=String(s||'—');if(el(id).textContent!==s)el(id).textContent=s;};
   let a='—',b='—',c='—',d='—',note='';
@@ -3552,7 +3558,7 @@ const boot=()=>{
   const caption=global.querySelector('.gpn-caption b');
   const subtitle=global.querySelector('.gpn-caption span');
   const info=document.getElementById('uxWorkspace');
-  const originalHeaderTitle='SIMULASI KREDIT • 6 PRODUK';
+  const originalHeaderTitle='SIMULASI KREDIT • 7 PRODUK + DEPOSITO';
   let previous='';
   function restore(){
    const plus=false;
@@ -3696,7 +3702,7 @@ const boot=()=>{
 </script>
 <script type="module" src="./firebase-monitor.js?v=20261018-user-online-v1"></script>
 <script src="./online-funding-admin.js"></script>
-<script>if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('./sw.js?v=20261018-user-online-v1', {updateViaCache:'none'}).catch(console.warn);</script>
+<script>if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('./sw.js?v=20261021-vehicle-v1', {updateViaCache:'none'}).catch(console.warn);</script>
 <script id="aoSyncAcrossProducts2026">
 (() => {
   const officer = document.getElementById('docOfficer');
@@ -3722,5 +3728,7 @@ const boot=()=>{
 })();
 </script>
 <script src="./user-management.js?v=20261018-user-online-v1" defer></script>
-</body>
+<script id="vehicleIframeResizeAudit">
+(()=>{const frame=document.getElementById('vehicleFrame');let observer=null;const resize=()=>{if(document.getElementById('vehicleMain').hidden)return;try{const b=frame.contentDocument?.body;if(b){const h=Math.ceil(b.getBoundingClientRect().height+48);if(h>100&&Math.abs(parseInt(frame.style.height||'0')-h)>3)frame.style.height=h+'px';}}catch(_){}};frame.addEventListener('load',()=>{observer?.disconnect();try{if(frame.contentDocument?.body){observer=new ResizeObserver(resize);observer.observe(frame.contentDocument.body);resize();}}catch(_){}});document.getElementById('globalProductSelect').addEventListener('change',()=>requestAnimationFrame(resize));window.addEventListener('resize',resize);})();
+</script></body>
 </html>
