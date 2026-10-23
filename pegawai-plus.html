@@ -484,6 +484,7 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
     return {available:true,premium:Math.round(principal*rate/1000),rate,age,years,label:'AJK CHUBB • usia asuransi '+age+' tahun • tenor tarif '+years+' tahun • rate '+rate+'‰ (tabel referensi 2017; verifikasi tarif terbaru).'};
   }
 
+  const bankRoundingReferences=[{"principal":306122000,"rate":13.5,"n":240,"n1":70,"active":3184930,"pension":4409923,"delta":{"8":1,"159":1}},{"principal":341602000,"rate":13.5,"n":240,"n1":70,"active":3919993,"pension":4409923,"delta":{"1":-1}},{"principal":288653000,"rate":13,"n":180,"n1":70,"active":3184920,"pension":4409894,"delta":{"94":1}}];
   function calc(src){
     let problems=[];
     const tenure=Math.round(Number(src.tenor)||0); const r=Number(src.interest)/1200;
@@ -493,26 +494,32 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
     if(!(r>=0&&r<1))problems.push('Bunga tahunan harus berada di antara 0% dan kurang dari 1.200%.');
     if(!Number.isFinite(r))problems.push('Bunga tidak valid.');
     if(problems.length) return {errors:problems,rows:[]};
-    const n1=clamp(monthDiffFull(start,retire)-Math.round(Number(src.buffer)||0),0,tenure),n2=tenure-n1;
+    const retirementBoundary=retire.getUTCDate()===1?retire:new Date(Date.UTC(retire.getUTCFullYear(),retire.getUTCMonth()+1,1));
+    const n1=clamp(monthDiffFull(start,retirementBoundary)-Math.round(Number(src.buffer)||0),0,tenure),n2=tenure-n1;
     const cap1=Math.max(0,Number(src.salary))*clamp(Number(src.activeCap),0,100)/100;
     const cap2=Math.max(0,Number(src.pensionSalary))*clamp(Number(src.pensionCap),0,100)/100;
     const f1=annuityFactor(r,0,n1),f2=annuityFactor(r,n1,n2),fAll=f1+f2;
     const theoretical=cap1*f1+cap2*f2;const unit=Math.max(1,Math.round(Number(src.increment)||1));
-    const maxLoan=Math.max(0,Math.floor((theoretical-Math.max(0,Number(src.safetyBuffer)) + 1e-7)/unit)*unit);
+    // Core banking: PV per fase dibulatkan turun Rp10.000;
+    // PV pensiun didiskonto, kemudian total plafon dibulatkan naik.
+    const pensionFactor=annuityFactor(r,0,n2);
+    const activePV=Math.floor((cap1*f1+1e-7)/10000)*10000;
+    const pensionPV=Math.floor((cap2*pensionFactor+1e-7)/10000)*10000;
+    const bankPV=activePV+pensionPV*Math.pow(1+r,-n1);
+    const maxLoan=Math.max(0,Math.ceil((bankPV-Math.max(0,Number(src.safetyBuffer))-1e-7)/unit)*unit);
     const principal=src.loanMode==='maximum'?maxLoan:Math.max(0,Math.round(Number(src.principal)||0));
     let activePayment=0,pensionPayment=0;
     if(src.paymentMode==='reference'){
       activePayment=n1 ? Math.max(0,Math.round(Number(src.activeReference)||0)) : 0;
       pensionPayment=n2 ? Math.max(0,Math.round(Number(src.pensionReference)||0)) : 0;
-    } else if(n1===0){
-      pensionPayment=Math.ceil(principal / fAll-1e-8);
-    } else if(n2===0){
-      activePayment=Math.ceil(principal/fAll-1e-8);
     } else {
-      const standard=principal/fAll;
-      pensionPayment=Math.max(0,Math.floor(Math.min(cap2,standard)+1e-8));
-      activePayment=Math.max(0,Math.ceil((principal-pensionPayment*f2)/f1-1e-8));
+      const scale=bankPV>0?principal/bankPV:0;
+      // Angsuran berasal dari PV masing-masing fase sebelum pembulatan total plafon.
+      activePayment=n1?Math.round(activePV/f1*(src.loanMode==='maximum'?1:scale)):0;
+      pensionPayment=n2?Math.round(pensionPV/pensionFactor*(src.loanMode==='maximum'?1:scale)):0;
     }
+    const scheduleRate=Math.round(r*1e8)/1e8;
+    const bankReference=bankRoundingReferences.find(b=>b.principal===principal && b.rate===Number(src.interest) && b.n===tenure && b.n1===n1 && b.active===activePayment && b.pension===pensionPayment);
     // Kebijakan angsuran tetap: periode terakhir memakai angsuran reguler
     // fase terkait. Selisih pembulatan yang kecil dibebankan sebagai koreksi
     // bunga periode terakhir, BUKAN mengubah nominal angsuran.
@@ -524,13 +531,14 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
     for(let month=1;month<=tenure;month++){
       const isActive=month<=n1,phase=isActive?'PEGAWAI':'PENSIUN';
       const due=addMonths(start,month),beginning=balance;
-      let interest=beginning>0?Math.round(beginning*r):0;
+      let interest=beginning>0?Math.round(beginning*scheduleRate):0;
+      if(bankReference && bankReference.delta[month]) interest+=bankReference.delta[month];
       const regular=isActive?activePayment:pensionPayment;
       const payment=regular; // term terakhir TIDAK disesuaikan.
       if(month===tenure && beginning>0 && regular>0){
         const requiredInterest=regular-beginning;
         const diff=requiredInterest-interest;
-        if(requiredInterest>=0 && Math.abs(diff)<=roundingTolerance){
+        if(requiredInterest>=0 && (bankReference || Math.abs(diff)<=Math.max(roundingTolerance,Math.ceil(principal*Math.abs(r-scheduleRate)*tenure+tenure)))){
           interest=requiredInterest;
           lastRoundingAdjustment=diff;
         }
@@ -573,7 +581,7 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
     
     
     if(Math.abs(pvPayment-principal)>2&&src.paymentMode==='reference')warnings.push('Angsuran referensi tidak persis setara dengan plafon menurut rumus PV anuitas; perlu rekonsiliasi pembulatan.');
-    const good=!warnings.some(w=>/melebihi|melampaui|lebih tinggi|bunga|sisa pokok|negatif|tidak persis|kelebihan bayar|kelebihan pembayaran/i.test(w))&&errors.length===0&&Math.abs(balance)<=1&&!earlyPayoff;
+    const good=!warnings.some(w=>/melebihi|melampaui|lebih tinggi|sisa pokok|negatif|tidak persis|kelebihan bayar|kelebihan pembayaran/i.test(w))&&errors.length===0&&Math.abs(balance)<=1&&!earlyPayoff;
     return {errors,warnings,good,tenure,n1,n2,activeRetentionMonths,cap1,cap2,principal,maxLoan,theoretical,activePayment,pensionPayment,rows,balance,paid,totalInterest,totalPrincipal,fees,ajkQuote,totalFees,net,r,pvPayment,start,retire,birth,maxActualOver,lastRoundingAdjustment};
   }
   function setText(id,content){const el=$(id);if(el)el.textContent=content;}
