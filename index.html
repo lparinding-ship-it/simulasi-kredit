@@ -1720,11 +1720,11 @@ body.plus-document-preview .bank-plus-emphasis .bs-total strong{font-size:20pt!i
 </div>
 
 <section id="globalProductNav" aria-label="Pilih produk kredit" hidden>
-  <div class="gpn-inner"><div class="gpn-caption"><b>SIMULASI KREDIT • 7 PRODUK + DEPOSITO</b><span>Pilih produk untuk perhitungan dan cetak dokumen</span></div>
+  <div class="gpn-inner"><div class="gpn-caption"><b>SIMULASI KREDIT • 8 PRODUK + DEPOSITO</b><span>Pilih produk untuk perhitungan dan cetak dokumen</span></div>
   <label for="globalProductSelect">PRODUK KREDIT</label>
   <select id="globalProductSelect">
     <option value="asn">Kredit CPNS/ASN</option><option value="pension">Kredit Pensiun</option>
-    <option value="business">Kredit Usaha</option><option value="method2">Kredit Pegawai Plus — Metode 2 (3G) · Rekomendasi</option>
+    <option value="business">Kredit Usaha</option><option value="prk">Kredit Usaha PRK</option><option value="method2">Kredit Pegawai Plus — Metode 2 (3G) · Rekomendasi</option>
     <option value="method1">Kredit Pegawai Plus — Metode 1 (3F) · Alternatif</option>
     <option value="method3">Kredit KPEG Plus — Skema-3 (THT)</option>
     <option value="vehicle">Kredit Kendaraan Bermotor (KKB)</option><option value="deposito">Simulasi Deposito — DEPOSITO ME</option>
@@ -2865,12 +2865,19 @@ window.SIM_MONITOR_RESET = function () {
 
 </script>
 <!-- ONLINE SAJA: pendaftaran service worker dimatikan -->
+<style id="prkEmbeddedStyles">
+#prkMain[hidden]{display:none!important}#prkMain{width:100%;margin:auto}#prkFrame{display:block;width:100%;height:2500px;border:0;background:#f3f7fb}
+body.prk-active .top-print-actions{display:none!important}
+body.monitor-locked>#prkMain,body.monitor-admin-open>#prkMain,body.plus-document-preview>#prkMain{display:none!important}
+@media print{#prkMain{display:none!important}}
+</style><main id="prkMain" hidden aria-label="Kredit Usaha PRK"><iframe id="prkFrame" title="Simulasi Kredit Usaha PRK" src="about:blank" referrerpolicy="same-origin"></iframe></main>
 <script id="unifiedProductsBridge">
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
   const isPlus = v => v==='method1'||v==='method2';
   const isTht = v => v==='method3';
+  const isPrk = v => v==='prk';
   const isVehicle = v => v==='vehicle';
   const isDeposit = v => v==='deposito';
   const isSpecial = v => isPlus(v)||isTht(v);
@@ -2903,7 +2910,7 @@ window.SIM_MONITOR_RESET = function () {
   }
   window.SIM_PLUS_ACTIVE=false;
   window.SIM_MONITOR_GET_SNAPSHOT=()=>{
-    if(isDeposit(selected)||isVehicle(selected))return null;
+    if(isDeposit(selected)||isVehicle(selected)||isPrk(selected))return null;
     if(isTht(selected))return window.THT_PRODUCT?.snapshot(identity())||null;
     if(!isPlus(selected)) return getCoreSnap?.();
     if(!plusSnap) return null;
@@ -2914,7 +2921,7 @@ window.SIM_MONITOR_RESET = function () {
   };
   window.SIM_MONITOR_CAN_SAVE=()=>{
     const doc=identity(),complete=!!(doc.reference&&doc.debtor&&doc.date&&doc.branch&&doc.ao);
-    if(isDeposit(selected)||isVehicle(selected))return false;
+    if(isDeposit(selected)||isVehicle(selected)||isPrk(selected))return false;
     if(isTht(selected))return complete&&!!window.THT_PRODUCT?.get()?.valid;
     if(isPlus(selected))return complete&&!!(plusSnap?.good&&plusSnap.balance<=1);
     return !!getCoreCanSave?.();
@@ -2938,7 +2945,7 @@ window.SIM_MONITOR_RESET = function () {
   function hidePrintFeedback(){ $('printActionFeedback').hidden=true; }
   $('printFeedbackClose').addEventListener('click',hidePrintFeedback);
   function printBlockers(){
-    if(isDeposit(selected)||isVehicle(selected))return [];
+    if(isDeposit(selected)||isVehicle(selected)||isPrk(selected))return [];
     const data=identity(),reasons=[];
     if(!data.debtor)reasons.push('Isi nama calon debitur pada Identitas Dokumen.');
     if(!data.reference)reasons.push('Isi nomor referensi simulasi.');
@@ -2976,7 +2983,7 @@ window.SIM_MONITOR_RESET = function () {
   const plusExpectedOrigin=location.protocol==='file:'?'null':location.origin;
   const post=message=>frame.contentWindow?.postMessage({channel:'SIM_PLUS_PARENT',...message},plusTargetOrigin);
   function selectProduct(value){
-    if(!['asn','pension','business','method1','method2','method3','deposito','vehicle'].includes(value))return;
+    if(!['asn','pension','business','method1','method2','method3','deposito','vehicle','prk'].includes(value))return;
     selected=value; nav.value=value;window.SIM_PLUS_ACTIVE=isSpecial(value);
     // Aksi dan validasi cetak kredit tidak berlaku ketika Deposito dipilih.
     // Tutup pemberitahuan yang mungkin masih terbuka dari produk kredit sebelumnya.
@@ -2984,10 +2991,15 @@ window.SIM_MONITOR_RESET = function () {
     document.body.classList.toggle('plus-active',isSpecial(value));
     document.body.classList.toggle('deposit-active',isDeposit(value));
     document.body.classList.toggle('vehicle-active',isVehicle(value));
-    $('coreMain').hidden=isSpecial(value)||isDeposit(value)||isVehicle(value); $('plusMain').hidden=!isPlus(value);$('thtMain').hidden=!isTht(value);$('depositoMain').hidden=!isDeposit(value);$('vehicleMain').hidden=!isVehicle(value);
+    document.body.classList.toggle('prk-active',isPrk(value));
+    $('prkMain').hidden=!isPrk(value);
+    $('coreMain').hidden=isSpecial(value)||isDeposit(value)||isVehicle(value)||isPrk(value); $('plusMain').hidden=!isPlus(value);$('thtMain').hidden=!isTht(value);$('depositoMain').hidden=!isDeposit(value);$('vehicleMain').hidden=!isVehicle(value);
     relocateIdentity(value);
     $('gpnStatus').textContent=isDeposit(value)?'Simulasi deposito dan prospek funding':isTht(value)?'Bunga diblokir + pokok pelunasan THT':isPlus(value)?'Simulasi anuitas dua fase':'Simulasi reguler';
-    if(isVehicle(value)) {
+    if(isPrk(value)) {
+      $('gpnStatus').textContent='Simulasi Kredit Usaha PRK';
+      const pf=$('prkFrame');if(pf.getAttribute('src')==='about:blank')pf.src='./kredit-usaha-prk.html';
+    } else if(isVehicle(value)) {
       $('gpnStatus').textContent='Simulasi Kredit Kendaraan Bermotor';
       const vf=$('vehicleFrame');if(vf.getAttribute('src')==='about:blank')vf.src='./kendaraan.html';
     } else if(isDeposit(value)) {
@@ -3232,7 +3244,7 @@ window.SIM_MONITOR_RESET = function () {
   for(const id of ['print','printScheduleTop']){
     $(id)?.addEventListener('click',e=>{
       // Tombol ini milik kredit. Jangan validasi CPNS/ASN saat modul Deposito aktif.
-      if(isDeposit(selected)||isVehicle(selected)){
+      if(isDeposit(selected)||isVehicle(selected)||isPrk(selected)){
         e.preventDefault();
         e.stopImmediatePropagation();
         hidePrintFeedback();
@@ -3575,7 +3587,7 @@ const boot=()=>{
   const caption=global.querySelector('.gpn-caption b');
   const subtitle=global.querySelector('.gpn-caption span');
   const info=document.getElementById('uxWorkspace');
-  const originalHeaderTitle='SIMULASI KREDIT • 7 PRODUK + DEPOSITO';
+  const originalHeaderTitle='SIMULASI KREDIT • 8 PRODUK + DEPOSITO';
   let previous='';
   function restore(){
    const plus=false;
@@ -3747,5 +3759,8 @@ const boot=()=>{
 <script src="./user-management.js?v=20261018-user-online-v1" defer></script>
 <script id="vehicleIframeResizeAudit">
 (()=>{const frame=document.getElementById('vehicleFrame');let observer=null;const resize=()=>{if(document.getElementById('vehicleMain').hidden)return;try{const b=frame.contentDocument?.body;if(b){const h=Math.ceil(b.getBoundingClientRect().height+48);if(h>100&&Math.abs(parseInt(frame.style.height||'0')-h)>3)frame.style.height=h+'px';}}catch(_){}};frame.addEventListener('load',()=>{observer?.disconnect();try{if(frame.contentDocument?.body){observer=new ResizeObserver(resize);observer.observe(frame.contentDocument.body);resize();}}catch(_){}});document.getElementById('globalProductSelect').addEventListener('change',()=>requestAnimationFrame(resize));window.addEventListener('resize',resize);})();
+</script><script id="prkIframeResize2026">
+(()=>{const frame=document.getElementById('prkFrame');let ro,mo;const resize=()=>{if(document.getElementById('prkMain').hidden)return;try{const doc=frame.contentDocument;if(!doc?.body)return;const preview=doc.getElementById('print-preview');const previewOpen=preview&&!preview.hidden;const height=previewOpen?Math.max(720,window.innerHeight-145):Math.max(900,Math.ceil(doc.body.scrollHeight+30));if(frame.style.height!==height+'px')frame.style.height=height+'px';}catch(_){}};frame.addEventListener('load',()=>{ro?.disconnect();mo?.disconnect();try{const doc=frame.contentDocument;if(doc?.body){ro=new ResizeObserver(resize);ro.observe(doc.body);mo=new MutationObserver(resize);const preview=doc.getElementById('print-preview');if(preview)mo.observe(preview,{attributes:true,attributeFilter:['hidden']});resize();}}catch(_){}});document.getElementById('globalProductSelect').addEventListener('change',()=>requestAnimationFrame(resize));window.addEventListener('resize',resize);})();
 </script></body>
 </html>
+

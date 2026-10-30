@@ -1,7 +1,7 @@
 /* Simulasi Kredit PWA — GitHub Pages. Cache V63. */
-const APP_CACHE_VERSION = 'simkredit-plus-core-20261030-v66-plafon-print';
+const APP_CACHE_VERSION = 'simkredit-prk-20261031-v67-menu';
 const APP_URL = new URL('./', self.registration.scope).href;
-const ASSET_PATHS = ['./kendaraan.html','./vehicle-calc.js','./vehicle-ui.js','./', './index.html', './manifest.webmanifest',
+const ASSET_PATHS = ['./kredit-usaha-prk.html','./kendaraan.html','./vehicle-calc.js','./vehicle-ui.js','./', './index.html', './manifest.webmanifest',
   './firebase-monitor.js','./pegawai-plus.html','./report-export.js',
   './online-funding-admin.js','./user-management.js','./theme.css',
   './theme.js','./deposito.html','./icon-192.png','./icon-512.png',
@@ -79,3 +79,4 @@ self.addEventListener('fetch', event => {
     catch (_) { return Response.error(); }
   })());
 });
+
