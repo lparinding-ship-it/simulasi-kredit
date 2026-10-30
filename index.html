@@ -2866,7 +2866,7 @@ window.SIM_MONITOR_RESET = function () {
 </script>
 <!-- ONLINE SAJA: pendaftaran service worker dimatikan -->
 <style id="prkEmbeddedStyles">
-#prkMain[hidden]{display:none!important}#prkMain{width:100%;margin:auto}#prkFrame{display:block;width:100%;height:2500px;border:0;background:#f3f7fb}
+#prkMain[hidden]{display:none!important}#prkMain{width:100%;max-width:100%;min-width:0;margin:auto;overflow-x:clip}#prkFrame{display:block;width:100%;height:2500px;border:0;background:#f3f7fb}
 body.prk-active .top-print-actions{display:none!important}
 body.monitor-locked>#prkMain,body.monitor-admin-open>#prkMain,body.plus-document-preview>#prkMain{display:none!important}
 @media print{#prkMain{display:none!important}}
@@ -3763,4 +3763,5 @@ const boot=()=>{
 (()=>{const frame=document.getElementById('prkFrame');let ro,mo;const resize=()=>{if(document.getElementById('prkMain').hidden)return;try{const doc=frame.contentDocument;if(!doc?.body)return;const preview=doc.getElementById('print-preview');const previewOpen=preview&&!preview.hidden;const height=previewOpen?Math.max(720,window.innerHeight-145):Math.max(900,Math.ceil(doc.body.scrollHeight+30));if(frame.style.height!==height+'px')frame.style.height=height+'px';}catch(_){}};frame.addEventListener('load',()=>{ro?.disconnect();mo?.disconnect();try{const doc=frame.contentDocument;if(doc?.body){ro=new ResizeObserver(resize);ro.observe(doc.body);mo=new MutationObserver(resize);const preview=doc.getElementById('print-preview');if(preview)mo.observe(preview,{attributes:true,attributeFilter:['hidden']});resize();}}catch(_){}});document.getElementById('globalProductSelect').addEventListener('change',()=>requestAnimationFrame(resize));window.addEventListener('resize',resize);})();
 </script></body>
 </html>
+
 
