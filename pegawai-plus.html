@@ -527,7 +527,20 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
     // pertahankan nilainya, tampilkan saldo sebenarnya, lalu BLOKIR CETAK.
     const rows=[];let balance=principal, paid=0, totalInterest=0, totalPrincipal=0, maxActualOver=0, negativeAmort=false;
     let lastRoundingAdjustment=0, earlyPayoff=false;
-    const roundingTolerance=Math.min(720,Math.max(100,tenure*2));
+    // Batas rekonsiliasi mencakup dampak pembulatan PV/plafon yang
+    // terakumulasi sepanjang tenor, bukan hanya Rp2 per bulan.
+    // Berlaku pada skema otomatis; angsuran referensi yang kurang tetap diblokir.
+    const growth=Math.pow(1+scheduleRate,tenure);
+    const paymentPV=activePayment*annuityFactor(scheduleRate,0,n1)
+      +pensionPayment*annuityFactor(scheduleRate,n1,n2);
+    const projectedResidual=(principal-paymentPV)*growth;
+    const accumulatedRupiahRounding=0.5*annuityFactor(scheduleRate,0,tenure)*growth;
+    const automaticBankRounding=src.paymentMode!=='reference'
+      &&src.loanMode==='maximum'&&principal===maxLoan
+      &&Number(src.safetyBuffer||0)===0;
+    const roundingTolerance=automaticBankRounding
+      ? Math.ceil(Math.abs(projectedResidual)+accumulatedRupiahRounding+1)
+      : Math.max(100,Math.min(720,tenure*2));
     for(let month=1;month<=tenure;month++){
       const isActive=month<=n1,phase=isActive?'PEGAWAI':'PENSIUN';
       const due=addMonths(start,month),beginning=balance;
@@ -538,7 +551,7 @@ html{scroll-behavior:smooth}body{background:#f2f6fb!important;color:#1b3553!impo
       if(month===tenure && beginning>0 && regular>0){
         const requiredInterest=regular-beginning;
         const diff=requiredInterest-interest;
-        if(requiredInterest>=0 && (bankReference || Math.abs(diff)<=Math.max(roundingTolerance,Math.ceil(principal*Math.abs(r-scheduleRate)*tenure+tenure)))){
+        if(requiredInterest>=0 && !earlyPayoff && Math.abs(diff)<=roundingTolerance){
           interest=requiredInterest;
           lastRoundingAdjustment=diff;
         }
