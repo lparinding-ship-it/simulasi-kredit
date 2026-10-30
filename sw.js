@@ -1,5 +1,5 @@
 /* Simulasi Kredit PWA — GitHub Pages. Cache V63. */
-const APP_CACHE_VERSION = 'simkredit-plus-core-20261030-v65-zero-final';
+const APP_CACHE_VERSION = 'simkredit-plus-core-20261030-v66-plafon-print';
 const APP_URL = new URL('./', self.registration.scope).href;
 const ASSET_PATHS = ['./kendaraan.html','./vehicle-calc.js','./vehicle-ui.js','./', './index.html', './manifest.webmanifest',
   './firebase-monitor.js','./pegawai-plus.html','./report-export.js',
