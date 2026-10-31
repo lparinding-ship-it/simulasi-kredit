@@ -1689,7 +1689,7 @@ body.plus-document-preview .bank-plus-emphasis .bs-total{padding:2.4mm 3mm!impor
 body.plus-document-preview .bank-plus-emphasis .bs-total strong{font-size:20pt!important}
 }
 </style>
-</head>
+<style id="prkViewportAudit2026">@media screen{body.prk-active{min-width:0;max-width:100%;overflow-x:hidden}body.prk-active #prkMain{box-sizing:border-box;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:0!important;overflow:visible;position:relative;left:auto;right:auto;transform:none}#prkFrame{box-sizing:border-box;width:100%!important;max-width:100%!important;min-width:0;display:block;vertical-align:top}body.prk-active #globalProductNav,body.prk-active #globalProductNav .gpn-inner{min-width:0;max-width:100%;box-sizing:border-box}body.prk-active #globalProductSelect{min-width:0;max-width:100%}body.prk-active #monitorAppControls{max-width:100%;box-sizing:border-box;flex-wrap:wrap}}</style></head>
 <body class="monitor-locked">
 <aside id="printActionFeedback" role="alert" aria-live="assertive" hidden>
   <button type="button" id="printFeedbackClose" aria-label="Tutup pemberitahuan">×</button>
@@ -3760,8 +3760,13 @@ const boot=()=>{
 <script id="vehicleIframeResizeAudit">
 (()=>{const frame=document.getElementById('vehicleFrame');let observer=null;const resize=()=>{if(document.getElementById('vehicleMain').hidden)return;try{const b=frame.contentDocument?.body;if(b){const h=Math.ceil(b.getBoundingClientRect().height+48);if(h>100&&Math.abs(parseInt(frame.style.height||'0')-h)>3)frame.style.height=h+'px';}}catch(_){}};frame.addEventListener('load',()=>{observer?.disconnect();try{if(frame.contentDocument?.body){observer=new ResizeObserver(resize);observer.observe(frame.contentDocument.body);resize();}}catch(_){}});document.getElementById('globalProductSelect').addEventListener('change',()=>requestAnimationFrame(resize));window.addEventListener('resize',resize);})();
 </script><script id="prkIframeResize2026">
-(()=>{const frame=document.getElementById('prkFrame');let ro,mo;const resize=()=>{if(document.getElementById('prkMain').hidden)return;try{const doc=frame.contentDocument;if(!doc?.body)return;const preview=doc.getElementById('print-preview');const previewOpen=preview&&!preview.hidden;const height=previewOpen?Math.max(720,window.innerHeight-145):Math.max(900,Math.ceil(doc.body.scrollHeight+30));if(frame.style.height!==height+'px')frame.style.height=height+'px';}catch(_){}};frame.addEventListener('load',()=>{ro?.disconnect();mo?.disconnect();try{const doc=frame.contentDocument;if(doc?.body){ro=new ResizeObserver(resize);ro.observe(doc.body);mo=new MutationObserver(resize);const preview=doc.getElementById('print-preview');if(preview)mo.observe(preview,{attributes:true,attributeFilter:['hidden']});resize();}}catch(_){}});document.getElementById('globalProductSelect').addEventListener('change',()=>requestAnimationFrame(resize));window.addEventListener('resize',resize);})();
-</script></body>
+(()=>{const frame=document.getElementById('prkFrame'),host=document.getElementById('prkMain');let ro,mo,raf=0;
+function resize(){raf=0;if(host.hidden)return;try{const doc=frame.contentDocument;if(!doc?.body)return;const modal=doc.getElementById('print-preview');const isPreview=modal&&!modal.hidden;const visual=window.visualViewport;const top=frame.getBoundingClientRect().top;let h;if(isPreview){h=Math.max(440,Math.floor((visual?.height||innerHeight)-Math.max(0,top)-8));}else{const main=doc.querySelector('body>main');if(!main)return;const rect=main.getBoundingClientRect();h=Math.ceil(rect.bottom+frame.contentWindow.scrollY+16);}if(Number.isFinite(h)&&h>100&&Math.abs(parseFloat(frame.style.height||'0')-h)>2)frame.style.height=h+'px';}catch(_){}}
+const schedule=()=>{if(!raf)raf=requestAnimationFrame(resize);};
+frame.addEventListener('load',()=>{ro?.disconnect();mo?.disconnect();try{const doc=frame.contentDocument;if(!doc?.body)return;ro=new ResizeObserver(schedule);const main=doc.querySelector('body>main');if(main)ro.observe(main);const header=doc.querySelector('body>header');if(header)ro.observe(header);mo=new MutationObserver(schedule);const modal=doc.getElementById('print-preview');if(modal)mo.observe(modal,{attributes:true,attributeFilter:['hidden']});for(const img of doc.images)if(!img.complete)img.addEventListener('load',schedule,{once:true});schedule();}catch(_){}});
+document.getElementById('globalProductSelect').addEventListener('change',schedule);window.addEventListener('resize',schedule);window.addEventListener('orientationchange',schedule);window.visualViewport?.addEventListener('resize',schedule);
+})();</script></body>
 </html>
+
 
 

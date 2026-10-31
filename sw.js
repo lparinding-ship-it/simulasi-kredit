@@ -1,5 +1,5 @@
 /* Simulasi Kredit PWA — GitHub Pages. Cache V63. */
-const APP_CACHE_VERSION = 'simkredit-prk-20261031-v68-mobile';
+const APP_CACHE_VERSION = 'simkredit-prk-20261031-v69-device-audit';
 const APP_URL = new URL('./', self.registration.scope).href;
 const ASSET_PATHS = ['./kredit-usaha-prk.html','./kendaraan.html','./vehicle-calc.js','./vehicle-ui.js','./', './index.html', './manifest.webmanifest',
   './firebase-monitor.js','./pegawai-plus.html','./report-export.js',
@@ -79,5 +79,6 @@ self.addEventListener('fetch', event => {
     catch (_) { return Response.error(); }
   })());
 });
+
 
 
