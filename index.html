@@ -1689,7 +1689,7 @@ body.plus-document-preview .bank-plus-emphasis .bs-total{padding:2.4mm 3mm!impor
 body.plus-document-preview .bank-plus-emphasis .bs-total strong{font-size:20pt!important}
 }
 </style>
-<style id="prkViewportAudit2026">@media screen{body.prk-active{min-width:0;max-width:100%;overflow-x:hidden}body.prk-active #prkMain{box-sizing:border-box;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:0!important;overflow:visible;position:relative;left:auto;right:auto;transform:none}#prkFrame{box-sizing:border-box;width:100%!important;max-width:100%!important;min-width:0;display:block;vertical-align:top}body.prk-active #globalProductNav,body.prk-active #globalProductNav .gpn-inner{min-width:0;max-width:100%;box-sizing:border-box}body.prk-active #globalProductSelect{min-width:0;max-width:100%}body.prk-active #monitorAppControls{max-width:100%;box-sizing:border-box;flex-wrap:wrap}}</style></head>
+<style id="prkViewportAudit2026">@media screen{body.prk-active{min-width:0;max-width:100%;overflow-x:hidden}body.prk-active #prkMain{box-sizing:border-box;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:0!important;overflow:visible;position:relative;left:auto;right:auto;transform:none}#prkFrame{box-sizing:border-box;width:100%!important;max-width:100%!important;min-width:0;display:block;vertical-align:top}body.prk-active #globalProductNav,body.prk-active #globalProductNav .gpn-inner{min-width:0;max-width:100%;box-sizing:border-box}body.prk-active #globalProductSelect{min-width:0;max-width:100%}body.prk-active #monitorAppControls{max-width:100%;box-sizing:border-box;flex-wrap:wrap}}</style><style id="prkHostUnified2026">@media screen{body.prk-active #prkMain{display:block;box-sizing:border-box;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:0!important;left:auto;right:auto;transform:none;overflow:visible}#prkFrame{width:100%!important;max-width:100%!important;min-width:0;border:0;display:block}body.prk-active #prkMain[hidden]{display:none!important}body.prk-active.monitor-locked #prkMain,body.prk-active.monitor-admin-open #prkMain{display:none!important}}</style></head>
 <body class="monitor-locked">
 <aside id="printActionFeedback" role="alert" aria-live="assertive" hidden>
   <button type="button" id="printFeedbackClose" aria-label="Tutup pemberitahuan">×</button>
@@ -2998,7 +2998,7 @@ body.monitor-locked>#prkMain,body.monitor-admin-open>#prkMain,body.plus-document
     $('gpnStatus').textContent=isDeposit(value)?'Simulasi deposito dan prospek funding':isTht(value)?'Bunga diblokir + pokok pelunasan THT':isPlus(value)?'Simulasi anuitas dua fase':'Simulasi reguler';
     if(isPrk(value)) {
       $('gpnStatus').textContent='Simulasi Kredit Usaha PRK';
-      const pf=$('prkFrame');if(pf.getAttribute('src')==='about:blank')pf.src='./kredit-usaha-prk.html';
+      const pf=$('prkFrame');if(pf.getAttribute('src')==='about:blank')pf.src='./kredit-usaha-prk.html?embed=1&v=20261031-prk-ui70';
     } else if(isVehicle(value)) {
       $('gpnStatus').textContent='Simulasi Kredit Kendaraan Bermotor';
       const vf=$('vehicleFrame');if(vf.getAttribute('src')==='about:blank')vf.src='./kendaraan.html';
@@ -3731,7 +3731,7 @@ const boot=()=>{
 </script>
 <script type="module" src="./firebase-monitor.js?v=20261018-user-online-v1"></script>
 <script src="./online-funding-admin.js"></script>
-<script>if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('./sw.js?v=20261021-vehicle-v1', {updateViaCache:'none'}).catch(console.warn);</script>
+<script>if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('./sw.js?v=20261031-prk-ui70', {updateViaCache:'none'}).catch(console.warn);</script>
 <script id="aoSyncAcrossProducts2026">
 (() => {
   const officer = document.getElementById('docOfficer');

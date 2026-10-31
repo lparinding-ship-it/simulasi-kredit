@@ -1,5 +1,5 @@
 /* Simulasi Kredit PWA — GitHub Pages. Cache V63. */
-const APP_CACHE_VERSION = 'simkredit-prk-20261031-v69-device-audit';
+const APP_CACHE_VERSION = 'simkredit-prk-20261031-v70-unified-ui';
 const APP_URL = new URL('./', self.registration.scope).href;
 const ASSET_PATHS = ['./kredit-usaha-prk.html','./kendaraan.html','./vehicle-calc.js','./vehicle-ui.js','./', './index.html', './manifest.webmanifest',
   './firebase-monitor.js','./pegawai-plus.html','./report-export.js',
@@ -33,10 +33,10 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin ||
       !url.pathname.startsWith(new URL(APP_URL).pathname)) return;
 
-  if (req.mode === 'navigate') {
+  if (req.mode === 'navigate' || url.pathname.endsWith('.html')) {
     event.respondWith((async () => {
       try {
-        const fresh = await fetch(req);
+        const fresh = await fetch(req, {cache:'no-store'});
         if (fresh.ok) {
           const cache = await caches.open(APP_CACHE_VERSION);
           await cache.put(req, fresh.clone());
@@ -47,7 +47,7 @@ self.addEventListener('fetch', event => {
         }
         return fresh;
       } catch (_) {
-        return (await caches.match(req)) ||
+        return (await caches.match(req)) || (await caches.match(url.origin+url.pathname)) ||
           ((url.pathname === new URL('./', APP_URL).pathname ||
             url.pathname === new URL('./index.html', APP_URL).pathname)
            ? await caches.match(new URL('./index.html', APP_URL).href) : null) ||
