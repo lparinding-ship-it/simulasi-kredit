@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a1c31">
   <meta name="description" content="Kalkulator estimasi NIM dan margin kontribusi kredit perorangan PT. BPR Modern Express — offline dan responsif.">
-  <title>Kalkulator NIM Perorangan V5 | Modern Express</title>
+  <title>Kalkulator NIM MODEX V7 KPEG PLUS | Modern Express</title>
   <style>
 :root{--navy:#0c1d33;--ink:#142a44;--blue:#117ad1;--cyan:#12b7d9;--pale:#edf5fb;--bg:#f4f7fb;--line:#dce5ee;--muted:#708197;--soft:#91a1b1;--red:#cf4a55;--green:#158a73;--shadow:0 7px 30px rgba(15,47,83,.055);font-synthesis:none}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
@@ -105,8 +105,42 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .print-schedule .report-shell{width:100%}
 }
 
+/* KPEG PLUS — transparansi fee pra dan pascapensiun, tanpa mengubah layout lama. */
+.kpeg-box{border:1px solid #bcd8ea;border-radius:12px;background:linear-gradient(145deg,#f4faff,#eaf4fc);padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 12px rgba(21,107,169,.04)}
+.kpeg-box[hidden],.kpeg-insight[hidden]{display:none!important}
+.kpeg-box strong{color:#175e8b;font-size:12px}
+.kpeg-box .hint{font-size:10.5px;color:#516c82;line-height:1.6}
+.kpeg-box .kpeg-chip{background:#d9eaf7;border-radius:6px;padding:4px 7px;color:#15648f;font-size:10px;font-weight:750;white-space:nowrap}
+.kpeg-insight{border:1px solid #d0e2f0;background:linear-gradient(110deg,#fff,#f1f8fd);padding:16px 18px;margin-bottom:16px;border-radius:13px;box-shadow:var(--shadow)}
+.kpeg-insight h3{margin:0 0 7px;font-size:13px;color:#174a6b}
+.kpeg-fee-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
+.kpeg-fee-grid>div{border-left:3px solid #249ac6;padding-left:10px;min-width:0}
+.kpeg-fee-grid>div:last-child{border-color:#138878}
+.kpeg-fee-grid span{display:block;color:#6c8094;font-size:10px}
+.kpeg-fee-grid strong{display:block;font-size:18px;margin-top:4px;color:#123b5e;font-variant-numeric:tabular-nums}
+.kpeg-fee-grid small{display:block;font-size:10px;color:#748da2;margin-top:4px}
+.phase-chip{display:inline-block;padding:4px 7px;border-radius:5px;background:#e9f3fa;font-size:10px;font-weight:750;color:#1b6a9c;white-space:nowrap}
+.phase-chip.pension{color:#086a5a;background:#e3f6ed}
+@media(max-width:520px){.kpeg-fee-grid{grid-template-columns:1fr}}
 </style>
-<style id="printPaperStyle">@media print{@page{size:A4 portrait;margin:12mm 13mm}}</style>
+<style id="printPaperStyle">@media print{@page{size:A4 portrait;margin:12mm 13mm}}/* KPEG PLUS — transparansi fee pra dan pascapensiun, tanpa mengubah layout lama. */
+.kpeg-box{border:1px solid #bcd8ea;border-radius:12px;background:linear-gradient(145deg,#f4faff,#eaf4fc);padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 12px rgba(21,107,169,.04)}
+.kpeg-box[hidden],.kpeg-insight[hidden]{display:none!important}
+.kpeg-box strong{color:#175e8b;font-size:12px}
+.kpeg-box .hint{font-size:10.5px;color:#516c82;line-height:1.6}
+.kpeg-box .kpeg-chip{background:#d9eaf7;border-radius:6px;padding:4px 7px;color:#15648f;font-size:10px;font-weight:750;white-space:nowrap}
+.kpeg-insight{border:1px solid #d0e2f0;background:linear-gradient(110deg,#fff,#f1f8fd);padding:16px 18px;margin-bottom:16px;border-radius:13px;box-shadow:var(--shadow)}
+.kpeg-insight h3{margin:0 0 7px;font-size:13px;color:#174a6b}
+.kpeg-fee-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
+.kpeg-fee-grid>div{border-left:3px solid #249ac6;padding-left:10px;min-width:0}
+.kpeg-fee-grid>div:last-child{border-color:#138878}
+.kpeg-fee-grid span{display:block;color:#6c8094;font-size:10px}
+.kpeg-fee-grid strong{display:block;font-size:18px;margin-top:4px;color:#123b5e;font-variant-numeric:tabular-nums}
+.kpeg-fee-grid small{display:block;font-size:10px;color:#748da2;margin-top:4px}
+.phase-chip{display:inline-block;padding:4px 7px;border-radius:5px;background:#e9f3fa;font-size:10px;font-weight:750;color:#1b6a9c;white-space:nowrap}
+.phase-chip.pension{color:#086a5a;background:#e3f6ed}
+@media(max-width:520px){.kpeg-fee-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
   <header class="topbar">
@@ -136,7 +170,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         <strong>Excel MODEX</strong>
         <span>INPUT &amp; NIM-kpeg 240</span>
         <div class="stamp-line"></div>
-        <small>Versi 4 · Angsuran Rp100 · November 2026</small>
+        <small>Versi 7 · KPEG PLUS EIR dua fase · November 2026</small>
       </div>
     </section>
 
@@ -149,7 +183,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <div class="fields">
             <label class="field"><span>Nama debitur <em>opsional</em></span><input id="debtor" data-field="debtor" type="text" placeholder="Nama debitur" autocomplete="off" maxlength="100"></label>
             <label class="field"><span>Kantor cabang <em>opsional</em></span><input id="office" data-field="office" type="text" placeholder="Mis. KC Palu" maxlength="80"></label>
-            <label class="field"><span>Jenis produk</span><input id="product" data-field="product" type="text" maxlength="80" value="Kredit Pegawai"></label>
+            <label class="field"><span>Jenis produk</span><input id="product" data-field="product" type="text" list="productOptions" maxlength="80" value="Kredit Pegawai"><datalist id="productOptions"><option value="Kredit Pegawai"><option value="KPEG PLUS M1"><option value="KPEG PLUS M2"><option value="KPEG PLUS M3"><option value="Kredit Pensiun"></datalist></label>
             <label class="field"><span>Tanggal mulai</span><input id="startingDate" data-field="startingDate" type="date"></label>
           </div>
         </section>
@@ -159,7 +193,19 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <label class="field field-wide"><span>Plafon pinjaman <em>Rp</em></span><input id="principal" data-field="principal" type="number" min="1" step="1000000" inputmode="numeric"><small id="principalHint" class="input-hint"></small></label>
             <div class="two-fields">
               <label class="field"><span>Tenor <em>bulan</em></span><input id="tenor" data-field="tenor" type="number" min="1" max="240" step="1"></label>
-              <label class="field"><span>Bunga flat <em>% / bulan</em></span><input id="flatMonthlyPct" data-field="flatMonthlyPct" type="number" min="0" max="100" step="0.01"></label>
+              <label class="field" id="flatInterestWrap"><span>Bunga flat <em>% / bulan</em></span><input id="flatMonthlyPct" data-field="flatMonthlyPct" type="number" min="0" max="100" step="0.01"></label>
+            </div>
+            <div id="plusInterestBox" class="kpeg-box" hidden>
+              <div><span class="kpeg-chip">BUNGA KPEG PLUS — EIR</span> <strong>Jadwal anuitas dua tahap</strong></div>
+              <p class="hint">Bunga dihitung dari saldo awal kredit × bunga efektif tahunan ÷ 12. Angsuran masa aktif dan masa pensiun dapat berbeda. Angsuran dari referensi dibukukan dalam Rupiah penuh (tanpa pembulatan Rp100) agar cocok dengan jadwal inti.</p>
+              <label class="field"><span>Suku bunga efektif nominal <em>% per tahun</em></span><input id="plusEirAnnualPct" data-field="plusEirAnnualPct" type="number" min="0" max="100" step="0.01"></label>
+              <div class="two-fields">
+                <label class="field"><span>Angsuran masa aktif <em>Rp/bulan</em></span><input id="plusPaymentActive" data-field="plusPaymentActive" type="number" min="0" step="1" placeholder="Otomatis jika kosong"></label>
+                <label class="field"><span>Angsuran masa pensiun <em>Rp/bulan</em></span><input id="plusPaymentPension" data-field="plusPaymentPension" type="number" min="0" step="1" placeholder="Otomatis jika kosong"></label>
+              </div>
+              <label class="field"><span>Pembulatan angsuran KPEG PLUS</span><select id="plusRounding" data-field="plusRounding"><option value="reference">Rupiah penuh (sesuai jadwal referensi)</option><option value="100">Kelipatan Rp100</option></select></label>
+              <button type="button" id="btnLoadKpegExample" class="button button-add">Gunakan contoh jadwal KPEG PLUS 120 bulan</button>
+              <p class="hint">Referensi: jadwal kpeg plus 1.pdf (sumber yang pernah dibagikan). Angsuran fase pertama Rp4.451.137 (bulan 1–25) dan Rp4.649.835 mulai bulan ke-26. Perubahan angsuran mengikuti tanggal efektif pensiun pada bagian D.</p>
             </div>
             <div class="two-fields">
               <label class="field"><span>COF / antar kantor <em>% / tahun</em></span><input id="cofAnnualPct" data-field="cofAnnualPct" type="number" min="0" max="100" step="0.01"></label>
@@ -195,6 +241,14 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <label class="field"><span>Jenis fee penagihan</span><select id="collectionMode" data-field="collectionMode"><option value="percent">Persentase dari angsuran</option><option value="nominal">Nominal tetap per bulan</option></select></label>
             <label class="field" id="collectionPctWrap"><span>Fee penagihan <em>% angsuran</em></span><input id="collectionPct" data-field="collectionPct" type="number" min="0" step="0.1"></label>
             <label class="field" id="collectionNominalWrap" hidden><span>Fee penagihan <em>Rp / bulan</em></span><input id="collectionNominal" data-field="collectionNominal" type="number" min="0" step="10000"></label>
+            <div id="kpegPlusBox" class="kpeg-box" hidden>
+              <div><span class="kpeg-chip">KPEG PLUS M1 / M2 / M3</span> <strong>Fee berbeda setelah pensiun</strong></div>
+              <label class="field"><span>Tanggal efektif mulai pensiun <em>juga menjadi tanggal perubahan angsuran</em></span><input type="date" id="retirementDate" data-field="retirementDate"></label>
+              <label class="field"><span>Metode fee penagihan setelah pensiun</span><select id="pensionCollectionMode" data-field="pensionCollectionMode"><option value="percent">% dari angsuran</option><option value="nominal">Nominal Rp per bulan</option></select></label>
+              <label class="field" id="pensionCollectionPctWrap"><span>Fee setelah pensiun <em>% dari angsuran</em></span><input type="number" step="0.01" min="0" placeholder="Isi tarif resmi (0 boleh)" id="pensionCollectionPct" data-field="pensionCollectionPct"></label>
+              <label class="field" id="pensionCollectionNominalWrap" hidden><span>Fee setelah pensiun <em>Rp / bulan</em></span><input type="number" step="100" min="0" placeholder="Isi nilai resmi (0 boleh)" id="pensionCollectionNominal" data-field="pensionCollectionNominal"></label>
+              <div class="hint">Tanggal efektif mengubah besaran angsuran KPEG PLUS sekaligus dasar fee. Fee sebelum pensiun menggunakan isian di atas. Fee setelah pensiun baru berlaku untuk tanggal angsuran <b>pada atau sesudah</b> tanggal efektif pensiun. Tarif setelah pensiun harus diisi sesuai kebijakan bank; sistem tidak menganggap fee otomatis nol.</div>
+            </div>
             <label class="field"><span>Basis perhitungan COF</span><select id="cofBasis" data-field="cofBasis"><option value="30/365">30/365 — mengikuti workbook</option><option value="1/12">1/12 — proporsi bulanan</option></select></label>
           </div>
         </section>
@@ -220,14 +274,18 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
               <div id="resultNim" class="hero-value">–</div>
               <div class="kpi-foot"><span id="decisionBadge" class="status-pill">–</span><span id="minimumLabel">Batas internal 3%</span></div>
             </div>
-            <div class="kpi-side"><div class="side-metric"><span>Estimasi kontribusi bersih total</span><strong id="resultTotalNet">–</strong></div><div class="side-divider"></div><div class="side-metric"><span>Saldo tertimbang setahun</span><strong id="resultExposure">–</strong></div></div>
+            <div class="kpi-side"><div class="side-metric"><span>Estimasi kontribusi bersih total</span><strong id="resultTotalNet">–</strong></div><div class="side-divider"></div><div class="side-metric"><span>Eksposur saldo-tahun (akumulasi)</span><strong id="resultExposure">–</strong></div></div>
           </div>
           <div class="metric-grid">
             <div class="metric-card"><span>Margin sebelum diskon</span><strong id="resultBefore">–</strong><small>Sudah termasuk COF &amp; fee penagihan</small></div>
             <div class="metric-card"><span>Bunga efektif nominal</span><strong id="resultEffective">–</strong><small>Hasil konversi flat ke anuitas / tahun</small></div>
-            <div class="metric-card"><span>Angsuran bulanan (Rp100)</span><strong id="resultPayment">–</strong><small id="resultTenor">–</small></div>
+            <div class="metric-card"><span id="paymentTitle">Angsuran bulanan (Rp100)</span><strong id="resultPayment">–</strong><small id="resultTenor">–</small></div>
             <div class="metric-card"><span>Margin bunga − COF</span><strong id="resultGross">–</strong><small>Sebelum provisi, diskon dan fee lain</small></div>
           </div>
+          <section id="kpegFeeSummary" class="kpeg-insight" hidden>
+            <h3>Rincian fee penagihan KPEG PLUS · sebelum dan setelah pensiun</h3>
+            <div id="kpegFeeItems" class="kpeg-fee-grid"></div>
+          </section>
           <div class="two-panels">
             <section class="panel breakdown-panel"><div class="panel-head"><div><p>RINCIAN KONTRIBUSI</p><h3>Dari pendapatan ke margin bersih</h3></div><span class="panel-tag">Akumulasi tenor</span></div><div id="breakdown" class="breakdown"></div><div class="breakdown-total"><span>Kontribusi bersih setelah biaya</span><strong id="breakdownTotal">–</strong></div></section>
             <section class="panel"><div class="panel-head"><div><p>PROFIL PORTOFOLIO</p><h3>Pergerakan baki debet</h3></div><span class="panel-tag">Anuitas</span></div><div id="balanceChart" class="balance-chart" role="img" aria-label="Grafik posisi baki debet sepanjang tenor"></div><div class="chart-footer"><span>Awal: <b id="chartStart">–</b></span><span>Akhir: <b id="chartEnd">–</b></span></div><div class="mini-insight" id="summaryInsights">–</div></section>
@@ -237,13 +295,13 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
         <section id="panelSchedule" class="tab-panel" hidden>
           <div class="panel"><div class="panel-head panel-head-action"><div><p>REKAP POKOK &amp; BUNGA</p><h3>Jadwal angsuran terperinci</h3></div><div class="inline-buttons"><label class="year-select">Periode <select id="yearFilter" aria-label="Filter tahun angsuran"><option value="all">Seluruh tenor</option></select></label><div class="excel-controls"><select id="excelMode" class="excel-select" aria-label="Jenis laporan Excel"><option value="full">Laporan lengkap</option><option value="schedule">Jadwal sesuai periode</option><option value="summary">Ringkasan NIM</option></select><button type="button" id="btnExcel" class="button button-excel">Unduh Excel (.xlsx)</button></div><button type="button" id="btnCSV" class="button button-secondary">Unduh CSV</button><button type="button" id="btnPrintSchedule" class="button button-secondary">Cetak jadwal</button></div></div>
-          <div class="schedule-intro"><span id="rowsLabel">–</span><span>Angsuran dibulatkan ke Rp100 terdekat dalam perhitungan. Komponen lain tampil dalam Rupiah penuh.</span></div>
-          <div class="table-scroller"><table class="data-table" id="scheduleTable"><thead><tr><th>Bulan</th><th>Tgl angsuran</th><th class="num">Saldo awal</th><th class="num">Pokok</th><th class="num">Bunga</th><th class="num">Angsuran</th><th class="num">COF</th><th class="num">Fee penagihan</th><th class="num">Provisi &amp; adm neto</th><th class="num">Biaya lain</th><th class="num">Kontribusi bersih</th><th class="num">Saldo akhir</th></tr></thead><tbody id="scheduleBody"></tbody><tfoot id="scheduleFoot"></tfoot></table></div></div>
+          <div class="schedule-intro"><span id="rowsLabel">–</span><span id="scheduleMethodLabel">Angsuran dibulatkan ke Rp100 terdekat dalam perhitungan. Komponen lain tampil dalam Rupiah penuh.</span></div>
+          <div class="table-scroller"><table class="data-table" id="scheduleTable"><thead><tr><th>Bulan</th><th>Fase tagihan</th><th>Tgl angsuran</th><th class="num">Saldo awal</th><th class="num">Pokok</th><th class="num">Bunga</th><th class="num">Angsuran</th><th class="num">COF</th><th class="num">Fee penagihan</th><th class="num">Provisi &amp; adm neto</th><th class="num">Biaya lain</th><th class="num">Kontribusi bersih</th><th class="num">Saldo akhir</th></tr></thead><tbody id="scheduleBody"></tbody><tfoot id="scheduleFoot"></tfoot></table></div></div>
         </section>
 
         <section id="panelAudit" class="tab-panel" hidden>
           <div class="audit-grid"><section class="panel audit-panel"><div class="panel-head"><div><p>REKONSILIASI OTOMATIS</p><h3>Kontrol integritas perhitungan</h3></div><span id="auditStatus" class="audit-label">–</span></div><div id="auditChecks" class="audit-checks"></div><button type="button" id="btnRerun" class="button button-secondary audit-rerun">Jalankan ulang uji</button></section>
-          <section class="panel audit-panel"><div class="panel-head"><div><p>KETERBUKAAN RUMUS</p><h3>Metodologi simulasi</h3></div></div><div class="method-list"><div><strong>1. Bunga flat dan pembulatan angsuran Rp100</strong><p>Bunga flat total = plafon × bunga flat bulanan × tenor. Angsuran dasar = (plafon + bunga flat total) / tenor. Angsuran yang digunakan = pembulatan ke kelipatan Rp100 terdekat (dibulatkan ke atas jika perlu agar pokok terlunasi).</p></div><div><strong>2. Konversi suku bunga efektif</strong><p>Bunga efektif bulanan diperoleh secara numerik berdasarkan <b>angsuran yang sudah dibulatkan</b>, bukan nominal sebelum pembulatan. Bunga nominal efektif tahunan = bunga efektif bulanan × 12. Angsuran terakhir disesuaikan untuk memastikan saldo akhir Rp0.</p></div><div><strong>3. Dana, fee dan diskon</strong><p>COF = saldo awal × COF tahunan × 30/365 (atau 1/12). Fee penagihan memakai % dari angsuran atau nominal tetap; provisi dihitung sebagai persentase plafon; administrasi dapat dipilih sebagai nominal Rp atau persentase plafon. Kedua komponen dialokasikan sekali sepanjang tenor.</p></div><div><strong>4. Biaya tambahan &amp; NIM internal</strong><p>Biaya sekali bayar dialokasikan selama tenor; biaya bulanan × tenor; biaya tahunan × tenor/12. Margin kontribusi tertimbang = total kontribusi bersih × 12 / total saldo awal bulanan × 100%.</p></div></div></section></div>
+          <section class="panel audit-panel"><div class="panel-head"><div><p>KETERBUKAAN RUMUS</p><h3>Metodologi simulasi</h3></div></div><div class="method-list"><div><strong>1. Bunga kredit sesuai jenis produk</strong><p><b>Kredit Pegawai reguler:</b> bunga flat dikonversi ke anuitas dengan angsuran Rp100. <b>KPEG PLUS:</b> bunga EIR nominal per tahun dibagi 12 atas baki debet awal; angsuran aktif/pensiun berbeda sesuai tanggal efektif pensiun.</p></div><div><strong>2. Jadwal angsuran dan rekonsiliasi</strong><p><b>Reguler:</b> konversi flat→EIR dari angsuran Rp100. <b>KPEG PLUS:</b> suku bunga EIR langsung dari input, bunga bulanan dibulatkan ke Rupiah, dan angsuran dua fase dapat diinput berdasarkan jadwal inti. Selisih kecil pada bunga terakhir ditampilkan di audit.</p></div><div><strong>3. Dana, fee dan diskon</strong><p>COF = saldo awal × COF tahunan × 30/365 (atau 1/12). Fee penagihan memakai % dari angsuran atau nominal tetap. <b>KPEG PLUS</b> memakai tarif sebelum pensiun untuk angsuran sebelum tanggal efektif pensiun, lalu tarif setelah pensiun mulai angsuran pada/sesudah tanggal itu. Provisi dan administrasi dialokasikan sekali sepanjang tenor.</p></div><div><strong>4. Biaya tambahan &amp; NIM internal</strong><p>Biaya sekali bayar dialokasikan selama tenor; biaya bulanan × tenor; biaya tahunan × tenor/12. Margin kontribusi tertimbang = total kontribusi bersih × 12 / total saldo awal bulanan × 100%.</p></div></div></section></div>
           <div class="method-note"><strong>Perhatian:</strong> Margin kontribusi perorangan ini merupakan alat pricing/kajian internal, bukan rasio NIM resmi laporan keuangan BPR. Pembebanan provisi, administrasi, fee dan biaya langsung dalam laporan akuntansi perlu mengikuti kebijakan serta metode suku bunga efektif yang berlaku. Pastikan seluruh diskon benar-benar merupakan pengurang pendapatan atau beban bank sebelum penilaian kredit.</div>
         </section>
         <footer class="footer"><span>PT. BPR MODERN EXPRESS · KALKULATOR NIM PERORANGAN</span><span>Simulasi internal • Berjalan pada perangkat ini</span></footer>
@@ -268,6 +326,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     discountProvision: 790000, discountAdministration: 250000,
     insuranceSubsidy: 9064065, insuranceBorne: true,
     collectionMode: 'percent', collectionPct: 3, collectionNominal: 0,
+    plusEirAnnualPct: 13.5, plusPaymentActive: '', plusPaymentPension: '', plusRounding: 'reference',
+    retirementDate: '', pensionCollectionMode: 'percent', pensionCollectionPct: '', pensionCollectionNominal: '',
     cofBasis: '30/365', minimumMarginPct: 3,
     startingDate: '2026-11-12',
     extraCosts: []
@@ -306,6 +366,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     target.setDate(Math.min(d.getDate(), daysInMonth(target)));
     return target.getFullYear() + '-' + String(target.getMonth() + 1).padStart(2, '0') + '-' + String(target.getDate()).padStart(2, '0');
   }
+  function isKpegPlus(product){ return /(?:\bKPEG\s*(?:PLUS|\+)\b|\bPEGAWAI\s*PLUS\b)/i.test(String(product||'')); }
   function calculate(raw) {
     const data = { ...SOURCE_DEFAULTS, ...(raw || {}) };
     const principal = finiteNonnegative(data.principal, 'Plafon');
@@ -327,6 +388,19 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     const collectionNominal = finiteNonnegative(data.collectionNominal, 'Fee penagihan (Rp)');
     const minimumMarginPct = finiteNonnegative(data.minimumMarginPct, 'Batas margin');
     if (!['percent','nominal'].includes(data.collectionMode)) throw new Error('Jenis fee penagihan tidak valid.');
+    const isPlus = isKpegPlus(data.product);
+    const plusAnnual = isPlus ? finiteNonnegative(data.plusEirAnnualPct, 'Suku bunga EIR KPEG PLUS') : 0;
+    if(isPlus && plusAnnual>100) throw new Error('Suku bunga efektif tahunan KPEG PLUS tidak boleh lebih dari 100%.');
+    if(isPlus && !['reference','100'].includes(data.plusRounding)) throw new Error('Pilihan pembulatan KPEG PLUS tidak valid.');
+    if(isPlus && !/^\d{4}-\d{2}-\d{2}$/.test(data.retirementDate||'')) throw new Error('KPEG PLUS: masukkan tanggal efektif pensiun (boleh setelah jatuh tempo kredit).');
+    if(isPlus && !['percent','nominal'].includes(data.pensionCollectionMode)) throw new Error('Metode fee setelah pensiun tidak valid.');
+    const lastDue = plusMonths(data.startingDate,tenor);
+    const pensionMonthsExpected=isPlus && data.retirementDate<=lastDue;
+    const pensionFeeRaw = data.pensionCollectionMode==='nominal' ? data.pensionCollectionNominal : data.pensionCollectionPct;
+    if(pensionMonthsExpected && (pensionFeeRaw==='' || pensionFeeRaw===null || pensionFeeRaw===undefined))
+      throw new Error('KPEG PLUS: isi nilai fee setelah pensiun sesuai ketentuan bank. Nilai 0 harus ditulis 0 secara sengaja.');
+    const pensionFee = pensionMonthsExpected ? finiteNonnegative(pensionFeeRaw, 'Fee setelah pensiun') : 0;
+    if(pensionMonthsExpected && data.pensionCollectionMode==='percent' && pensionFee>100) throw new Error('Fee penagihan setelah pensiun tidak boleh lebih dari 100%.');
     if (!['30/365','1/12'].includes(data.cofBasis)) throw new Error('Basis COF tidak valid.');
     if (!Array.isArray(data.extraCosts)) throw new Error('Biaya tambahan tidak valid.');
 
@@ -343,29 +417,74 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     const insuranceCost = data.insuranceBorne ? insuranceSubsidy : 0;
     const flatMonth = flatMonthlyPct / 100;
     const flatInterestTotal = principal * flatMonth * tenor;
-    // Angsuran adalah nominal yang benar-benar dibayar, dibulatkan ke kelipatan Rp100.
-    // Jangan hanya membulatkan tampilan: angsuran ini digunakan untuk EIR, pokok, bunga, fee, NIM dan ekspor.
-    const installmentRaw = (principal + flatInterestTotal) / tenor;
-    const roundingIncrement = 100;
-    const installmentNearest = Math.round(installmentRaw / roundingIncrement) * roundingIncrement;
-    const minimumAmortizingInstallment = Math.ceil((principal / tenor - 1e-10) / roundingIncrement) * roundingIncrement;
-    // Pada bunga sangat rendah, pembulatan terdekat bisa kurang dari pokok/tenor.
-    // Naikkan ke ratusan berikutnya agar tidak menghasilkan bunga negatif atau jadwal gagal lunas.
-    const installment = Math.max(installmentNearest, minimumAmortizingInstallment);
-    const roundingAdjustment = (installment - installmentRaw) * tenor;
-    const effectiveMonthly = solveMonthlyRate(principal, installment, tenor);
+    const regularRaw = (principal + flatInterestTotal) / tenor;
+    const roundingIncrement = isPlus ? (data.plusRounding==='100'?100:1) : 100;
+    const regularNearest = Math.round(regularRaw / 100) * 100;
+    const minimumAmortizingInstallment = Math.ceil((principal / tenor - 1e-10) / 100) * 100;
+    const regularInstallment = Math.max(regularNearest,minimumAmortizingInstallment);
+    // KPEG PLUS memakai EIR input langsung, bukan estimasi EIR hasil konversi flat.
+    // Ketika dua fase memiliki angsuran berbeda, nilai angsuran dapat dimasukkan sesuai jadwal referensi.
+    const effectiveMonthly = isPlus ? plusAnnual / 1200 : solveMonthlyRate(principal,regularInstallment,tenor);
+    const activeMonths = isPlus ? Array.from({length:tenor},(_,i)=>plusMonths(data.startingDate,i+1)).filter(d=>d<data.retirementDate).length : tenor;
+    const pensionMonths = tenor-activeMonths;
+    const roundPayment = n=>Math.round(n/roundingIncrement)*roundingIncrement;
+    const manual = name=>{const v=data[name];return v==='' || v===null || v===undefined ? null : finiteNonnegative(v,name);};
+    let plusActive=0,plusPension=0;
+    if(isPlus){
+      const enteredActive=manual('plusPaymentActive'),enteredPension=manual('plusPaymentPension');
+      const discount=(t)=>Math.pow(1+effectiveMonthly,-t);
+      const factorActive=Array.from({length:activeMonths},(_,i)=>discount(i+1)).reduce((a,b)=>a+b,0);
+      const factorPension=Array.from({length:pensionMonths},(_,i)=>discount(activeMonths+i+1)).reduce((a,b)=>a+b,0);
+      const annuity=paymentFromRate(principal,effectiveMonthly,tenor);
+      plusActive=enteredActive===null ? annuity : enteredActive;
+      plusPension=enteredPension===null ? annuity : enteredPension;
+      if(enteredActive!==null && enteredPension===null && factorPension>0) plusPension=(principal-enteredActive*factorActive)/factorPension;
+      if(enteredPension!==null && enteredActive===null && factorActive>0) plusActive=(principal-enteredPension*factorPension)/factorActive;
+      if(plusActive<0 || plusPension<0 || !Number.isFinite(plusActive) || !Number.isFinite(plusPension)) throw new Error('Angsuran KPEG PLUS tidak memungkinkan pelunasan sesuai tenor. Periksa angka dua fase.');
+      plusActive=roundPayment(plusActive);plusPension=roundPayment(plusPension);
+    }
+    const installmentRaw = isPlus ? plusActive : regularRaw;
+    const installment = isPlus ? plusActive : regularInstallment;
+    const roundingAdjustment = isPlus ? 0 : (installment-regularRaw)*tenor;
     const cofAnnual = cofAnnualPct / 100;
+    let lastInterestAdjustment=0,lastPaymentAdjustment=0;
     const schedule = [];
-    const totals = { principal: 0, interest: 0, payment: 0, cof: 0, collection: 0, grossFees: 0, discountedFees: 0, insurance: 0, extras: 0, beforeDiscount: 0, net: 0, openingBalances: 0 };
+    const totals = { principal: 0, interest: 0, payment: 0, cof: 0, collection: 0, collectionBefore: 0, collectionAfter: 0, monthsBefore: 0, monthsAfter: 0, grossFees: 0, discountedFees: 0, insurance: 0, extras: 0, beforeDiscount: 0, net: 0, openingBalances: 0 };
     let opening = principal;
     let minNet = Number.POSITIVE_INFINITY;
     for (let month = 1; month <= tenor; month++) {
-      const interest = opening * effectiveMonthly;
-      const principalPart = month === tenor ? opening : installment - interest;
-      const paid = month === tenor ? principalPart + interest : installment;
+      const date=plusMonths(data.startingDate,month);
+      const afterPension=isPlus && date>=data.retirementDate;
+      const planned = isPlus ? (afterPension ? plusPension : plusActive) : installment;
+      let interest=isPlus?Math.round(opening*effectiveMonthly):opening*effectiveMonthly;
+      let paid=planned;
+      let principalPart=paid-interest;
+      if(month===tenor){
+        if(isPlus){
+          const due=opening+interest;
+          // Referensi core banking KPEG PLUS menjaga angsuran final tetap sesuai fase.
+          // Selisih pembulatan kecil (<0,1% angsuran atau paling sedikit Rp5.000)
+          // direkonsiliasi sebagai penyesuaian bunga terakhir dan diungkapkan dalam audit.
+          const diff=planned-due;
+          const tolerance=Math.max(5000,planned*.001);
+          if(planned>=opening && Math.abs(diff)<=tolerance){
+            lastInterestAdjustment=diff;interest+=diff;principalPart=opening;
+          } else {
+            paid=due;principalPart=opening;lastPaymentAdjustment=paid-planned;
+          }
+        } else {principalPart=opening;paid=principalPart+interest;}
+      } else if(isPlus && principalPart <= 0){
+        throw new Error('Angsuran fase '+(afterPension?'pensiun':'aktif')+' lebih kecil/sama dengan bunga bulanan pada bulan '+month+'.');
+      } else if(isPlus && principalPart>=opening){
+        throw new Error('Angsuran KPEG PLUS melunasi kredit sebelum tenor. Periksa nominal fase aktif/pensiun.');
+      }
+      if(interest < -0.01) throw new Error('Bunga terakhir negatif. Periksa angsuran fase pensiun dan tenor.');
       const closing = roundNearZero(opening - principalPart);
       const cof = opening * cofAnnual * (data.cofBasis === '30/365' ? 30/365 : 1/12);
-      const collection = data.collectionMode === 'percent' ? paid * collectionPct / 100 : collectionNominal;
+      const collection = afterPension
+        ? (data.pensionCollectionMode==='percent' ? paid*pensionFee/100 : pensionFee)
+        : (data.collectionMode==='percent' ? paid*collectionPct/100 : collectionNominal);
+      const phase=isPlus ? (afterPension?'Pensiun':'Pra-pensiun') : 'Reguler';
       const grossMonthlyFees = grossFees / tenor;
       const discountedMonthlyFees = discountedFees / tenor;
       const monthlyInsurance = insuranceCost / tenor;
@@ -373,13 +492,15 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       const beforeDiscount = interest + grossMonthlyFees - cof - collection;
       const net = beforeDiscount - discountedMonthlyFees - monthlyInsurance - monthlyExtra;
       const annualizedNetPct = opening > 0 ? (net * 12 / opening) * 100 : 0;
-      const row = { month, date: plusMonths(data.startingDate, month), opening, principal: principalPart, interest, payment: paid, closing, cof, collection, grossFees: grossMonthlyFees, discountedFees: discountedMonthlyFees, insurance: monthlyInsurance, extras: monthlyExtra, beforeDiscount, net, annualizedNetPct };
+      const row = { month, date, phase, opening, principal: principalPart, interest, payment: paid, closing, cof, collection, grossFees: grossMonthlyFees, discountedFees: discountedMonthlyFees, insurance: monthlyInsurance, extras: monthlyExtra, beforeDiscount, net, annualizedNetPct };
       schedule.push(row);
       totals.principal += principalPart;
       totals.interest += interest;
       totals.payment += paid;
       totals.cof += cof;
       totals.collection += collection;
+      if(afterPension){ totals.collectionAfter+=collection; totals.monthsAfter++; }
+      else { totals.collectionBefore+=collection; totals.monthsBefore++; }
       totals.grossFees += grossMonthlyFees;
       totals.discountedFees += discountedMonthlyFees;
       totals.insurance += monthlyInsurance;
@@ -402,18 +523,22 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     if (feesAfterDiscount < -0.01) warnings.push('Pendapatan provisi & administrasi setelah diskon bernilai negatif; kelebihan diskon diklasifikasikan sebagai beban dalam kalkulasi internal.');
     if (extraTotal > 0) warnings.push('Biaya tambahan tahunan dialokasikan prorata setara bulanan untuk analisis, bukan jadwal arus kas aktual.');
     if (minNet < 0) warnings.push('Terdapat bulan dengan kontribusi bersih negatif; lihat jadwal angsuran.');
-    if (installment !== installmentNearest) warnings.push('Angsuran dibulatkan ke atas Rp100 untuk memastikan pokok dapat dilunasi tanpa bunga efektif negatif.');
+    if(!isPlus && installment !== regularNearest) warnings.push('Angsuran dibulatkan ke atas Rp100 untuk memastikan pokok dapat dilunasi tanpa bunga efektif negatif.');
+    if(isPlus && lastInterestAdjustment!==0) warnings.push('Jadwal KPEG PLUS: bunga bulan terakhir disesuaikan '+Math.round(lastInterestAdjustment)+' Rupiah agar angsuran dua fase dan saldo akhir sesuai referensi; bunga final tidak persis saldo × EIR.');
+    if(isPlus && lastPaymentAdjustment!==0) warnings.push('Jadwal KPEG PLUS: angsuran terakhir disesuaikan '+Math.round(lastPaymentAdjustment)+' Rupiah untuk memastikan saldo akhir nol.');
+    if(isPlus && !totals.monthsAfter) warnings.push('KPEG PLUS: tanggal pensiun berada setelah angsuran terakhir. Seluruh tenor masih menggunakan fee sebelum pensiun.');
     return {
       source: 'KALKULATOR_NIM_MODEX.xlsx / INPUT dan NIM-kpeg 240', data, extras, warnings,
       installment, installmentRaw, roundingIncrement, roundingAdjustment, effectiveMonthlyPct: effectiveMonthly * 100, effectiveNominalAnnualPct: effectiveMonthly * 1200,
+      plusActive,plusPension,lastInterestAdjustment,lastPaymentAdjustment,interestMethod:isPlus?'EIR KPEG PLUS dua fase':'Flat ke EIR anuitas',
       flatInterestTotal, grossProvision, administrationNominal, grossFees, feesAfterDiscount, discountedFees, insuranceCost, extraTotal,
-      yearExposure, grossMarginPct, beforeDiscountPct, netMarginPct, simpleMonthlyPct,
+      yearExposure, grossMarginPct, beforeDiscountPct, netMarginPct, simpleMonthlyPct, isKpegPlus:isPlus,
       decision: netMarginPct >= minimumMarginPct ? 'MEMENUHI BATAS INTERNAL' : 'DI BAWAH BATAS INTERNAL',
       totals, schedule, reconciliation: { originalPrincipal: principal, endingBalance: schedule[schedule.length-1].closing, principalDifference: totals.principal - principal,
         netDifference: totals.interest + totals.grossFees - totals.cof - totals.collection - totals.discountedFees - totals.insurance - totals.extras - totals.net }
     };
   }
-  return { SOURCE_DEFAULTS, calculate, solveMonthlyRate, paymentFromRate, plusMonths };
+  return { SOURCE_DEFAULTS, calculate, solveMonthlyRate, paymentFromRate, plusMonths, isKpegPlus };
 });
 
 </script>
@@ -460,10 +585,10 @@ function reportSummary(r,linkSchedule){
   simpleRow(s,8,'Margin sebelum diskon & biaya tambahan',asPct(r.beforeDiscountPct),'pct');
   simpleRow(s,9,'Margin bunga setelah COF',asPct(r.grossMarginPct),'pct');
   simpleRow(s,10,'Suku bunga anuitas efektif nominal / tahun',asPct(r.effectiveNominalAnnualPct),'pct');
-  simpleRow(s,11,'Angsuran setelah pembulatan Rp100',r.installment,'num');
+  simpleRow(s,11,r.isKpegPlus?'Angsuran sebelum pensiun (Rp)':'Angsuran setelah pembulatan Rp100',r.installment,'num');
   simpleRow(s,12,'Kontribusi bersih selama tenor',r.totals.net,'num');
-  simpleRow(s,13,'Eksposur rerata tahunan (jumlah saldo awal / 12)',r.yearExposure,'num');
-  simpleRow(s,14,'Angsuran sebelum pembulatan (Rp)',r.installmentRaw,'num');
+  simpleRow(s,13,'Eksposur saldo-tahun (jumlah saldo awal / 12)',r.yearExposure,'num');
+  simpleRow(s,14,r.isKpegPlus?'Angsuran setelah pensiun (Rp)':'Angsuran sebelum pembulatan (Rp)',r.isKpegPlus?r.plusPension:r.installmentRaw,'num');
   section(s,15,'IDENTITAS DAN STRUKTUR KREDIT');
   const entries=[
     ['Nama debitur',r.data.debtor||'Belum diisi','text'],
@@ -472,7 +597,7 @@ function reportSummary(r,linkSchedule){
     ['Tanggal mulai kredit',r.data.startingDate,'date'],
     ['Plafon kredit',r.data.principal,'num'],
     ['Tenor (bulan)',r.data.tenor,'num'],
-    ['Bunga flat per bulan',asPct(r.data.flatMonthlyPct),'pct'],
+    [r.isKpegPlus?'Suku bunga EIR nominal/tahun':'Bunga flat per bulan',asPct(r.isKpegPlus?r.data.plusEirAnnualPct:r.data.flatMonthlyPct),'pct'],
     ['COF / bunga antar kantor tahunan',asPct(r.data.cofAnnualPct),'pct'],
     ['Basis perhitungan COF',r.data.cofBasis,'text'],
     ['Provisi bruto terhadap plafon',asPct(r.data.provisionPct),'pct'],
@@ -482,6 +607,16 @@ function reportSummary(r,linkSchedule){
     ['Subsidi premi ditanggung bank',r.data.insuranceBorne?'YA':'TIDAK','text']
   ];
   entries.forEach(([k,v,t],i)=>{const row=16+i;if(t==='date'){if(/^\d{4}-\d{2}-\d{2}$/.test(String(v)))simpleRow(s,row,k,serial(v),'date');else simpleRow(s,row,k,'Tidak ditentukan','text');}else simpleRow(s,row,k,v,t);});
+  if(r.isKpegPlus){
+    section(s,47,'KPEG PLUS - PERUBAHAN FEE KETIKA MASUK PENSIUN');
+    simpleRow(s,48,'Tanggal mulai fase pensiun',serial(r.data.retirementDate),'date');
+    simpleRow(s,49,'Jumlah angsuran pra pensiun',r.totals.monthsBefore,'num');
+    simpleRow(s,50,'Jumlah angsuran setelah pensiun',r.totals.monthsAfter,'num');
+    simpleRow(s,51,'Total fee pra pensiun',r.totals.collectionBefore,'num');
+    simpleRow(s,52,'Total fee setelah pensiun',r.totals.collectionAfter,'num');
+    simpleRow(s,53,'Bunga: penyesuaian bulan terakhir (Rp)',r.lastInterestAdjustment,'num');
+    merge(s,54,1,8,'Tanggal efektif adalah batas transisi. Fee pascapensiun harus mengikuti tarif resmi yang diinput petugas.',F.note);
+  }
   section(s,32,'REKAP KONTRIBUSI DAN BIAYA (AKUMULASI TENOR)');
   const t=r.totals;
   const costs=[['Pendapatan bunga kredit',t.interest],['Pendapatan provisi & administrasi bruto',t.grossFees],['Biaya dana / COF',-t.cof],['Fee penagihan',-t.collection],['Diskon provisi & administrasi',-t.discountedFees],['Subsidi premi asuransi (beban bank)',-t.insurance],['Biaya tambahan lainnya',-t.extras]];
@@ -490,23 +625,24 @@ function reportSummary(r,linkSchedule){
   section(s,42,'CATATAN ANALISIS');
   merge(s,43,1,8,'Margin internal = akumulasi kontribusi bersih × 12 / jumlah saldo awal seluruh bulan. Hasil simulasi dapat berbeda dari NIM resmi BPR.',F.note);
   merge(s,44,1,8,'Diskon dan subsidi wajib dikonfirmasi penanggungnya; perhitungan ini mengalokasikan biaya secara rata selama tenor, bukan jurnal akuntansi EIR.',F.note);
-  merge(s,45,1,8,'Angsuran dibulatkan ke kelipatan Rp100 terdekat sebelum EIR/jadwal dihitung. Angsuran terakhir menutup saldo tepat Rp0.',F.note);
+  merge(s,45,1,8,r.isKpegPlus?'KPEG PLUS: bunga = baki debet × suku bunga EIR nominal / 12; angsuran dua fase dan penyesuaian akhir diungkapkan.':'Angsuran dibulatkan ke kelipatan Rp100 terdekat sebelum EIR/jadwal dihitung. Angsuran terakhir menutup saldo tepat Rp0.',F.note);
   [43,44,45].forEach(x=>s.heights.set(x,28));s.freeze=4;
   return s;
 }
 function reportSchedule(r,onlyYear){
   const selected=r.schedule.filter(x=>onlyYear==='all'||Math.ceil(x.month/12)===Number(onlyYear));
   const title=onlyYear==='all'?'SELURUH TENOR':`PERIODE ANGSURAN TAHUN KE-${onlyYear}`;
-  const s=sheet('Jadwal Angsuran',[9,17,18,18,18,19,18,18,20,19,18,18,21,19,16]);
+  const s=sheet('Jadwal Angsuran',[9,17,18,18,18,19,18,18,20,19,18,18,21,19,16,17]);
   heading(s,'JADWAL ANGSURAN & KONTRIBUSI NIM','PT. BPR MODERN EXPRESS  •  '+title+'  •  Nilai uang Rp  •  Seluruh angka menggunakan presisi perhitungan',15);
-  merge(s,4,1,15,`DEBITUR: ${r.data.debtor||'Belum diisi'}    |    CABANG: ${r.data.office||'Belum diisi'}    |    PRODUK: ${r.data.product}    |    TENOR: ${r.data.tenor} bulan`,F.note);
-  merge(s,5,1,15,'Angsuran kelipatan Rp100 digunakan dalam perhitungan EIR, bunga, pokok, fee, NIM. Bulan terakhir disesuaikan untuk saldo akhir Rp0.',F.note);
-  const heads=['Bulan','Tanggal','Saldo awal (Rp)','Pokok (Rp)','Bunga (Rp)','Angsuran (Rp)','COF (Rp)','Fee penagihan (Rp)','Prov & adm bruto (Rp)','Diskon prov & adm (Rp)','Subsidi premi (Rp)','Biaya tambahan (Rp)','Kontribusi bersih (Rp)','Saldo akhir (Rp)','Margin bln / tahun'];
+  merge(s,4,1,16,`DEBITUR: ${r.data.debtor||'Belum diisi'}    |    CABANG: ${r.data.office||'Belum diisi'}    |    PRODUK: ${r.data.product}    |    TENOR: ${r.data.tenor} bulan`,F.note);
+  merge(s,5,1,16,r.isKpegPlus?'KPEG PLUS: bunga saldo awal × EIR tahunan/12; angsuran berubah saat masuk pensiun, saldo akhir Rp0.':'Angsuran kelipatan Rp100 digunakan dalam perhitungan EIR, bunga, pokok, fee, NIM. Bulan terakhir disesuaikan untuk saldo akhir Rp0.',F.note);
+  const heads=['Bulan','Tanggal','Saldo awal (Rp)','Pokok (Rp)','Bunga (Rp)','Angsuran (Rp)','COF (Rp)','Fee penagihan (Rp)','Prov & adm bruto (Rp)','Diskon prov & adm (Rp)','Subsidi premi (Rp)','Biaya tambahan (Rp)','Kontribusi bersih (Rp)','Saldo akhir (Rp)','Margin bln / tahun','Fase fee tagihan'];
   heads.forEach((v,i)=>set(s,6,i+1,v,F.header));s.heights.set(6,32);
   selected.forEach((x,i)=>{
     const row=7+i;
     const vals=[x.month,serial(x.date),x.opening,x.principal,x.interest,x.payment,x.cof,x.collection,x.grossFees,x.discountedFees,x.insurance,x.extras,x.net,x.closing,x.annualizedNetPct/100];
-    vals.forEach((v,c)=>set(s,row,c+1,v,c===1?F.date:c===14?F.pct:c===12?(v<0?F.negative:F.positive):c===0?F.lightLabel:F.num));
+    vals.push(x.phase);
+    vals.forEach((v,c)=>set(s,row,c+1,v,c===15?F.text:c===1?F.date:c===14?F.pct:c===12?(v<0?F.negative:F.positive):c===0?F.lightLabel:F.num));
   });
   const endRow=6+selected.length;
   const totalRow=endRow+1;
@@ -521,13 +657,14 @@ function reportSchedule(r,onlyYear){
     set(s,totalRow,c,v,F.totalNum,`SUM(${colName(c)}7:${colName(c)}${endRow})`);
   }
   set(s,totalRow,14,selected.length?selected[selected.length-1].closing:0,F.totalNum);
+  set(s,totalRow,16,'TOTAL',F.totalLabel);
   const openingSum=selected.reduce((a,x)=>a+x.opening,0),netSum=selected.reduce((a,x)=>a+x.net,0);
   set(s,totalRow,15,openingSum?netSum*12/openingSum:0,F.totalPct,`IFERROR(M${totalRow}*12/C${totalRow},0)`);
   s.heights.set(totalRow,29);s.freeze=6;
-  s.autoFilter=`A6:O${endRow}`;
+  s.autoFilter=`A6:P${endRow}`;
   s.cf={ref:`M7:M${endRow}`,type:'negative'};
-  merge(s,totalRow+2,1,15,'CATATAN: Saldo awal pada baris TOTAL dijumlah untuk dasar margin tertimbang, bukan saldo portofolio pada satu tanggal.',F.note);
-  merge(s,totalRow+3,1,15,'Margin ini adalah estimasi pricing internal, bukan rasio NIM resmi berdasarkan laporan keuangan bank.',F.note);
+  merge(s,totalRow+2,1,16,'CATATAN: Saldo awal pada baris TOTAL dijumlah untuk dasar margin tertimbang, bukan saldo portofolio pada satu tanggal.',F.note);
+  merge(s,totalRow+3,1,16,'Margin ini adalah estimasi pricing internal, bukan rasio NIM resmi berdasarkan laporan keuangan bank.',F.note);
   s.heights.set(totalRow+2,25);s.heights.set(totalRow+3,25);
   return s;
 }
@@ -552,6 +689,14 @@ function reportCosts(r){
   const totalRow=16+Math.max(1,r.extras.length);merge(s,totalRow,1,5,'TOTAL BIAYA TAMBAHAN',F.totalLabel);set(s,totalRow,6,ctotal,F.totalNum,`SUM(F16:F${totalRow-1})`);s.heights.set(totalRow,27);
   merge(s,totalRow+2,1,8,'Metodologi biaya: sekali = 1×; bulanan = tenor×; tahunan = tenor / 12×. Dialokasikan merata dalam simulasi kontribusi.',F.note);
   merge(s,totalRow+3,1,8,'Diskon provisi dan administrasi diperlakukan sebagai pengurang penghasilan. Jika melebihi komponen bruto, lakukan verifikasi subsidi.',F.note);
+  if(r.isKpegPlus){
+    const f=totalRow+5;
+    section(s,f,'FEE PENAGIHAN KPEG PLUS PER FASE');
+    simpleRow(s,f+1,'Fee sebelum pensiun (total)',r.totals.collectionBefore,'num');
+    simpleRow(s,f+2,'Fee setelah pensiun (total)',r.totals.collectionAfter,'num');
+    simpleRow(s,f+3,'Total fee penagihan',r.totals.collection,'num');
+    merge(s,f+4,1,8,'Awal fase pensiun '+r.data.retirementDate+'; fee mengikuti tanggal angsuran.',F.note);
+  }
   s.freeze=15;return s;
 }
 function reportAudit(r){
@@ -563,7 +708,7 @@ function reportAudit(r){
     ['Saldo akhir tepat nol',Math.abs(r.reconciliation.endingBalance)<0.01,r.reconciliation.endingBalance],
     ['Kontribusi bersih sudah direkonsiliasi',Math.abs(r.reconciliation.netDifference)<0.01,r.reconciliation.netDifference],
     ['Jumlah angsuran sesuai tenor',r.schedule.length===r.data.tenor,r.schedule.length],
-    ['Angsuran merupakan kelipatan Rp100',Math.abs(r.installment/100-Math.round(r.installment/100))<1e-8,r.installment],
+    ['Angsuran sesuai pembulatan terpilih',r.isKpegPlus?([r.plusActive,r.plusPension].every(v=>Math.abs(v/r.roundingIncrement-Math.round(v/r.roundingIncrement))<1e-8)):Math.abs(r.installment/100-Math.round(r.installment/100))<1e-8,r.installment],
     ['Provisi bruto tidak diduplikasi',Math.abs(r.totals.grossFees-r.grossFees)<0.01,r.totals.grossFees],
     ['Administrasi sesuai Rp / %',Math.abs(r.grossFees-r.grossProvision-r.administrationNominal)<0.01,r.administrationNominal],
     ['Diskon tercatat sekali',Math.abs(r.totals.discountedFees-r.discountedFees)<0.01,r.discountedFees],
@@ -576,8 +721,8 @@ function reportAudit(r){
   const done=tests.every(x=>x[1]);merge(s,18,1,4,'STATUS AUDIT KESELURUHAN',F.totalLabel);merge(s,18,5,8,done?`LULUS ${tests.length}/${tests.length}`:'PERLU PEMERIKSAAN',done?F.pass:F.fail);
   section(s,20,'ASUMSI & METODE');
   const methodology=[
-    'Angsuran dasar = (plafon + plafon × bunga flat bulanan × tenor) / tenor; dibulatkan ke Rp100 terdekat.',
-    'Bunga efektif dihitung dari angsuran yang telah dibulatkan Rp100; saldo akhir dilunasi pada tenor terakhir.',
+    r.isKpegPlus?'KPEG PLUS: bunga dihitung dari saldo awal kredit × bunga EIR nominal per tahun / 12, dengan pembulatan bunga tiap bulan ke Rupiah penuh.':'Angsuran dasar = (plafon + plafon × bunga flat bulanan × tenor) / tenor; dibulatkan ke Rp100 terdekat.',
+    r.isKpegPlus?'KPEG PLUS: angsuran terpisah masa aktif dan masa pensiun; perubahan mengikuti tanggal pensiun, rekonsiliasi bunga/pay final tercatat di audit.':'Bunga efektif dihitung dari angsuran yang telah dibulatkan Rp100; saldo akhir dilunasi pada tenor terakhir.',
     'COF bulanan = saldo awal × COF tahunan × 30/365 atau 1/12 sesuai pilihan.',
     'Provisi & administrasi bruto dikurangi diskon; dialokasikan selama tenor hanya untuk analisis margin.',
     'Margin tertimbang / tahun = jumlah kontribusi bersih × 12 / jumlah saldo awal bulanan.',
@@ -676,8 +821,8 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
   const engine = window.NIMEngine;
   const baseDefaults = structuredClone(engine.SOURCE_DEFAULTS);
   const STORAGE_KEY = 'modex_nim_personal_v1';
-  const numberFields = new Set(['principal','tenor','flatMonthlyPct','cofAnnualPct','minimumMarginPct','provisionPct','administration','discountProvision','discountAdministration','insuranceSubsidy','collectionPct','collectionNominal']);
-  const formFields = ['debtor','office','product','startingDate','principal','tenor','flatMonthlyPct','cofAnnualPct','provisionPct','administration','administrationMode','discountProvision','discountAdministration','insuranceSubsidy','insuranceBorne','collectionMode','collectionPct','collectionNominal','cofBasis','minimumMarginPct'];
+  const numberFields = new Set(['plusEirAnnualPct','plusPaymentActive','plusPaymentPension','pensionCollectionPct','pensionCollectionNominal','principal','tenor','flatMonthlyPct','cofAnnualPct','minimumMarginPct','provisionPct','administration','discountProvision','discountAdministration','insuranceSubsidy','collectionPct','collectionNominal']);
+  const formFields = ['plusEirAnnualPct','plusPaymentActive','plusPaymentPension','plusRounding','retirementDate','pensionCollectionMode','pensionCollectionPct','pensionCollectionNominal','debtor','office','product','startingDate','principal','tenor','flatMonthlyPct','cofAnnualPct','provisionPct','administration','administrationMode','discountProvision','discountAdministration','insuranceSubsidy','insuranceBorne','collectionMode','collectionPct','collectionNominal','cofBasis','minimumMarginPct'];
   const fmtInt = new Intl.NumberFormat('id-ID', {maximumFractionDigits:0});
   const fmtPct = new Intl.NumberFormat('id-ID', {minimumFractionDigits:2, maximumFractionDigits:2});
   const fmtPrecisePct = new Intl.NumberFormat('id-ID', {maximumFractionDigits:6});
@@ -697,7 +842,7 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
     const obj = { ...baseDefaults };
     for (const field of formFields) if (Object.prototype.hasOwnProperty.call(data,field)) {
       const x = data[field];
-      if (numberFields.has(field)) obj[field] = Number(x);
+      if (numberFields.has(field)) obj[field] = (x==='' || x===null || x===undefined) && (field==='pensionCollectionPct' || field==='pensionCollectionNominal') ? '' : Number(x);
       else if (field==='insuranceBorne') obj[field]=Boolean(x);
       else obj[field] = String(x ?? '').slice(0,100);
     }
@@ -717,9 +862,20 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
       else el.value=state[field];
     }
     $('collectionPctWrap').hidden = state.collectionMode !== 'percent';
+    toggleKpegFields();
     $('collectionNominalWrap').hidden = state.collectionMode !== 'nominal';
     renderAdministrationHint();
     renderCosts();
+  }
+  function toggleKpegFields(){
+    const plus=engine.isKpegPlus(state.product);
+    $('kpegPlusBox').hidden=!plus;
+    $('plusInterestBox').hidden=!plus;
+    $('flatInterestWrap').hidden=plus;
+    $('pensionCollectionPctWrap').hidden=state.pensionCollectionMode!=='percent';
+    $('pensionCollectionNominalWrap').hidden=state.pensionCollectionMode!=='nominal';
+    $('collectionPctWrap').querySelector('span').innerHTML=plus?'Fee sebelum pensiun <em>% angsuran</em>':'Fee penagihan <em>% angsuran</em>';
+    $('collectionNominalWrap').querySelector('span').innerHTML=plus?'Fee sebelum pensiun <em>Rp / bulan</em>':'Fee penagihan <em>Rp / bulan</em>';
   }
   function renderAdministrationHint() {
     const value=Number(state.administration);
@@ -750,8 +906,9 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
       state.administrationMode=next;
       $('administration').value=Number.isFinite(state.administration)?state.administration:'';
     } else {
-      state[field]=el.type==='checkbox' ? el.checked : numberFields.has(field) ? (el.value===''?NaN:Number(el.value)) : el.value;
+      state[field]=el.type==='checkbox' ? el.checked : numberFields.has(field) ? (el.value==='' ? (field.startsWith('pensionCollection')||field.startsWith('plusPayment')?'':NaN) : Number(el.value)) : el.value;
     }
+    if(['collectionMode','product','pensionCollectionMode'].includes(field)) toggleKpegFields();
     if(field==='collectionMode') { $('collectionPctWrap').hidden=state.collectionMode!=='percent';$('collectionNominalWrap').hidden=state.collectionMode!=='nominal'; }
     if(['administration','administrationMode','principal'].includes(field))renderAdministrationHint();
     persist(); update();
@@ -815,15 +972,20 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
     $('resultTotalNet').textContent=currency(r.totals.net);
     $('resultExposure').textContent=currency(r.yearExposure);
     $('resultBefore').textContent=percent(r.beforeDiscountPct);
+    const box=$('kpegFeeSummary');box.hidden=!r.isKpegPlus;
+    if(r.isKpegPlus) $('kpegFeeItems').innerHTML='<div><span>Fee pra-pensiun · '+r.totals.monthsBefore+' bulan</span><strong>'+currency(r.totals.collectionBefore)+'</strong><small>Tarif sebelum pensiun dari kolom penagihan utama</small></div><div><span>Fee pascapensiun · '+r.totals.monthsAfter+' bulan</span><strong>'+currency(r.totals.collectionAfter)+'</strong><small>Efektif sejak '+escapeText(r.data.retirementDate)+'</small></div>';
     $('resultEffective').textContent=percent(r.effectiveNominalAnnualPct);
     $('resultPayment').textContent=currency(r.installment);
-    $('resultTenor').textContent=r.data.tenor+' bulan • pembulatan Rp100 terdekat';
+    $('paymentTitle').textContent=r.isKpegPlus?'Angsuran masa aktif':'Angsuran bulanan (Rp100)';
+    $('resultTenor').textContent=r.isKpegPlus ? ('Pensiun '+currency(r.plusPension)+' • '+r.data.tenor+' bulan') : r.data.tenor+' bulan • pembulatan Rp100 terdekat';
     $('resultGross').textContent=percent(r.grossMarginPct);
     renderBreakdown(r);
     renderChart(r);
     const t=r.totals;
-    $('summaryInsights').textContent='Angsuran dasar '+currency(r.installmentRaw)+' → angsuran setelah pembulatan Rp100 '+currency(r.installment)+'. Estimasi total bunga '+currency(t.interest)+' dan biaya dana '+currency(t.cof)+' selama '+r.data.tenor+' bulan. Pendapatan provisi & administrasi bersih setelah diskon: '+currency(r.feesAfterDiscount)+'.';
+    $('summaryInsights').textContent=(r.isKpegPlus ? 'KPEG PLUS EIR '+percent(r.data.plusEirAnnualPct)+' per tahun: angsuran masa aktif '+currency(r.plusActive)+' dan masa pensiun '+currency(r.plusPension)+'. ' : 'Angsuran dasar '+currency(r.installmentRaw)+' → angsuran setelah pembulatan Rp100 '+currency(r.installment)+'. ')+ 'Total bunga '+currency(t.interest)+' dan biaya dana '+currency(t.cof)+' selama '+r.data.tenor+' bulan. Pendapatan provisi & administrasi setelah diskon: '+currency(r.feesAfterDiscount)+'.';
     const msg=[];
+    if(r.isKpegPlus) msg.push({kind:'info',text:'KPEG PLUS: EIR efektif nominal '+percent(r.data.plusEirAnnualPct)+'; angsuran '+currency(r.plusActive)+' sebelum dan '+currency(r.plusPension)+' setelah pensiun. Bunga dari baki debet/12.'});
+    if(r.isKpegPlus) msg.push({kind:'info',text:'KPEG PLUS: fee sebelum pensiun '+currency(r.totals.collectionBefore)+' ('+r.totals.monthsBefore+' bulan) dan fee setelah pensiun '+currency(r.totals.collectionAfter)+' ('+r.totals.monthsAfter+' bulan). Tanggal transisi '+r.data.retirementDate+'.'});
     msg.push({kind:r.netMarginPct>=r.data.minimumMarginPct?'info':'urgent',text:'Margin bersih '+percent(r.netMarginPct)+(r.netMarginPct>=r.data.minimumMarginPct?' memenuhi':' berada di bawah')+' batas internal '+percent(r.data.minimumMarginPct)+'. Ini indikator kajian, bukan persetujuan kredit otomatis.'});
     msg.push({kind:'info',text:'Diskon provisi dan administrasi '+currency(r.discountedFees)+' diperlakukan sebagai pengurang pendapatan bruto, sedangkan premi asuransi '+currency(r.insuranceCost)+' sebagai biaya bank jika opsi dicentang.'});
     for(const x of r.warnings) msg.push({kind:'urgent',text:x});
@@ -877,11 +1039,12 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
     const shown=r.schedule.filter(row=>year==='all'||Math.ceil(row.month/12)===Number(year));
     const amountClass=n=>n<-.5?'negative':n>.5?'positive':'';
     const date=iso=>fmtDate.format(new Date(iso+'T12:00:00'));
-    $('scheduleBody').innerHTML=shown.map(x=>`<tr><td><strong>${x.month}</strong></td><td>${date(x.date)}</td><td class="num">${money(x.opening)}</td><td class="num">${money(x.principal)}</td><td class="num">${money(x.interest)}</td><td class="num">${money(x.payment)}</td><td class="num">${money(x.cof)}</td><td class="num">${money(x.collection)}</td><td class="num ${amountClass(x.grossFees-x.discountedFees)}">${money(x.grossFees-x.discountedFees)}</td><td class="num">${money(x.insurance+x.extras)}</td><td class="num ${amountClass(x.net)}">${money(x.net)}</td><td class="num">${money(x.closing)}</td></tr>`).join('');
+    $('scheduleBody').innerHTML=shown.map(x=>`<tr><td><strong>${x.month}</strong></td><td><span class="phase-chip ${x.phase==='Pensiun'?'pension':''}">${escapeText(x.phase)}</span></td><td>${date(x.date)}</td><td class="num">${money(x.opening)}</td><td class="num">${money(x.principal)}</td><td class="num">${money(x.interest)}</td><td class="num">${money(x.payment)}</td><td class="num">${money(x.cof)}</td><td class="num">${money(x.collection)}</td><td class="num ${amountClass(x.grossFees-x.discountedFees)}">${money(x.grossFees-x.discountedFees)}</td><td class="num">${money(x.insurance+x.extras)}</td><td class="num ${amountClass(x.net)}">${money(x.net)}</td><td class="num">${money(x.closing)}</td></tr>`).join('');
     $('rowsLabel').textContent=shown.length+' bulan angsuran ditampilkan';
+    $('scheduleMethodLabel').textContent=r.isKpegPlus?('KPEG PLUS: bunga dari saldo awal × EIR '+percent(r.data.plusEirAnnualPct)+' / 12; angsuran '+currency(r.plusActive)+' / '+currency(r.plusPension)+' per fase.'): 'Angsuran dibulatkan ke Rp100 terdekat dalam perhitungan. Komponen lain tampil dalam Rupiah penuh.';
     const aggregate=k=>shown.reduce((a,x)=>a+x[k],0);
     const last=shown.length?shown.at(-1).closing:0;
-    $('scheduleFoot').innerHTML=`<tr><td colspan="2">TOTAL PILIHAN</td><td class="num">–</td><td class="num">${money(aggregate('principal'))}</td><td class="num">${money(aggregate('interest'))}</td><td class="num">${money(aggregate('payment'))}</td><td class="num">${money(aggregate('cof'))}</td><td class="num">${money(aggregate('collection'))}</td><td class="num">${money(aggregate('grossFees')-aggregate('discountedFees'))}</td><td class="num">${money(aggregate('insurance')+aggregate('extras'))}</td><td class="num">${money(aggregate('net'))}</td><td class="num">${money(last)}</td></tr>`;
+    $('scheduleFoot').innerHTML=`<tr><td colspan="3">TOTAL PILIHAN</td><td class="num">–</td><td class="num">${money(aggregate('principal'))}</td><td class="num">${money(aggregate('interest'))}</td><td class="num">${money(aggregate('payment'))}</td><td class="num">${money(aggregate('cof'))}</td><td class="num">${money(aggregate('collection'))}</td><td class="num">${money(aggregate('grossFees')-aggregate('discountedFees'))}</td><td class="num">${money(aggregate('insurance')+aggregate('extras'))}</td><td class="num">${money(aggregate('net'))}</td><td class="num">${money(last)}</td></tr>`;
   }
   function updateAudit(r) {
     const checks=[
@@ -889,14 +1052,19 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
       ['Saldo akhir tenor = Rp0',Math.abs(r.reconciliation.endingBalance)<.01,currency(r.reconciliation.endingBalance)],
       ['Rekonsiliasi kontribusi bersih',Math.abs(r.reconciliation.netDifference)<.01,currency(r.reconciliation.netDifference)],
       ['Jumlah tenor tepat',r.schedule.length===r.data.tenor,r.schedule.length+' bulan'],
-      ['Angsuran kelipatan Rp100',Math.abs((r.installment / 100)-Math.round(r.installment / 100))<1e-8,currency(r.installment)],
+      ['Angsuran sesuai satuan pembulatan',r.isKpegPlus?[r.plusActive,r.plusPension].every(v=>Math.abs(v/r.roundingIncrement-Math.round(v/r.roundingIncrement))<1e-8):Math.abs((r.installment / 100)-Math.round(r.installment / 100))<1e-8,currency(r.installment)],
       ['Angsuran akhir melunasi kredit',Math.abs(r.schedule.at(-1).closing)<.01,currency(r.schedule.at(-1).payment)],
       ['Pendapatan provisi tercatat sekali',Math.abs(r.totals.grossFees-r.grossFees)<.01,currency(r.totals.grossFees)],
       ['Administrasi sesuai pilihan Rp / %',Math.abs((r.grossFees-r.grossProvision)-r.administrationNominal)<.01,currency(r.administrationNominal)],
       ['Diskon sesuai input',Math.abs(r.totals.discountedFees-r.discountedFees)<.01,currency(r.totals.discountedFees)],
       ['Subsidi premi sesuai pilihan',Math.abs(r.totals.insurance-r.insuranceCost)<.01,currency(r.totals.insurance)],
       ['Biaya tambahan teralokasi penuh',Math.abs(r.totals.extras-r.extraTotal)<.01,currency(r.totals.extras)],
-      ['Tidak ada angka NaN / tak hingga',r.schedule.every(x=>Object.values(x).every(v=>typeof v==='number'?Number.isFinite(v):true)),'Valid']
+      ['Tidak ada angka NaN / tak hingga',r.schedule.every(x=>Object.values(x).every(v=>typeof v==='number'?Number.isFinite(v):true)),'Valid'],
+      ['Fee sebelum dan setelah pensiun sesuai total',Math.abs(r.totals.collectionBefore+r.totals.collectionAfter-r.totals.collection)<0.01,currency(r.totals.collection)],
+      ['Jumlah bulan fase fee sesuai tenor',r.totals.monthsBefore+r.totals.monthsAfter===r.data.tenor,r.totals.monthsBefore+' + '+r.totals.monthsAfter+' bulan'],
+      ['Peralihan fee dan angsuran sesuai tanggal pensiun',!r.isKpegPlus || r.schedule.every(x=>(x.phase==='Pensiun')===(x.date>=r.data.retirementDate)),'Valid'],
+      ['Bunga KPEG PLUS dari baki debet × EIR/12 (kecuali penyesuaian akhir)',!r.isKpegPlus || r.schedule.slice(0,-1).every(x=>Math.abs(x.interest-Math.round(x.opening*r.data.plusEirAnnualPct/1200))<=1),'Valid'],
+      ['Angsuran dua fase KPEG PLUS konsisten',!r.isKpegPlus || r.schedule.slice(0,-1).every(x=>Math.abs(x.payment-(x.phase==='Pensiun'?r.plusPension:r.plusActive))<=.01),'Valid']
     ];
     const all=checks.every(x=>x[1]);
     $('auditStatus').textContent=all?'LULUS '+checks.length+'/'+checks.length:'PERLU PEMERIKSAAN';
@@ -936,8 +1104,8 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
   }
   function exportCSV() {
     if(!current)return;
-    const r=current;const head=['Bulan','Tanggal','Saldo Awal (Rp)','Pokok (Rp)','Bunga (Rp)','Angsuran (Rp)','COF (Rp)','Fee Penagihan (Rp)','Prov & Adm Bruto (Rp)','Diskon Prov & Adm (Rp)','Subsidi Premi (Rp)','Biaya Tambahan (Rp)','Kontribusi Bersih (Rp)','Saldo Akhir (Rp)'];
-    const data=r.schedule.map(x=>[x.month,x.date,x.opening,x.principal,x.interest,x.payment,x.cof,x.collection,x.grossFees,x.discountedFees,x.insurance,x.extras,x.net,x.closing]);
+    const r=current;const head=['Bulan','Fase fee','Tanggal','Saldo Awal (Rp)','Pokok (Rp)','Bunga (Rp)','Angsuran (Rp)','COF (Rp)','Fee Penagihan (Rp)','Prov & Adm Bruto (Rp)','Diskon Prov & Adm (Rp)','Subsidi Premi (Rp)','Biaya Tambahan (Rp)','Kontribusi Bersih (Rp)','Saldo Akhir (Rp)'];
+    const data=r.schedule.map(x=>[x.month,x.phase,x.date,x.opening,x.principal,x.interest,x.payment,x.cof,x.collection,x.grossFees,x.discountedFees,x.insurance,x.extras,x.net,x.closing]);
     const lines=[head,...data].map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');
     downloadBlob('Jadwal_NIM_MODEX_'+r.data.tenor+'bulan.csv','\ufeff'+lines,'text/csv;charset=utf-8');toast('Jadwal angsuran berhasil diunduh.');
   }
@@ -968,12 +1136,14 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
         ['Plafon kredit',currency(r.data.principal)],
         ['Tenor / jangka waktu',r.data.tenor+' bulan'],
         ['Tanggal mulai',r.data.startingDate ? fmtDate.format(new Date(r.data.startingDate+'T12:00:00')) : '–'],
-        ['Bunga flat per bulan',percent(r.data.flatMonthlyPct)],
+        [r.isKpegPlus?'Bunga EIR nominal/tahun':'Bunga flat per bulan',percent(r.isKpegPlus?r.data.plusEirAnnualPct:r.data.flatMonthlyPct)],
         ['Bunga efektif (nominal/tahun)',percent(r.effectiveNominalAnnualPct)],
         ['COF / biaya dana per tahun',percent(r.data.cofAnnualPct)],
-        ['Angsuran per bulan',currency(r.installment)],
+        [r.isKpegPlus?'Angsuran masa aktif':'Angsuran per bulan',currency(r.installment)],
+        ...(r.isKpegPlus?[['Angsuran masa pensiun',currency(r.plusPension)]]:[]),
         ['Provisi bruto',percent(r.data.provisionPct)+' plafon'],
-        ['Administrasi bruto',currency(r.administrationNominal) + (r.data.administrationMode==='percent'?' ('+percent(r.data.administration)+' plafon)':'')]
+        ['Administrasi bruto',currency(r.administrationNominal) + (r.data.administrationMode==='percent'?' ('+percent(r.data.administration)+' plafon)':'')],
+        ...(r.isKpegPlus?[['Mulai pensiun',r.data.retirementDate],['Fee pra/pascapensiun',currency(r.totals.collectionBefore)+' / '+currency(r.totals.collectionAfter)]]:[])
       ];
       const rows = [
         ['Pendapatan bunga sepanjang tenor',t.interest],
@@ -1000,7 +1170,8 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
         </tbody></table>
         <section class="print-review ${bad?'bad':''}"><div class="review-top"><span>03 / Kesimpulan simulasi</span><span>${bad?'DI BAWAH TARGET':'MEMENUHI TARGET'}</span></div>
           <p>Margin sebelum diskon <b>${escapeText(percent(r.beforeDiscountPct))}</b>, margin setelah biaya <b>${escapeText(percent(r.netMarginPct))}</b>, dibanding target <b>${escapeText(percent(r.data.minimumMarginPct))}</b>. ${bad?'Hasil margin belum memenuhi ambang internal yang dimasukkan.':'Hasil margin memenuhi ambang internal yang dimasukkan.'} Penilaian kelayakan kredit tetap memerlukan pemeriksaan risiko dan kebijakan bank.</p></section>
-        <p class="print-disclaimer">Catatan metode: margin kontribusi internal = jumlah kontribusi bersih × 12 ÷ jumlah saldo awal bulanan × 100%. Angsuran anuitas dibulatkan Rp100 terdekat; angsuran terakhir disesuaikan agar saldo akhir Rp0. Ini bukan NIM resmi laporan keuangan. Perlakuan diskon, fee, dan biaya harus diverifikasi sesuai kebijakan akuntansi bank.</p>
+        ${r.isKpegPlus?'<p class="print-disclaimer">KPEG PLUS: transisi fee pada '+escapeText(r.data.retirementDate)+'. Pra pensiun '+escapeText(String(r.totals.monthsBefore))+' bulan: '+escapeText(currency(r.totals.collectionBefore))+'; pascapensiun '+escapeText(String(r.totals.monthsAfter))+' bulan: '+escapeText(currency(r.totals.collectionAfter))+'. Nominal berdasarkan tarif yang diinput analis.</p>':''}
+        <p class="print-disclaimer">Catatan metode: margin kontribusi internal = jumlah kontribusi bersih × 12 ÷ jumlah saldo awal bulanan × 100%. ${r.isKpegPlus?'KPEG PLUS: bunga EIR nominal/12 atas baki debet; angsuran dua fase mengikuti tanggal pensiun, dengan penyesuaian akhir yang diungkapkan.':'Angsuran anuitas dibulatkan Rp100 terdekat; angsuran terakhir disesuaikan agar saldo akhir Rp0.'} Ini bukan NIM resmi laporan keuangan. Perlakuan diskon, fee, dan biaya harus diverifikasi sesuai kebijakan akuntansi bank.</p>
         <div class="print-signatures"><div class="sig"><strong>Disiapkan oleh</strong><span>Petugas / Analis Kredit</span></div><div class="sig"><strong>Diperiksa oleh</strong><span>Pejabat pemeriksa</span></div></div>
         <div class="print-bottom"><span>PT. BPR MODERN EXPRESS • KAJIAN INTERNAL</span><span>Dokumen simulasi • ${escapeText(today)}</span></div>
       </div>`;
@@ -1008,18 +1179,18 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
       const sums = [t.openingBalances,t.principal,t.interest,t.payment,t.cof,t.collection,t.grossFees-t.discountedFees,t.insurance+t.extras,t.net];
       const head = ['Ke-','Saldo awal','Pokok','Bunga','Angsuran','COF','Fee','Prov & adm neto','Premi & biaya','Kontribusi','Saldo akhir'];
       html = `<div class="report-shell print-schedule">${top}
-        <div class="print-doc-title print-schedule-header"><div><h2>Jadwal Angsuran & Kontribusi NIM</h2><p>Rincian per bulan dan komponen pembentukan margin</p></div><span class="print-tag">${escapeText(String(r.data.tenor))} BULAN • ANUITAS</span></div>
+        <div class="print-doc-title print-schedule-header"><div><h2>Jadwal Angsuran & Kontribusi NIM</h2><p>Rincian per bulan dan komponen pembentukan margin${r.isKpegPlus?' • Transisi pensiun '+escapeText(r.data.retirementDate):''}</p></div><span class="print-tag">${escapeText(String(r.data.tenor))} BULAN • ANUITAS</span></div>
         <div class="print-schedule-meta">
           <div class="sm-item"><span>Debitur / cabang</span><strong>${escapeText((r.data.debtor||'–')+' / '+(r.data.office||'–'))}</strong></div>
           <div class="sm-item"><span>Plafon</span><strong>${escapeText(currency(r.data.principal))}</strong></div>
-          <div class="sm-item"><span>Angsuran normal</span><strong>${escapeText(currency(r.installment))}</strong></div>
+          <div class="sm-item"><span>${r.isKpegPlus?'Aktif / pensiun':'Angsuran normal'}</span><strong>${escapeText(r.isKpegPlus?(currency(r.plusActive)+' / '+currency(r.plusPension)):currency(r.installment))}</strong></div>
           <div class="sm-item"><span>Margin bersih / tahun</span><strong>${escapeText(percent(r.netMarginPct))}</strong></div>
         </div>
         <table class="print-table print-schedule-table"><thead><tr>${head.map(h=>'<th>'+escapeText(h)+'</th>').join('')}</tr></thead><tbody>
         ${r.schedule.map(x=>`<tr><td>${x.month}</td><td>${money(x.opening)}</td><td>${money(x.principal)}</td><td>${money(x.interest)}</td><td>${money(x.payment)}</td><td>${money(x.cof)}</td><td>${money(x.collection)}</td><td>${money(x.grossFees-x.discountedFees)}</td><td>${money(x.insurance+x.extras)}</td><td class="${negative(x.net)}">${money(x.net)}</td><td>${money(x.closing)}</td></tr>`).join('')}
         <tr class="sum-row"><td>TOTAL</td><td>–</td><td>${money(t.principal)}</td><td>${money(t.interest)}</td><td>${money(t.payment)}</td><td>${money(t.cof)}</td><td>${money(t.collection)}</td><td>${money(t.grossFees-t.discountedFees)}</td><td>${money(t.insurance+t.extras)}</td><td>${money(t.net)}</td><td>${money(r.schedule.at(-1).closing)}</td></tr>
         </tbody></table>
-        <p class="print-schedule-note">Angsuran normal dibulatkan ke Rp100 terdekat. Angsuran terakhir menyesuaikan sisa saldo, sehingga baki debet akhir Rp0. Nilai ditampilkan dalam Rupiah tanpa desimal.</p>
+        <p class="print-schedule-note">${r.isKpegPlus?'KPEG PLUS: fee sebelum pensiun '+escapeText(currency(r.totals.collectionBefore))+'; setelah pensiun '+escapeText(currency(r.totals.collectionAfter))+'; tanggal efektif '+escapeText(r.data.retirementDate)+'. ':''}${r.isKpegPlus?'Angsuran dua fase KPEG PLUS mengikuti metode Rupiah penuh / Rp100 pilihan dan bunga EIR nominal atas saldo awal, dengan rekonsiliasi akhir.':'Angsuran normal dibulatkan ke Rp100 terdekat. Angsuran terakhir menyesuaikan sisa saldo, sehingga baki debet akhir Rp0.'} Nilai ditampilkan dalam Rupiah tanpa desimal.</p>
         <div class="print-signatures"><div class="sig"><strong>Disiapkan oleh</strong><span>Petugas / Analis Kredit</span></div><div class="sig"><strong>Diperiksa oleh</strong><span>Pejabat pemeriksa</span></div></div>
         <div class="print-bottom"><span>PT. BPR MODERN EXPRESS • JADWAL ANGSURAN</span><span>Dicetak: ${escapeText(today)}</span></div>
       </div>`;
@@ -1042,8 +1213,15 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
     };
     reader.readAsText(file);
   }
+  function loadKpegReference(){
+    if(!window.confirm('Muat contoh PDF KPEG PLUS 120 bulan? Parameter simulasi yang sedang digunakan akan diganti.'))return;
+    const d=structuredClone(baseDefaults);
+    Object.assign(d,{product:'KPEG PLUS M1',principal:301051000,tenor:120,startingDate:'2026-10-21',retirementDate:'2028-12-21',plusEirAnnualPct:13.5,plusPaymentActive:4451137,plusPaymentPension:4649835,plusRounding:'reference',collectionMode:'percent',collectionPct:0,pensionCollectionMode:'percent',pensionCollectionPct:0,discountProvision:0,discountAdministration:0,insuranceSubsidy:0,insuranceBorne:false});
+    state=d;fillInputs();persist();update();toast('Contoh jadwal KPEG PLUS 120 bulan dimuat. Ganti tarif fee sesuai ketentuan bank.');
+  }
   function initialize(){
     fillInputs();
+    $('btnLoadKpegExample').addEventListener('click',loadKpegReference);
     document.querySelectorAll('[data-field]').forEach(el=>el.addEventListener(el.tagName==='SELECT'||el.type==='checkbox'?'change':'input',onFormEdit));
     $('extraList').addEventListener('input',onCostEdit);
     $('extraList').addEventListener('change',onCostEdit);
