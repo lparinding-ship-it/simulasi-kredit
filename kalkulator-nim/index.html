@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a1c31">
   <meta name="description" content="Kalkulator estimasi NIM dan margin kontribusi kredit perorangan PT. BPR Modern Express — offline dan responsif.">
-  <title>Kalkulator NIM MODEX V8 | Pilihan Produk Kredit</title>
+  <title>Kalkulator NIM MODEX V9 | Cetak Laporan Direksi</title>
   <style>
 :root{--navy:#0c1d33;--ink:#142a44;--blue:#117ad1;--cyan:#12b7d9;--pale:#edf5fb;--bg:#f4f7fb;--line:#dce5ee;--muted:#708197;--soft:#91a1b1;--red:#cf4a55;--green:#158a73;--shadow:0 7px 30px rgba(15,47,83,.055);font-synthesis:none}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
@@ -129,6 +129,87 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 #product option{color:#183d61;font-weight:500}
 #productMethodHint{display:block;line-height:1.5;margin-top:6px;color:#55738f}
 #productCustomWrap[hidden]{display:none!important}
+
+
+/* V9 — pusat cetak laporan Direksi. Tidak memengaruhi perhitungan NIM. */
+.print-center{position:fixed;inset:0;z-index:180;background:rgba(5,20,39,.63);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
+.print-center[hidden]{display:none!important}
+.print-dialog{background:linear-gradient(160deg,#fff,#f6faff);border:1px solid #d4e4f0;border-radius:20px;box-shadow:0 24px 85px rgba(0,22,45,.3);width:min(670px,100%);max-height:min(94vh,790px);overflow-y:auto;color:#16324c}
+.print-dialog-head{padding:21px 26px;background:linear-gradient(125deg,#0d2b49,#164e70);border-radius:19px 19px 0 0;color:#fff;display:flex;gap:18px;align-items:flex-start;justify-content:space-between}
+.print-dialog-head span{font-size:10px;color:#93d7e9;letter-spacing:1.6px;font-weight:800}
+.print-dialog-head h2{font-size:21px;margin:6px 0 5px;letter-spacing:-.5px}.print-dialog-head p{margin:0;font-size:12px;color:#c5ddeb;line-height:1.55}
+.print-dialog-close{background:#ffffff19;border:1px solid #ffffff36;color:white;width:33px;height:33px;border-radius:9px;font-size:21px;flex:none}
+.print-dialog-body{padding:20px 26px}
+.print-dialog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.print-dialog .print-field{min-width:0;display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:750;color:#49647b}
+.print-dialog .print-field input,.print-dialog .print-field select,.print-dialog .print-field textarea{background:#fff;border:1px solid #d3e2ed;border-radius:9px;padding:10px 12px;min-height:41px;width:100%;font-size:12px;color:#1d3c55}
+.print-dialog .print-field textarea{resize:vertical;min-height:62px;line-height:1.4}
+.print-dialog .print-field.span-2{grid-column:1/-1}.print-dialog .print-field input::placeholder,.print-dialog .print-field textarea::placeholder{color:#a6b3c1}
+.print-dialog .print-hint{border-left:3px solid #4bb4d2;background:#eef7fb;color:#4c7086;font-size:11px;line-height:1.6;padding:10px 12px;margin:12px 0 16px;border-radius:0 7px 7px 0}
+.print-dialog h3{font-size:11px;letter-spacing:1.1px;color:#2b6892;text-transform:uppercase;margin:17px 0 12px}
+.print-dialog-foot{padding:16px 26px 20px;display:flex;align-items:center;justify-content:flex-end;gap:11px;border-top:1px solid #e1eaf1}
+.print-dialog-foot .button{padding:12px 18px;font-size:12px}
+.print-year-wrap[hidden]{display:none!important}
+@media(max-width:560px){.print-dialog-body{padding:16px}.print-dialog-head{padding:18px}.print-dialog-foot{padding:14px}.print-dialog-grid{grid-template-columns:1fr}.print-dialog .print-field.span-2{grid-column:auto}}
+@media print {
+  .print-center{display:none!important}
+  /* Ringkasan Eksekutif Direksi: kertas putih, aksen navy, bayangan 3D ringan. */
+  .director{color:#18364f;letter-spacing:0;line-height:1.29!important;font-family:Arial,'Segoe UI',sans-serif!important}
+  .director .print-band{height:5px;margin-bottom:8px}
+  .director .print-header{padding-bottom:8px;gap:8px}
+  .director .print-bank strong{font-size:12px}.director .print-bank span{font-size:7.5px}
+  .director .print-mark{width:35px;height:35px;flex-basis:35px;font-size:13px;box-shadow:2px 3px 0 #c4d9e9}
+  .director .print-code strong{font-size:9px}.director .print-code small{font-size:8px}
+  .director .director-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:11px 0 9px}
+  .director .director-heading h2{font-size:15px;font-weight:900;margin:0;color:#133956}
+  .director .director-heading small{font-size:8px;color:#678297;display:block;margin-top:3px}
+  .director .director-label{font-size:8px;font-weight:900;color:#377398;background:#ebf5f9!important;border:1px solid #bddbe9;border-radius:5px;padding:5px 8px;white-space:nowrap}
+  .director .director-hero{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+  .director .director-tile{min-width:0;padding:13px 12px 12px;border:1px solid #d1dfeb;border-bottom:3px solid #afc7dc;border-radius:10px;background:linear-gradient(150deg,#fff,#f1f7fc)!important;box-shadow:2px 3px 0 #e4edf3;break-inside:avoid}
+  .director .director-tile.primary{background:linear-gradient(132deg,#0b2c4c,#1b6085)!important;color:white!important;border-color:#145477;border-bottom-color:#72bdcf;box-shadow:2px 3px 0 #cbdde8}
+  .director .director-tile span{display:block;font-size:9.4px;color:#728a9e;font-weight:750;line-height:1.4;text-transform:uppercase;letter-spacing:.35px}
+  .director .director-tile.primary span{color:#c3e2ec!important}
+  .director .director-tile b{display:block;font-size:20px;letter-spacing:-.6px;margin:6px 0;color:#153e60;line-height:1.12}
+  .director .director-tile.primary b{font-size:25px;color:#fff!important}
+  .director .director-tile small{display:block;font-size:9px;color:#738ca0;line-height:1.3}
+  .director .director-tile.primary small{color:#d0e6f0!important}
+  .director .director-section{display:flex;align-items:center;gap:8px;color:#175179;font-size:11px;font-weight:900;margin:10px 0 7px;letter-spacing:.25px;page-break-after:avoid}
+  .director .director-section i{height:7px;width:7px;border-radius:2px;background:#2491b3;display:block}
+  .director .director-profile{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid #d8e5ee;border-radius:8px;overflow:hidden}
+  .director .director-profile div{min-width:0;padding:8px 9px 8px;border-bottom:1px solid #e5edf3;border-right:1px solid #e5edf3;background:linear-gradient(180deg,#fff,#f9fbfd)!important;min-height:42px}
+  .director .director-profile div:nth-child(3n){border-right:0}.director .director-profile div:nth-last-child(-n+3){border-bottom:0}
+  .director .director-profile small{display:block;font-size:9px;color:#73879b;font-weight:650;margin-bottom:3px}
+  .director .director-profile b{display:block;font-size:10.8px;color:#193c59;font-weight:800;overflow-wrap:anywhere}
+  .director .director-table{width:100%;border-collapse:collapse;table-layout:fixed;margin:0;font-size:10px}
+  .director .director-table th{background:#163f5e!important;color:#fff!important;font-size:10px;font-weight:850;padding:7px 10px;text-align:left}
+  .director .director-table th:last-child{text-align:right;width:32%}
+  .director .director-table td{padding:6.4px 10px;border-bottom:1px solid #e3ebf0;font-size:10px;color:#234358}
+  .director .director-table td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+  .director .director-table tbody tr:nth-child(even){background:#f7fafc!important}
+  .director .director-table .total{background:linear-gradient(90deg,#e1f0f8,#e9f6fc)!important}
+  .director .director-table .total td{font-size:10px;font-weight:900!important;color:#0c4f72;padding:8px 10px;border-top:2px solid #88b9d1;border-bottom:2px solid #88b9d1}
+  .director .director-table .neg{color:#b43f4c!important}.director .director-table .pos{color:#0c765f!important}
+  .director .director-check{padding:9px 11px;margin-top:10px;border:1px solid #c9e0ed;border-left:4px solid #167fa6;background:linear-gradient(110deg,#eef7fb,#fff)!important;border-radius:7px;break-inside:avoid}
+  .director .director-check.bad{border-color:#eed4d7;border-left-color:#c8485c;background:linear-gradient(110deg,#fff1f2,#fff)!important}
+  .director .director-check strong{font-size:11px;color:#194965;display:block}
+  .director .director-check.bad strong{color:#ab3f4c}
+  .director .director-check p{font-size:10px;line-height:1.38;margin:4px 0 0;color:#526d80}
+  .director .director-notes{font-size:9px;color:#6b8091;line-height:1.35;margin:7px 2px 0}
+  .director .director-notes b{color:#334e66}
+  .director .director-signatures{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:16px 5px 0;break-inside:avoid}
+  .director .director-signatures>div{text-align:center;min-height:66px}
+  .director .director-signatures small{font-size:9.4px;color:#315672;font-weight:750;display:block}
+  .director .director-signatures span{display:block;border-bottom:1px solid #8faabb;max-width:165px;margin:32px auto 3px}
+  .director .director-signatures b{font-size:9.4px;color:#3b5568;font-weight:600;overflow-wrap:anywhere;display:block}
+  .director .director-footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #d5e3ed;margin-top:7px;padding-top:6px;font-size:8px;color:#8399a8}
+  .director .director-footer strong{color:#48647a}
+  .director .director-nop{font-variant-numeric:tabular-nums;font-size:7.5px;white-space:nowrap}
+  .print-schedule-table td{font-size:8.7px!important;padding:5.7px 3px!important}
+  .print-schedule-table th{font-size:8.3px!important;padding:7px 3px!important}
+  .print-schedule .print-header{break-inside:avoid}
+  .print-schedule .print-bottom{break-inside:avoid}
+  .print-schedule-table tbody tr{break-inside:avoid}
+}
 </style>
 <style id="printPaperStyle">@media print{@page{size:A4 portrait;margin:12mm 13mm}}/* KPEG PLUS — transparansi fee pra dan pascapensiun, tanpa mengubah layout lama. */
 .kpeg-box{border:1px solid #bcd8ea;border-radius:12px;background:linear-gradient(145deg,#f4faff,#eaf4fc);padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 12px rgba(21,107,169,.04)}
@@ -160,7 +241,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       <button type="button" id="btnExportScenario" class="button button-muted">Simpan skenario</button>
       <label for="importScenario" class="button button-muted file-label">Muat skenario</label>
       <input id="importScenario" type="file" accept="application/json,.json" hidden>
-      <button type="button" id="btnPrint" class="button button-primary">Cetak / PDF</button>
+      <button type="button" id="btnPrint" class="button button-primary">Cetak Laporan Direksi</button>
     </div>
   </header>
 
@@ -341,6 +422,29 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     </div>
   </main>
   <div id="toast" class="toast" aria-live="polite"></div>
+  <div id="printCenter" class="print-center" hidden>
+    <section class="print-dialog" role="dialog" aria-modal="true" aria-labelledby="printDialogTitle">
+      <div class="print-dialog-head"><div><span>PUSAT CETAK / MODEX REPORT</span><h2 id="printDialogTitle">Siapkan laporan untuk Direksi</h2><p>Pilih format, isi keterangan laporan, lalu cetak atau simpan PDF melalui browser.</p></div><button type="button" class="print-dialog-close" id="printClose" aria-label="Tutup panel cetak">×</button></div>
+      <div class="print-dialog-body">
+        <div class="print-dialog-grid">
+          <label class="print-field span-2">Jenis cetakan<select id="printReportType"><option value="director">Ringkasan Eksekutif Direksi — A4 Potret</option><option value="summary">Kajian Teknis Lengkap — A4 Potret</option><option value="schedule">Jadwal Angsuran Terperinci — A4 Lanskap</option></select></label>
+          <label class="print-field print-year-wrap span-2" id="printYearWrap" hidden>Periode jadwal<select id="printYear"><option value="all">Seluruh tenor</option></select></label>
+          <label class="print-field">Nomor / referensi laporan<input id="printReference" maxlength="65" placeholder="Contoh: KAJ-NIM/AREA2/001"></label>
+          <label class="print-field">Tujuan laporan<input id="printRecipient" maxlength="70" value="Direksi" placeholder="Direksi"></label>
+        </div>
+        <div class="print-hint" id="printFormatHint">Laporan Direksi menampilkan KPI margin, parameter penting, rekap biaya, kesimpulan dan 3 kolom paraf/tanda tangan. Format ringkas A4 potret.</div>
+        <h3>Identitas pemeriksaan / persetujuan</h3>
+        <div class="print-dialog-grid">
+          <label class="print-field">Disusun oleh<input id="printPreparer" maxlength="80" placeholder="Nama analis / jabatan"></label>
+          <label class="print-field">Diperiksa oleh<input id="printReviewer" maxlength="80" placeholder="Nama pemeriksa / jabatan"></label>
+          <label class="print-field span-2">Mengetahui<input id="printApprover" maxlength="80" placeholder="Nama pejabat / jabatan"></label>
+          <label class="print-field span-2">Catatan analisis (opsional)<textarea id="printAnalystNote" maxlength="300" placeholder="Catatan singkat untuk Direksi. Tidak memengaruhi angka simulasi."></textarea></label>
+        </div>
+        <div class="print-hint">Laporan ini merupakan simulasi margin kontribusi kredit, bukan persetujuan kredit atau NIM resmi laporan keuangan. Hasil mengikuti data yang sedang tampil; tidak dikirim ke server.</div>
+      </div>
+      <div class="print-dialog-foot"><button type="button" id="printCancel" class="button button-secondary">Batal</button><button type="button" id="printConfirm" class="button button-primary">Pratinjau Cetak / Simpan PDF</button></div>
+    </section>
+  </div>
   <div id="printArea" class="print-area"></div>
   <script>
 /* Kalkulator NIM Perorangan MODEX — mesin matematika murni, tanpa dependensi. */
@@ -890,6 +994,7 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
     else hint='Simulasi metode umum: flat dikonversi ke EIR anuitas. Belum memuat rumus khusus produk ini; validasi dengan kebijakan bank.';
     $('productMethodHint').textContent=hint;
   }
+
   const finite = n => Number.isFinite(n) ? n : 0;
   function snapshotAllowed(data) {
     const obj = { ...baseDefaults };
@@ -1166,11 +1271,13 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
     const lines=[head,...data].map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');
     downloadBlob('Jadwal_NIM_MODEX_'+r.data.tenor+'bulan.csv','\ufeff'+lines,'text/csv;charset=utf-8');toast('Jadwal angsuran berhasil diunduh.');
   }
-  function preparePrint(scheduleMode) {
+  function preparePrint(scheduleMode, options={}) {
     if (!current) return;
     const r = current, t = r.totals;
     const negative = v => v < -0.5 ? ' num-neg' : v > 0.5 ? ' num-pos' : '';
     const today = fmtDate.format(new Date());
+    const reference = String(options.reference || '').trim();
+    const reportSuffix = reference ? ' | Ref: ' + escapeText(reference) : '';
     const bad = r.netMarginPct < r.data.minimumMarginPct;
     const diff = r.netMarginPct - r.data.minimumMarginPct;
     // Ukuran kertas mengikuti jenis laporan: ringkasan potret, jadwal lanskap.
@@ -1182,7 +1289,7 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
           <div class="print-mark">ME</div>
           <div><strong>PT. BPR MODERN EXPRESS</strong><span>ANALISIS MARGIN KREDIT PERORANGAN</span></div>
         </div>
-        <div class="print-code"><strong>${scheduleMode?'JADWAL ANGSURAN':'LAPORAN KAJIAN NIM'}</strong><small>Dicetak: ${escapeText(today)}</small></div>
+        <div class="print-code"><strong>${scheduleMode?'JADWAL ANGSURAN':'LAPORAN KAJIAN NIM'}</strong><small>Dicetak: ${escapeText(today)}${reportSuffix}</small></div>
       </div>`;
     let html;
     if (!scheduleMode) {
@@ -1233,10 +1340,13 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
         <div class="print-bottom"><span>PT. BPR MODERN EXPRESS • KAJIAN INTERNAL</span><span>Dokumen simulasi • ${escapeText(today)}</span></div>
       </div>`;
     } else {
-      const sums = [t.openingBalances,t.principal,t.interest,t.payment,t.cof,t.collection,t.grossFees-t.discountedFees,t.insurance+t.extras,t.net];
+      const onlyYear=String(options.year||'all');
+      const printRows=onlyYear==='all' ? r.schedule : r.schedule.filter(x=>String(x.date).startsWith(onlyYear));
+      if(!printRows.length){toast('Tidak ada jadwal untuk periode yang dipilih.');return;}
+      const periodTotals=printRows.reduce((a,x)=>{a.principal+=x.principal;a.interest+=x.interest;a.payment+=x.payment;a.cof+=x.cof;a.collection+=x.collection;a.fees+=x.grossFees-x.discountedFees;a.other+=x.insurance+x.extras;a.net+=x.net;return a;},{principal:0,interest:0,payment:0,cof:0,collection:0,fees:0,other:0,net:0});
       const head = ['Ke-','Saldo awal','Pokok','Bunga','Angsuran','COF','Fee','Prov & adm neto','Premi & biaya','Kontribusi','Saldo akhir'];
       html = `<div class="report-shell print-schedule">${top}
-        <div class="print-doc-title print-schedule-header"><div><h2>Jadwal Angsuran & Kontribusi NIM</h2><p>Rincian per bulan dan komponen pembentukan margin${r.isKpegPlus?' • Transisi pensiun '+escapeText(r.data.retirementDate):''}</p></div><span class="print-tag">${escapeText(String(r.data.tenor))} BULAN • ANUITAS</span></div>
+        <div class="print-doc-title print-schedule-header"><div><h2>Jadwal Angsuran & Kontribusi NIM</h2><p>Rincian per bulan dan komponen pembentukan margin${r.isKpegPlus?' • Transisi pensiun '+escapeText(r.data.retirementDate):''}</p></div><span class="print-tag">${onlyYear==='all'?escapeText(String(r.data.tenor))+' BULAN':('TAHUN '+escapeText(onlyYear))} • ANUITAS</span></div>
         <div class="print-schedule-meta">
           <div class="sm-item"><span>Debitur / cabang</span><strong>${escapeText((r.data.debtor||'–')+' / '+(r.data.office||'–'))}</strong></div>
           <div class="sm-item"><span>Plafon</span><strong>${escapeText(currency(r.data.principal))}</strong></div>
@@ -1244,16 +1354,114 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
           <div class="sm-item"><span>Margin bersih / tahun</span><strong>${escapeText(percent(r.netMarginPct))}</strong></div>
         </div>
         <table class="print-table print-schedule-table"><thead><tr>${head.map(h=>'<th>'+escapeText(h)+'</th>').join('')}</tr></thead><tbody>
-        ${r.schedule.map(x=>`<tr><td>${x.month}</td><td>${money(x.opening)}</td><td>${money(x.principal)}</td><td>${money(x.interest)}</td><td>${money(x.payment)}</td><td>${money(x.cof)}</td><td>${money(x.collection)}</td><td>${money(x.grossFees-x.discountedFees)}</td><td>${money(x.insurance+x.extras)}</td><td class="${negative(x.net)}">${money(x.net)}</td><td>${money(x.closing)}</td></tr>`).join('')}
-        <tr class="sum-row"><td>TOTAL</td><td>–</td><td>${money(t.principal)}</td><td>${money(t.interest)}</td><td>${money(t.payment)}</td><td>${money(t.cof)}</td><td>${money(t.collection)}</td><td>${money(t.grossFees-t.discountedFees)}</td><td>${money(t.insurance+t.extras)}</td><td>${money(t.net)}</td><td>${money(r.schedule.at(-1).closing)}</td></tr>
+        ${printRows.map(x=>`<tr><td>${x.month}</td><td>${money(x.opening)}</td><td>${money(x.principal)}</td><td>${money(x.interest)}</td><td>${money(x.payment)}</td><td>${money(x.cof)}</td><td>${money(x.collection)}</td><td>${money(x.grossFees-x.discountedFees)}</td><td>${money(x.insurance+x.extras)}</td><td class="${negative(x.net)}">${money(x.net)}</td><td>${money(x.closing)}</td></tr>`).join('')}
+        <tr class="sum-row"><td>${onlyYear==='all'?'TOTAL':'TOTAL PERIODE'}</td><td>–</td><td>${money(periodTotals.principal)}</td><td>${money(periodTotals.interest)}</td><td>${money(periodTotals.payment)}</td><td>${money(periodTotals.cof)}</td><td>${money(periodTotals.collection)}</td><td>${money(periodTotals.fees)}</td><td>${money(periodTotals.other)}</td><td>${money(periodTotals.net)}</td><td>${money(printRows.at(-1).closing)}</td></tr>
         </tbody></table>
-        <p class="print-schedule-note">${r.isKpegPlus?'KPEG PLUS: fee sebelum pensiun '+escapeText(currency(r.totals.collectionBefore))+'; setelah pensiun '+escapeText(currency(r.totals.collectionAfter))+'; tanggal efektif '+escapeText(r.data.retirementDate)+'. ':''}${r.isKpegPlus?'Angsuran dua fase KPEG PLUS mengikuti metode Rupiah penuh / Rp100 pilihan dan bunga EIR nominal atas saldo awal, dengan rekonsiliasi akhir.':'Angsuran normal dibulatkan ke Rp100 terdekat. Angsuran terakhir menyesuaikan sisa saldo, sehingga baki debet akhir Rp0.'} Nilai ditampilkan dalam Rupiah tanpa desimal.</p>
+        <p class="print-schedule-note">${r.isKpegPlus?'KPEG PLUS: fee sebelum pensiun '+escapeText(currency(r.totals.collectionBefore))+'; setelah pensiun '+escapeText(currency(r.totals.collectionAfter))+'; tanggal efektif '+escapeText(r.data.retirementDate)+'. ':''}${r.isKpegPlus?'Angsuran dua fase KPEG PLUS mengikuti metode Rupiah penuh / Rp100 pilihan dan bunga EIR nominal atas saldo awal, dengan rekonsiliasi akhir.':'Angsuran normal dibulatkan ke Rp100 terdekat. Angsuran terakhir menyesuaikan sisa saldo, sehingga baki debet akhir Rp0.'} ${onlyYear==='all'?'':'Tabel hanya memuat tahun ' + escapeText(onlyYear) + '; total adalah subtotal periode tersebut. ' }Nilai ditampilkan dalam Rupiah tanpa desimal.</p>
         <div class="print-signatures"><div class="sig"><strong>Disiapkan oleh</strong><span>Petugas / Analis Kredit</span></div><div class="sig"><strong>Diperiksa oleh</strong><span>Pejabat pemeriksa</span></div></div>
         <div class="print-bottom"><span>PT. BPR MODERN EXPRESS • JADWAL ANGSURAN</span><span>Dicetak: ${escapeText(today)}</span></div>
       </div>`;
     }
     $('printArea').innerHTML = html;
     window.print();
+  }
+  function directorReport(options={}) {
+    if(!current)return;
+    const r=current,t=r.totals,bad=r.netMarginPct<r.data.minimumMarginPct;
+    const ref=String(options.reference||'').trim();
+    const recipient=String(options.recipient||'Direksi').trim()||'Direksi';
+    const printed=fmtDate.format(new Date());
+    const reportLine=(a,b)=>`<tr><td>${escapeText(a)}</td><td class="${b<-.5?'neg':b>.5?'pos':''}">${escapeText(money(Math.abs(b)<.5?0:b))}</td></tr>`;
+    const diff=r.netMarginPct-r.data.minimumMarginPct;
+    const principal=currency(r.data.principal);
+    const feeInfo=r.isKpegPlus ? `Aktif: ${currency(r.totals.collectionBefore)} (${r.totals.monthsBefore} bulan); pensiun: ${currency(r.totals.collectionAfter)} (${r.totals.monthsAfter} bulan)` : `Total fee ${currency(t.collection)}`;
+    const baseProfile=[
+      ['Kantor cabang',r.data.office||'Belum diisi'],
+      ['Nama debitur',r.data.debtor||'Belum diisi'],
+      ['Produk kredit',r.data.product||'–'],
+      ['Plafon kredit',principal],
+      ['Tenor',r.data.tenor+' bulan'],
+      ['Tanggal mulai',r.data.startingDate?fmtDate.format(new Date(r.data.startingDate+'T12:00:00')):'–'],
+      [r.isKpegPlus?'Bunga EIR / tahun':'Bunga flat / bulan',percent(r.isKpegPlus?r.data.plusEirAnnualPct:r.data.flatMonthlyPct)],
+      ['COF / tahun',percent(r.data.cofAnnualPct)],
+      [r.isKpegPlus?'Angsuran aktif':'Angsuran per bulan',currency(r.isKpegPlus?r.plusActive:r.installment)],
+      ...(r.isKpegPlus?[
+        ['Angsuran pensiun',currency(r.plusPension)],
+        ['Mulai pensiun',r.data.retirementDate||'–'],
+        ['Fee aktif / pensiun',`${currency(r.totals.collectionBefore)} / ${currency(r.totals.collectionAfter)}`]
+      ]:[])
+    ];
+    const heading='<div class="print-band"></div><div class="print-header"><div class="print-bank"><div class="print-mark">ME</div><div><strong>PT. BPR MODERN EXPRESS</strong><span>AREA BISNIS • KAJIAN MARGIN KREDIT PERORANGAN</span></div></div><div class="print-code"><strong>RAHASIA • INTERNAL</strong><small>Dicetak: '+escapeText(printed)+'</small></div></div>';
+    const caution=r.warnings.filter(w=>/diskon|negatif|penyesuaian|selisih|angsur/i.test(w)).slice(0,2);
+    const cautionHtml=caution.length?'<p class="director-notes"><b>Catatan kontrol:</b> '+escapeText(caution.join(' '))+'</p>':'';
+    const signed=(label,person,placeholder)=>`<div><small>${label}</small><span></span><b>${escapeText(person||placeholder)}</b></div>`;
+    $('printPaperStyle').textContent='@media print{@page{size:A4 portrait;margin:10mm 12mm}}';
+    $('printArea').innerHTML=`<div class="report-shell director">${heading}
+      <div class="director-heading"><div><h2>LAPORAN EKSEKUTIF KAJIAN NIM</h2><small>Ditujukan kepada: ${escapeText(recipient)}${ref?' • Nomor: '+escapeText(ref):''}</small></div><span class="director-label">KREDIT PERORANGAN</span></div>
+      <section class="director-hero">
+        <div class="director-tile primary"><span>Margin kontribusi bersih / tahun</span><b>${escapeText(percent(r.netMarginPct))}</b><small>Setelah biaya &amp; subsidi yang dimasukkan</small></div>
+        <div class="director-tile"><span>Kontribusi bersih selama tenor</span><b>${escapeText(currency(t.net))}</b><small>Pendapatan dikurangi seluruh biaya</small></div>
+        <div class="director-tile"><span>Target internal / selisih</span><b>${escapeText(percent(r.data.minimumMarginPct))}</b><small>${escapeText((diff>0?'+':'')+percent(diff))} poin persentase</small></div>
+      </section>
+      <h3 class="director-section"><i></i> 01 / IDENTITAS &amp; PARAMETER KREDIT</h3>
+      <section class="director-profile">${baseProfile.map(([k,v])=>`<div><small>${escapeText(k)}</small><b>${escapeText(v)}</b></div>`).join('')}</section>
+      <h3 class="director-section"><i></i> 02 / RINGKASAN HASIL KEUANGAN</h3>
+      <table class="director-table"><thead><tr><th>Komponen pendapatan / biaya selama tenor</th><th>Nilai (Rp)</th></tr></thead><tbody>
+        ${reportLine('Pendapatan bunga kredit',t.interest)}
+        ${reportLine('Provisi dan administrasi bruto',t.grossFees)}
+        ${reportLine('Biaya dana / Cost of Fund (COF)',-t.cof)}
+        ${reportLine('Fee penagihan',-t.collection)}
+        ${reportLine('Diskon provisi dan administrasi',-t.discountedFees)}
+        ${reportLine('Subsidi premi asuransi',-t.insurance)}
+        ${reportLine('Biaya tambahan lainnya',-t.extras)}
+        <tr class="total"><td>JUMLAH KONTRIBUSI BERSIH</td><td>${escapeText(currency(t.net))}</td></tr>
+      </tbody></table>
+      <section class="director-check ${bad?'bad':''}"><strong>03 / HASIL KAJIAN — ${bad?'DI BAWAH TARGET SIMULASI':'MEMENUHI TARGET SIMULASI'}</strong>
+        <p>Margin setelah biaya ${escapeText(percent(r.netMarginPct))} dibandingkan target ${escapeText(percent(r.data.minimumMarginPct))} (selisih ${escapeText((diff>0?'+':'')+percent(diff))} poin persentase). ${bad?'Margin simulasi di bawah parameter internal. Perlu evaluasi tarif, biaya dan risiko sebelum diputuskan.':'Margin simulasi mencapai parameter internal, namun kelayakan tetap perlu melalui analisis dan persetujuan sesuai kewenangan.'}</p></section>
+      ${r.isKpegPlus?'<p class="director-notes"><b>Rincian fee KPEG PLUS:</b> '+escapeText(feeInfo)+'. Bunga dihitung EIR nominal/12 × saldo awal; penyesuaian akhir mengikuti rekonsiliasi.</p>':''}
+      ${cautionHtml}
+      ${options.note?'<p class="director-notes"><b>Catatan analis:</b> '+escapeText(String(options.note).slice(0,300))+'</p>':''}
+      <p class="director-notes"><b>Metode:</b> Margin kontribusi = total kontribusi bersih × 12 / jumlah saldo awal bulanan × 100%. Hasil merupakan estimasi pricing internal, bukan NIM resmi bank. Biaya, diskon dan kebijakan akuntansi wajib diverifikasi.</p>
+      <div class="director-signatures">
+        ${signed('Disusun oleh',options.preparer,'Petugas / Analis')}
+        ${signed('Diperiksa oleh',options.reviewer,'Pejabat pemeriksa')}
+        ${signed('Mengetahui',options.approver,'Pejabat berwenang')}
+      </div>
+      <div class="director-footer"><strong>PT. BPR MODERN EXPRESS | DOKUMEN KAJIAN INTERNAL</strong><span class="director-nop">${escapeText(ref||'Tanpa nomor laporan')} • ${escapeText(printed)}</span></div>
+    </div>`;
+    window.print();
+  }
+  function updatePrintFormInfo(){
+    const type=$('printReportType').value;
+    $('printYearWrap').hidden=type!=='schedule';
+    $('printFormatHint').textContent=type==='director'
+      ?'Ringkasan Direksi dalam A4 potret: KPI, parameter kredit, rekap pendapatan dan biaya, analisis margin, serta tiga ruang tanda tangan.'
+      :type==='summary'
+      ?'Kajian teknis A4 potret: data lengkap, perhitungan margin, metodologi dan dua ruang tanda tangan.'
+      :'Jadwal angsuran A4 lanskap: seluruh bulan atau tahun tertentu, dengan subtotal sesuai periode dan kolom keuangan.';
+  }
+  function openPrintCenter(type='director'){
+    if(!current){toast('Lengkapi parameter simulasi yang valid terlebih dahulu.');return;}
+    $('printReportType').value=type;
+    const sel=$('printYear');sel.innerHTML='';
+    for(const opt of $('yearFilter').options){const o=document.createElement('option');o.value=opt.value;o.textContent=opt.textContent;sel.appendChild(o);}
+    sel.value=$('yearFilter').value;
+    updatePrintFormInfo();
+    $('printCenter').hidden=false;
+    document.body.style.overflow='hidden';
+    $('printReportType').focus();
+  }
+  function closePrintCenter(){
+    $('printCenter').hidden=true;
+    document.body.style.overflow='';
+  }
+  function printFromCenter(){
+    if(!current)return;
+    const type=$('printReportType').value;
+    const options={reference:$('printReference').value,recipient:$('printRecipient').value,preparer:$('printPreparer').value,reviewer:$('printReviewer').value,approver:$('printApprover').value,note:$('printAnalystNote').value,year:$('printYear').value};
+    closePrintCenter();
+    if(type==='director')directorReport(options);
+    else preparePrint(type==='schedule',options);
   }
   function importScenario(file) {
     if(!file)return;
@@ -1297,8 +1505,14 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
     $('btnExcel').addEventListener('click',exportExcel);
     $('btnExportScenario').addEventListener('click',exportScenario);
     $('importScenario').addEventListener('change',e=>{importScenario(e.target.files[0]);e.target.value='';});
-    $('btnPrint').addEventListener('click',()=>preparePrint(false));
-    $('btnPrintSchedule').addEventListener('click',()=>preparePrint(true));
+    $('btnPrint').addEventListener('click',()=>openPrintCenter('director'));
+    $('printClose').addEventListener('click',closePrintCenter);
+    $('printCancel').addEventListener('click',closePrintCenter);
+    $('printConfirm').addEventListener('click',printFromCenter);
+    $('printReportType').addEventListener('change',updatePrintFormInfo);
+    $('printCenter').addEventListener('click',e=>{if(e.target===$('printCenter'))closePrintCenter();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('printCenter').hidden)closePrintCenter();});
+    $('btnPrintSchedule').addEventListener('click',()=>openPrintCenter('schedule'));
     $('btnRerun').addEventListener('click',()=>{update();toast('Rekonsiliasi rumus telah dijalankan.');});
     update();
   }
