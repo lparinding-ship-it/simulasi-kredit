@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a1c31">
   <meta name="description" content="Kalkulator estimasi NIM dan margin kontribusi kredit perorangan PT. BPR Modern Express — offline dan responsif.">
-  <title>Kalkulator NIM MODEX V7 KPEG PLUS | Modern Express</title>
+  <title>Kalkulator NIM MODEX V8 | Pilihan Produk Kredit</title>
   <style>
 :root{--navy:#0c1d33;--ink:#142a44;--blue:#117ad1;--cyan:#12b7d9;--pale:#edf5fb;--bg:#f4f7fb;--line:#dce5ee;--muted:#708197;--soft:#91a1b1;--red:#cf4a55;--green:#158a73;--shadow:0 7px 30px rgba(15,47,83,.055);font-synthesis:none}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
@@ -122,6 +122,13 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .phase-chip{display:inline-block;padding:4px 7px;border-radius:5px;background:#e9f3fa;font-size:10px;font-weight:750;color:#1b6a9c;white-space:nowrap}
 .phase-chip.pension{color:#086a5a;background:#e3f6ed}
 @media(max-width:520px){.kpeg-fee-grid{grid-template-columns:1fr}}
+
+/* V8: pemilih produk selalu menampilkan pilihan lengkap, bukan datalist pencarian. */
+#product{cursor:pointer;appearance:auto;min-height:42px;font-weight:650;color:#183d61;background-color:#fff}
+#product optgroup{font-style:normal;font-weight:750;color:#2a587b}
+#product option{color:#183d61;font-weight:500}
+#productMethodHint{display:block;line-height:1.5;margin-top:6px;color:#55738f}
+#productCustomWrap[hidden]{display:none!important}
 </style>
 <style id="printPaperStyle">@media print{@page{size:A4 portrait;margin:12mm 13mm}}/* KPEG PLUS — transparansi fee pra dan pascapensiun, tanpa mengubah layout lama. */
 .kpeg-box{border:1px solid #bcd8ea;border-radius:12px;background:linear-gradient(145deg,#f4faff,#eaf4fc);padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 12px rgba(21,107,169,.04)}
@@ -170,7 +177,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         <strong>Excel MODEX</strong>
         <span>INPUT &amp; NIM-kpeg 240</span>
         <div class="stamp-line"></div>
-        <small>Versi 7 · KPEG PLUS EIR dua fase · November 2026</small>
+        <small>Versi 8 · Pilihan produk &amp; KPEG PLUS EIR · November 2026</small>
       </div>
     </section>
 
@@ -183,7 +190,32 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
           <div class="fields">
             <label class="field"><span>Nama debitur <em>opsional</em></span><input id="debtor" data-field="debtor" type="text" placeholder="Nama debitur" autocomplete="off" maxlength="100"></label>
             <label class="field"><span>Kantor cabang <em>opsional</em></span><input id="office" data-field="office" type="text" placeholder="Mis. KC Palu" maxlength="80"></label>
-            <label class="field"><span>Jenis produk</span><input id="product" data-field="product" type="text" list="productOptions" maxlength="80" value="Kredit Pegawai"><datalist id="productOptions"><option value="Kredit Pegawai"><option value="KPEG PLUS M1"><option value="KPEG PLUS M2"><option value="KPEG PLUS M3"><option value="Kredit Pensiun"></datalist></label>
+            <label class="field"><span>Jenis produk kredit</span>
+              <select id="product" data-field="product" aria-describedby="productMethodHint">
+                <optgroup label="Pegawai &amp; Pegawai Plus">
+                  <option value="Kredit Pegawai">Kredit Pegawai (PEG)</option>
+                  <option value="KPEG PLUS M1">KPEG PLUS — Metode 1 (M1)</option>
+                  <option value="KPEG PLUS M2">KPEG PLUS — Metode 2 (M2)</option>
+                  <option value="KPEG PLUS M3">KPEG PLUS — Metode 3 (M3)</option>
+                </optgroup>
+                <optgroup label="Produk lain · simulasi anuitas/flat umum">
+                  <option value="Kredit Pensiun">Kredit Pensiun</option>
+                  <option value="Kredit Swasta">Kredit Swasta</option>
+                  <option value="Kredit Produktif">Kredit Produktif (Angsuran)</option>
+                  <option value="Kredit Modal Kerja">Kredit Modal Kerja (Angsuran)</option>
+                  <option value="Kredit Investasi">Kredit Investasi (Angsuran)</option>
+                  <option value="KPR">Kredit Pemilikan Rumah (KPR)</option>
+                  <option value="Kredit Kendaraan R4">Kredit Kendaraan R4</option>
+                  <option value="Modex Emas">Modex Emas</option>
+                </optgroup>
+                <option value="__custom_product__">Produk lain — ketik nama</option>
+              </select>
+              <small id="productMethodHint" class="input-hint" aria-live="polite">Kredit Pegawai: flat dikonversi ke EIR; KPEG PLUS: EIR dua fase.</small>
+            </label>
+            <label class="field" id="productCustomWrap" hidden><span>Nama produk lainnya</span>
+              <input type="text" id="productCustomInput" placeholder="Tulis nama produk" autocomplete="off" maxlength="80">
+              <small class="input-hint">Produk kustom memakai simulasi bunga flat → anuitas umum, bukan aturan khusus produk tersebut.</small>
+            </label>
             <label class="field"><span>Tanggal mulai</span><input id="startingDate" data-field="startingDate" type="date"></label>
           </div>
         </section>
@@ -837,6 +869,27 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
   const money = n => (n < -0.5 ? '(' + fmtInt.format(-n) + ')' : fmtInt.format(n));
   const percent = n => fmtPct.format(n) + '%';
   const escapeText = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  const CUSTOM_PRODUCT='__custom_product__';
+  function normalizeProductName(value) {
+    const name=String(value??'').trim();
+    if (/^(?:PEG|KPEG)$/i.test(name)) return 'Kredit Pegawai';
+    if (/^KPEG\s*PLUS\s*(?:METODE\s*)?([123])$/i.test(name)) return 'KPEG PLUS M'+name.match(/([123])$/)[1];
+    return name||'Kredit Pegawai';
+  }
+  function syncProductPicker(){
+    state.product=normalizeProductName(state.product);
+    const selector=$('product');
+    const isPreset=Array.from(selector.options).some(o=>o.value===state.product && o.value!==CUSTOM_PRODUCT);
+    selector.value=isPreset?state.product:CUSTOM_PRODUCT;
+    $('productCustomWrap').hidden=isPreset;
+    if(!isPreset) $('productCustomInput').value=state.product;
+    let hint;
+    if(engine.isKpegPlus(state.product)) hint='Metode EIR dua fase aktif. Isi bunga EIR, tanggal pensiun serta fee tiap fase. M1/M2/M3 menggunakan model dua fase; cocokkan ketentuan masing-masing metode dengan kebijakan bank.';
+    else if(state.product==='Kredit Pegawai') hint='Kredit Pegawai: bunga flat dikonversi ke EIR; angsuran bulanan dibulatkan Rp100.';
+    else hint='Simulasi metode umum: flat dikonversi ke EIR anuitas. Belum memuat rumus khusus produk ini; validasi dengan kebijakan bank.';
+    $('productMethodHint').textContent=hint;
+  }
   const finite = n => Number.isFinite(n) ? n : 0;
   function snapshotAllowed(data) {
     const obj = { ...baseDefaults };
@@ -861,6 +914,7 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
       if (el.type==='checkbox') el.checked=Boolean(state[field]);
       else el.value=state[field];
     }
+    syncProductPicker();
     $('collectionPctWrap').hidden = state.collectionMode !== 'percent';
     toggleKpegFields();
     $('collectionNominalWrap').hidden = state.collectionMode !== 'nominal';
@@ -905,6 +959,9 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
       }
       state.administrationMode=next;
       $('administration').value=Number.isFinite(state.administration)?state.administration:'';
+    } else if(field==='product') {
+      state.product=el.value===CUSTOM_PRODUCT?($('productCustomInput').value.trim()||'Produk Lainnya'):el.value;
+      syncProductPicker();
     } else {
       state[field]=el.type==='checkbox' ? el.checked : numberFields.has(field) ? (el.value==='' ? (field.startsWith('pensionCollection')||field.startsWith('plusPayment')?'':NaN) : Number(el.value)) : el.value;
     }
@@ -1223,6 +1280,12 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
     fillInputs();
     $('btnLoadKpegExample').addEventListener('click',loadKpegReference);
     document.querySelectorAll('[data-field]').forEach(el=>el.addEventListener(el.tagName==='SELECT'||el.type==='checkbox'?'change':'input',onFormEdit));
+    $('productCustomInput').addEventListener('input',e=>{
+      if($('product').value!==CUSTOM_PRODUCT)return;
+      state.product=e.target.value.trim()||'Produk Lainnya';
+      $('productMethodHint').textContent='Produk kustom: kalkulasi metode umum flat → EIR anuitas, bukan tarif atau perhitungan khusus produk.';
+      persist();update();
+    });
     $('extraList').addEventListener('input',onCostEdit);
     $('extraList').addEventListener('change',onCostEdit);
     $('extraList').addEventListener('click',onCostEdit);
