@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a1c31">
   <meta name="description" content="Kalkulator estimasi NIM dan margin kontribusi kredit perorangan PT. BPR Modern Express — offline dan responsif.">
-  <title>Kalkulator NIM MODEX V9 | Cetak Laporan Direksi</title>
+  <title>Kalkulator NIM MODEX V9.1 | Cetak Laporan Direksi</title>
   <style>
 :root{--navy:#0c1d33;--ink:#142a44;--blue:#117ad1;--cyan:#12b7d9;--pale:#edf5fb;--bg:#f4f7fb;--line:#dce5ee;--muted:#708197;--soft:#91a1b1;--red:#cf4a55;--green:#158a73;--shadow:0 7px 30px rgba(15,47,83,.055);font-synthesis:none}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
@@ -1335,7 +1335,6 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
         <section class="print-review ${bad?'bad':''}"><div class="review-top"><span>03 / Kesimpulan simulasi</span><span>${bad?'DI BAWAH TARGET':'MEMENUHI TARGET'}</span></div>
           <p>Margin sebelum diskon <b>${escapeText(percent(r.beforeDiscountPct))}</b>, margin setelah biaya <b>${escapeText(percent(r.netMarginPct))}</b>, dibanding target <b>${escapeText(percent(r.data.minimumMarginPct))}</b>. ${bad?'Hasil margin belum memenuhi ambang internal yang dimasukkan.':'Hasil margin memenuhi ambang internal yang dimasukkan.'} Penilaian kelayakan kredit tetap memerlukan pemeriksaan risiko dan kebijakan bank.</p></section>
         ${r.isKpegPlus?'<p class="print-disclaimer">KPEG PLUS: transisi fee pada '+escapeText(r.data.retirementDate)+'. Pra pensiun '+escapeText(String(r.totals.monthsBefore))+' bulan: '+escapeText(currency(r.totals.collectionBefore))+'; pascapensiun '+escapeText(String(r.totals.monthsAfter))+' bulan: '+escapeText(currency(r.totals.collectionAfter))+'. Nominal berdasarkan tarif yang diinput analis.</p>':''}
-        <p class="print-disclaimer">Catatan metode: margin kontribusi internal = jumlah kontribusi bersih × 12 ÷ jumlah saldo awal bulanan × 100%. ${r.isKpegPlus?'KPEG PLUS: bunga EIR nominal/12 atas baki debet; angsuran dua fase mengikuti tanggal pensiun, dengan penyesuaian akhir yang diungkapkan.':'Angsuran anuitas dibulatkan Rp100 terdekat; angsuran terakhir disesuaikan agar saldo akhir Rp0.'} Ini bukan NIM resmi laporan keuangan. Perlakuan diskon, fee, dan biaya harus diverifikasi sesuai kebijakan akuntansi bank.</p>
         <div class="print-signatures"><div class="sig"><strong>Disiapkan oleh</strong><span>Petugas / Analis Kredit</span></div><div class="sig"><strong>Diperiksa oleh</strong><span>Pejabat pemeriksa</span></div></div>
         <div class="print-bottom"><span>PT. BPR MODERN EXPRESS • KAJIAN INTERNAL</span><span>Dokumen simulasi • ${escapeText(today)}</span></div>
       </div>`;
@@ -1421,7 +1420,6 @@ return {exportWorkbook, reportSummary, reportSchedule, reportCosts, reportAudit}
       ${r.isKpegPlus?'<p class="director-notes"><b>Rincian fee KPEG PLUS:</b> '+escapeText(feeInfo)+'. Bunga dihitung EIR nominal/12 × saldo awal; penyesuaian akhir mengikuti rekonsiliasi.</p>':''}
       ${cautionHtml}
       ${options.note?'<p class="director-notes"><b>Catatan analis:</b> '+escapeText(String(options.note).slice(0,300))+'</p>':''}
-      <p class="director-notes"><b>Metode:</b> Margin kontribusi = total kontribusi bersih × 12 / jumlah saldo awal bulanan × 100%. Hasil merupakan estimasi pricing internal, bukan NIM resmi bank. Biaya, diskon dan kebijakan akuntansi wajib diverifikasi.</p>
       <div class="director-signatures">
         ${signed('Disusun oleh',options.preparer,'Petugas / Analis')}
         ${signed('Diperiksa oleh',options.reviewer,'Pejabat pemeriksa')}
